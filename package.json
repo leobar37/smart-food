@@ -1,0 +1,24 @@
+{
+  "name": "smartfood",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "dev": "turbo run dev"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "packageManager": "yarn@1.22.17",
+  "devDependencies": {
+    "rollup": "^2.75.6",
+    "turbo": "^1.2.16",
+    "vite": "^2.9.12"
+  },
+  "dependencies": {
+    "@manypkg/cli": "^0.19.1"
+  }
+}

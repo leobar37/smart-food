@@ -1,0 +1,13 @@
+{
+  "productId": 18,
+  "options": [
+    { "id": 86, "options": [87] },
+    { "id": 89, "options": [92] }
+  ],
+  "metadata": {
+    "direction": "Av. El ejercito 294",
+    "pickUpPerson": "Elmer Joselito León Barboza",
+    "phone": "987654321",
+    "note": "ninguna"
+  }
+}
