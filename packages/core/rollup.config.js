@@ -30,7 +30,7 @@ export default [
       }),
       commonjs(),
       typescript({
-        tsconfig: path.resolve(__dirname, '../tsconfig.json'),
+        tsconfig: path.resolve(__dirname, 'tsconfig.json'),
       }),
     ],
   },
