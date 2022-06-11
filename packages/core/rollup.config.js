@@ -29,7 +29,9 @@ export default [
         preferBuiltins: true,
       }),
       commonjs(),
-      typescript({ tsconfig: path.resolve(__dirname, './tsconfig.json') }),
+      typescript({
+        tsconfig: path.resolve(__dirname, './packages/core/tsconfig.json'),
+      }),
     ],
   },
   {
