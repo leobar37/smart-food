@@ -3,7 +3,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
-import { resolve } from 'path';
+import path from 'path';
 const packageJson = require('./package.json');
 
 export default [
@@ -29,7 +29,7 @@ export default [
         preferBuiltins: true,
       }),
       commonjs(),
-      typescript({ tsconfig: resolve(__dirname, './tsconfig.json') }),
+      typescript({ tsconfig: path.resolve(__dirname, './tsconfig.json') }),
     ],
   },
   {
