@@ -26,7 +26,7 @@ RUN rm -rf /app/${YARN_CACHE_FOLDER}
 FROM base AS builder
 COPY --from=dev-deps /app/ .
 COPY --from=pruner /app/out/full/ .
-RUN yarn turbo run build --scope=${SCOPE} --include-dependencies --no-deps -vvv
+RUN yarn turbo run build --scope=${SCOPE} --include-dependencies --no-deps -vv
 RUN find . -name node_modules | xargs rm -rf
 
 FROM base AS runner
