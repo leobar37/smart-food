@@ -26,7 +26,7 @@ RUN rm -rf /app/${YARN_CACHE_FOLDER}
 FROM base AS builder
 COPY --from=dev-deps /app/ .
 COPY --from=pruner /app/out/full/ .
-RUN yarn turbo run build --scope=${SCOPE} --include-dependencies --no-deps
+RUN yarn turbo run build --scope=${SCOPE} --include-dependencies --no-deps -vvv
 RUN find . -name node_modules | xargs rm -rf
 
 FROM base AS runner
@@ -41,4 +41,4 @@ RUN wget -q -t3 'https://packages.doppler.com/public/cli/rsa.8004D9FF50437357.ke
 ENTRYPOINT [ "doppler" ,"run" , "--" ]
 
 
-CMD yarn workspace ${SCOPE} start:prod
+CMD yarn workspace ${SCOPE} start:prod 
