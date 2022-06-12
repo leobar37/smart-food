@@ -50,4 +50,4 @@ ENTRYPOINT [ "doppler" ,"run" , "--" ]
 RUN doppler secrets
 RUN echo $DOPPLER_TOKEN
 
-CMD ["yarn" ,"workspace" ,${SCOPE} "start:prod"] 
+CMD ["yarn" ,"workspace" ,${SCOPE},"start:prod"] 
