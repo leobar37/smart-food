@@ -9,9 +9,10 @@
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
-  "dependencies": {
-    "@nestjs/common": "^8.4.6",
-    "reflect-metadata": "^0.1.13",
+  "dependencies": {},
+  "peerDependencies": {
+    "@nestjs/common": "^8.0.0",
+    "@nestjs/core": "^8.0.0",
     "rxjs": "^7.5.5"
   },
   "devDependencies": {
