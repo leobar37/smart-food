@@ -46,5 +46,6 @@ RUN wget -q -t3 'https://packages.doppler.com/public/cli/rsa.8004D9FF50437357.ke
 ENTRYPOINT [ "doppler" ,"run" , "--" ]
 
 RUN doppler secrets
+RUN echo $DOPPLER_TOKEN
 
 CMD ["yarn" ,"workspace" ,${SCOPE} "start:prod"] 
