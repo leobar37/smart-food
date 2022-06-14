@@ -9,7 +9,9 @@
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
-  "dependencies": {},
+  "dependencies": {
+    "@smartfood/common": "*"
+  },
   "peerDependencies": {
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
