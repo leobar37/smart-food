@@ -3,9 +3,9 @@ RUN apk update
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY  admin/package*.json ./
 
-COPY yarn.lock ./
+COPY admin/yarn.lock ./
 
 RUN yarn install --frozen-lockfile
 
@@ -14,7 +14,10 @@ RUN wget -q -t3 'https://packages.doppler.com/public/cli/rsa.8004D9FF50437357.ke
     echo 'https://packages.doppler.com/public/cli/alpine/any-version/main' | tee -a /etc/apk/repositories && \
     apk add doppler
 
-COPY . .
+COPY admin/ .
+
+RUN  ls
+
 EXPOSE 5000
 
 RUN yarn build
