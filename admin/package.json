@@ -6,7 +6,7 @@
     "dev": "doppler run -- keystone dev",
     "start": "doppler run -- keystone start",
     "build": "doppler run -- keystone build",
-    "postinstall": "keystone postinstall"
+    "postinstall": "yarn keystone postinstall"
   },
   "dependencies": {
     "@keystone-6/auth": "^3.0.0",
