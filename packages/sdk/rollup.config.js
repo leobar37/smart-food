@@ -3,11 +3,19 @@ import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
+import json from '@rollup/plugin-json';
+import { terser } from 'rollup-plugin-terser';
+import babel from 'rollup-plugin-babel';
 
 const packageJson = require('./package.json');
 
+/**
+ * @type {import('rollup').RollupOptions}
+ */
+
 export default [
   {
+    external: ['graphql-request', 'graphql'],
     input: 'src/index.ts',
     output: [
       {
@@ -25,9 +33,16 @@ export default [
     ],
     plugins: [
       peerDepsExternal(),
-      resolve(),
+      resolve({
+        preferBuiltins: false,
+      }),
+      json(),
       commonjs(),
       typescript({ tsconfig: './tsconfig.json' }),
+      babel({
+        babelrc: true,
+        runtimeHelpers: true,
+      }),
     ],
   },
   {

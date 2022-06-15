@@ -6,6 +6,9 @@ export default withAuth(
   config({
     server: {
       port: 5000,
+      cors : {
+        origin : "*"
+      }
     },
     db: {
       provider: 'postgresql',
