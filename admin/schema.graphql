@@ -106,10 +106,18 @@ type Client {
   lastName: String
   direction: String
   email: String
+  orders(
+    where: OrderWhereInput! = {}
+    orderBy: [OrderOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Order!]
+  ordersCount(where: OrderWhereInput! = {}): Int
 }
 
 input ClientWhereUniqueInput {
   id: ID
+  email: String
 }
 
 input ClientWhereInput {
@@ -122,6 +130,13 @@ input ClientWhereInput {
   lastName: StringFilter
   direction: StringFilter
   email: StringFilter
+  orders: OrderManyRelationFilter
+}
+
+input OrderManyRelationFilter {
+  every: OrderWhereInput
+  some: OrderWhereInput
+  none: OrderWhereInput
 }
 
 input ClientOrderByInput {
@@ -139,6 +154,14 @@ input ClientUpdateInput {
   lastName: String
   direction: String
   email: String
+  orders: OrderRelateToManyForUpdateInput
+}
+
+input OrderRelateToManyForUpdateInput {
+  disconnect: [OrderWhereUniqueInput!]
+  set: [OrderWhereUniqueInput!]
+  create: [OrderCreateInput!]
+  connect: [OrderWhereUniqueInput!]
 }
 
 input ClientUpdateArgs {
@@ -152,13 +175,18 @@ input ClientCreateInput {
   lastName: String
   direction: String
   email: String
+  orders: OrderRelateToManyForCreateInput
+}
+
+input OrderRelateToManyForCreateInput {
+  create: [OrderCreateInput!]
+  connect: [OrderWhereUniqueInput!]
 }
 
 type Product {
   id: ID!
   photo: CloudinaryImage_File
   name: String
-  canCount: Boolean
   count: Int
   price: Float
   category: Category
@@ -230,16 +258,10 @@ input ProductWhereInput {
   NOT: [ProductWhereInput!]
   id: IDFilter
   name: StringFilter
-  canCount: BooleanFilter
   count: IntNullableFilter
   price: FloatNullableFilter
   category: CategoryWhereInput
   options: OptionManyRelationFilter
-}
-
-input BooleanFilter {
-  equals: Boolean
-  not: BooleanFilter
 }
 
 input IntNullableFilter {
@@ -273,7 +295,6 @@ input OptionManyRelationFilter {
 input ProductOrderByInput {
   id: OrderDirection
   name: OrderDirection
-  canCount: OrderDirection
   count: OrderDirection
   price: OrderDirection
 }
@@ -281,7 +302,6 @@ input ProductOrderByInput {
 input ProductUpdateInput {
   photo: Upload
   name: String
-  canCount: Boolean
   count: Int
   price: Float
   category: CategoryRelateToOneForUpdateInput
@@ -314,7 +334,6 @@ input ProductUpdateArgs {
 input ProductCreateInput {
   photo: Upload
   name: String
-  canCount: Boolean
   count: Int
   price: Float
   category: CategoryRelateToOneForCreateInput
@@ -335,6 +354,7 @@ type Option {
   id: ID!
   name: String
   limit: Int
+  label: String
   product: Product
   subOptions(
     where: SubOptionWhereInput! = {}
@@ -356,6 +376,7 @@ input OptionWhereInput {
   id: IDFilter
   name: StringFilter
   limit: IntNullableFilter
+  label: StringFilter
   product: ProductWhereInput
   subOptions: SubOptionManyRelationFilter
 }
@@ -370,11 +391,13 @@ input OptionOrderByInput {
   id: OrderDirection
   name: OrderDirection
   limit: OrderDirection
+  label: OrderDirection
 }
 
 input OptionUpdateInput {
   name: String
   limit: Int
+  label: String
   product: ProductRelateToOneForUpdateInput
   subOptions: SubOptionRelateToManyForUpdateInput
 }
@@ -400,6 +423,7 @@ input OptionUpdateArgs {
 input OptionCreateInput {
   name: String
   limit: Int
+  label: String
   product: ProductRelateToOneForCreateInput
   subOptions: SubOptionRelateToManyForCreateInput
 }
@@ -417,7 +441,7 @@ input SubOptionRelateToManyForCreateInput {
 type SubOption {
   id: ID!
   name: String
-  product: Option
+  option: Option
 }
 
 input SubOptionWhereUniqueInput {
@@ -430,7 +454,7 @@ input SubOptionWhereInput {
   NOT: [SubOptionWhereInput!]
   id: IDFilter
   name: StringFilter
-  product: OptionWhereInput
+  option: OptionWhereInput
 }
 
 input SubOptionOrderByInput {
@@ -440,7 +464,7 @@ input SubOptionOrderByInput {
 
 input SubOptionUpdateInput {
   name: String
-  product: OptionRelateToOneForUpdateInput
+  option: OptionRelateToOneForUpdateInput
 }
 
 input OptionRelateToOneForUpdateInput {
@@ -456,7 +480,7 @@ input SubOptionUpdateArgs {
 
 input SubOptionCreateInput {
   name: String
-  product: OptionRelateToOneForCreateInput
+  option: OptionRelateToOneForCreateInput
 }
 
 input OptionRelateToOneForCreateInput {
@@ -527,6 +551,106 @@ input ProductRelateToManyForCreateInput {
   connect: [ProductWhereUniqueInput!]
 }
 
+type Order {
+  id: ID!
+  createdAt: DateTime
+  total: Float
+  count: Int
+  client: Client
+  product: Product
+  metadata: JSON
+  paymentMethod: OrderPaymentMethodType
+}
+
+scalar DateTime
+  @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
+
+enum OrderPaymentMethodType {
+  CASH
+  CREDIT_CARD
+  PLIN
+  YAPE
+}
+
+input OrderWhereUniqueInput {
+  id: ID
+}
+
+input OrderWhereInput {
+  AND: [OrderWhereInput!]
+  OR: [OrderWhereInput!]
+  NOT: [OrderWhereInput!]
+  id: IDFilter
+  createdAt: DateTimeNullableFilter
+  total: FloatNullableFilter
+  count: IntNullableFilter
+  client: ClientWhereInput
+  product: ProductWhereInput
+  paymentMethod: OrderPaymentMethodTypeNullableFilter
+}
+
+input DateTimeNullableFilter {
+  equals: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  gt: DateTime
+  gte: DateTime
+  not: DateTimeNullableFilter
+}
+
+input OrderPaymentMethodTypeNullableFilter {
+  equals: OrderPaymentMethodType
+  in: [OrderPaymentMethodType!]
+  notIn: [OrderPaymentMethodType!]
+  not: OrderPaymentMethodTypeNullableFilter
+}
+
+input OrderOrderByInput {
+  id: OrderDirection
+  createdAt: OrderDirection
+  total: OrderDirection
+  count: OrderDirection
+  paymentMethod: OrderDirection
+}
+
+input OrderUpdateInput {
+  createdAt: DateTime
+  total: Float
+  count: Int
+  client: ClientRelateToOneForUpdateInput
+  product: ProductRelateToOneForUpdateInput
+  metadata: JSON
+  paymentMethod: OrderPaymentMethodType
+}
+
+input ClientRelateToOneForUpdateInput {
+  create: ClientCreateInput
+  connect: ClientWhereUniqueInput
+  disconnect: Boolean
+}
+
+input OrderUpdateArgs {
+  where: OrderWhereUniqueInput!
+  data: OrderUpdateInput!
+}
+
+input OrderCreateInput {
+  createdAt: DateTime
+  total: Float
+  count: Int
+  client: ClientRelateToOneForCreateInput
+  product: ProductRelateToOneForCreateInput
+  metadata: JSON
+  paymentMethod: OrderPaymentMethodType
+}
+
+input ClientRelateToOneForCreateInput {
+  create: ClientCreateInput
+  connect: ClientWhereUniqueInput
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -581,6 +705,12 @@ type Mutation {
   updateCategories(data: [CategoryUpdateArgs!]!): [Category]
   deleteCategory(where: CategoryWhereUniqueInput!): Category
   deleteCategories(where: [CategoryWhereUniqueInput!]!): [Category]
+  createOrder(data: OrderCreateInput!): Order
+  createOrders(data: [OrderCreateInput!]!): [Order]
+  updateOrder(where: OrderWhereUniqueInput!, data: OrderUpdateInput!): Order
+  updateOrders(data: [OrderUpdateArgs!]!): [Order]
+  deleteOrder(where: OrderWhereUniqueInput!): Order
+  deleteOrders(where: [OrderWhereUniqueInput!]!): [Order]
   endSession: Boolean!
   authenticateUserWithPassword(
     email: String!
@@ -659,6 +789,14 @@ type Query {
   ): [Category!]
   category(where: CategoryWhereUniqueInput!): Category
   categoriesCount(where: CategoryWhereInput! = {}): Int
+  orders(
+    where: OrderWhereInput! = {}
+    orderBy: [OrderOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Order!]
+  order(where: OrderWhereUniqueInput!): Order
+  ordersCount(where: OrderWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }

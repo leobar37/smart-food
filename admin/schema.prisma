@@ -19,24 +19,25 @@ model User {
 }
 
 model Client {
-  id        String @id @default(cuid())
-  phone     String @default("")
-  name      String @default("")
-  lastName  String @default("")
-  direction String @default("")
-  email     String @default("")
+  id        String  @id @default(cuid())
+  phone     String  @default("")
+  name      String  @default("")
+  lastName  String  @default("")
+  direction String  @default("")
+  email     String  @unique @default("")
+  orders    Order[] @relation("Order_client")
 }
 
 model Product {
-  id         String    @id @default(cuid())
-  photo      Json?
-  name       String    @default("")
-  canCount   Boolean   @default(false)
-  count      Int?
-  price      Float?
-  category   Category? @relation("Product_category", fields: [categoryId], references: [id])
-  categoryId String?   @map("category")
-  options    Option[]  @relation("Option_product")
+  id                 String    @id @default(cuid())
+  photo              Json?
+  name               String    @default("")
+  count              Int?
+  price              Float?
+  category           Category? @relation("Product_category", fields: [categoryId], references: [id])
+  categoryId         String?   @map("category")
+  options            Option[]  @relation("Option_product")
+  from_Order_product Order[]   @relation("Order_product")
 
   @@index([categoryId])
 }
@@ -45,24 +46,48 @@ model Option {
   id         String      @id @default(cuid())
   name       String      @default("")
   limit      Int?
+  label      String      @default("")
   product    Product?    @relation("Option_product", fields: [productId], references: [id])
   productId  String?     @map("product")
-  subOptions SubOption[] @relation("SubOption_product")
+  subOptions SubOption[] @relation("SubOption_option")
 
   @@index([productId])
 }
 
 model SubOption {
-  id        String  @id @default(cuid())
-  name      String  @default("")
-  product   Option? @relation("SubOption_product", fields: [productId], references: [id])
-  productId String? @map("product")
+  id       String  @id @default(cuid())
+  name     String  @default("")
+  option   Option? @relation("SubOption_option", fields: [optionId], references: [id])
+  optionId String? @map("option")
 
-  @@index([productId])
+  @@index([optionId])
 }
 
 model Category {
   id       String    @id @default(cuid())
   name     String    @default("")
   products Product[] @relation("Product_category")
+}
+
+model Order {
+  id            String                  @id @default(cuid())
+  createdAt     DateTime?               @default(now())
+  total         Float?
+  count         Int?
+  client        Client?                 @relation("Order_client", fields: [clientId], references: [id])
+  clientId      String?                 @map("client")
+  product       Product?                @relation("Order_product", fields: [productId], references: [id])
+  productId     String?                 @map("product")
+  metadata      Json?                   @default("{}")
+  paymentMethod OrderPaymentMethodType?
+
+  @@index([clientId])
+  @@index([productId])
+}
+
+enum OrderPaymentMethodType {
+  CASH
+  CREDIT_CARD
+  PLIN
+  YAPE
 }
