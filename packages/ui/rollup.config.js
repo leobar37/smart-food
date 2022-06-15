@@ -16,12 +16,12 @@ const config = defineConfig([
   {
     input: 'src/index.ts',
     output: [
-      {
-        file: packageJson.main,
-        format: 'cjs',
-        sourcemap: true,
-        inlineDynamicImports: true,
-      },
+      // {
+      //   file: packageJson.main,
+      //   format: 'cjs',
+      //   sourcemap: true,
+      //   inlineDynamicImports: true,
+      // },
       {
         file: packageJson.module,
         format: 'esm',
