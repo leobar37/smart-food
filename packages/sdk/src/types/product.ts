@@ -11,6 +11,7 @@ export interface Option {
   id: string;
   name: string;
   limit: number;
+  label:  string;
   subOptions: SubOption[];
 }
 

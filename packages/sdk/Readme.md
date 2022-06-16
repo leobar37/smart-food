@@ -13,4 +13,9 @@
 **Client**
 
 - Create client
+  
+
+**Product:**
+
+- Products by category
 - 

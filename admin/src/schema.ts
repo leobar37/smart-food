@@ -12,6 +12,31 @@ import {
 } from '@keystone-6/core/fields';
 import { PAYMENT_METHODS } from './constants';
 import { cloudinaryField } from './libs/cloudinay';
+
+enum OrderEnum {
+  PENDING = 'PENDING',
+  PAID = 'PAID',
+  CANCELLED = 'CANCELLED',
+  DELIVERED = 'DELIVERED',
+}
+const ORDER_STATUS = [
+  {
+    label: 'Pendiente',
+    value: OrderEnum.PENDING,
+  },
+  {
+    label: 'Pagado',
+    value: OrderEnum.PAID,
+  },
+  {
+    label: 'Cancelado',
+    value: OrderEnum.CANCELLED,
+  },
+  {
+    label: 'Entregado',
+    value: OrderEnum.DELIVERED,
+  },
+];
 export const lists: Lists = {
   User: list({
     fields: {
@@ -99,17 +124,45 @@ export const lists: Lists = {
       products: relationship({ ref: 'Product.category', many: true }),
     },
   }),
-  Order: list({
+  OrderLine: list({
     fields: {
+      order: relationship({ ref: 'Order.lines', many: false }),
+      product: relationship({ ref: 'Product', many: false }),
+      quantity: integer(),
+      price : float(),
+      total : float(),
+      selection: json({
+        defaultValue: {},
+      }),
+    },
+  }),
+  Order: list({
+    access : {
+        operation : {
+          create : () => false,
+          delete : () => false,
+          update :() => false,
+          query : () => false
+        }
+    },
+    fields: {
+        
       createdAt: timestamp({
         defaultValue: {
           kind: 'now',
         },
       }),
+      status: select({
+        type : "enum",
+        options: ORDER_STATUS,
+        defaultValue: OrderEnum.PENDING,
+        ui: {
+          displayMode: 'select',
+        },
+      }),
+      lines: relationship({ ref: 'OrderLine.order', many: true }),
       total: float(),
-      count: integer(),
       client: relationship({ ref: 'Client.orders', many: false }),
-      product: relationship({ ref: 'Product', many: false }),
       metadata: json({
         defaultValue: {},
       }),

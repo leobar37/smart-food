@@ -15,20 +15,23 @@ const Home: NextPage = () => {
   );
   useEffect(() => {
     (async () => {
-      const products = await client.getProducts({
-        responseType: 'product-with-options',
-      });
-      const categories = await client.getCategories();
+      // const products = await client.getProducts({
+      //   responseType: 'product-with-options',
+      // });
+      // const categories = await client.getCategories();
 
-      const productByCategory = await client.getProducts({
-        responseType: 'product-only',
-        categoryId: categories[0].id,
-      });
-      console.log({
-        products,
-        categories,
-        productByCategory,
-      });
+      // const productByCategory = await client.getProducts({
+      //   responseType: 'product-only',
+      //   categoryId: categories[0].id,
+      // });
+      // // const orderEmpty = await  client.patchOrder();
+
+      // console.log({
+      //   products,
+      //   categories,
+      //   productByCategory,
+      //   // orderEmpty
+      // });
     })();
   }, []);
 

@@ -551,19 +551,99 @@ input ProductRelateToManyForCreateInput {
   connect: [ProductWhereUniqueInput!]
 }
 
+type OrderLine {
+  id: ID!
+  order: Order
+  product: Product
+  quantity: Int
+  price: Float
+  total: Float
+  selection: JSON
+}
+
+input OrderLineWhereUniqueInput {
+  id: ID
+}
+
+input OrderLineWhereInput {
+  AND: [OrderLineWhereInput!]
+  OR: [OrderLineWhereInput!]
+  NOT: [OrderLineWhereInput!]
+  id: IDFilter
+  order: OrderWhereInput
+  product: ProductWhereInput
+  quantity: IntNullableFilter
+  price: FloatNullableFilter
+  total: FloatNullableFilter
+}
+
+input OrderLineOrderByInput {
+  id: OrderDirection
+  quantity: OrderDirection
+  price: OrderDirection
+  total: OrderDirection
+}
+
+input OrderLineUpdateInput {
+  order: OrderRelateToOneForUpdateInput
+  product: ProductRelateToOneForUpdateInput
+  quantity: Int
+  price: Float
+  total: Float
+  selection: JSON
+}
+
+input OrderRelateToOneForUpdateInput {
+  create: OrderCreateInput
+  connect: OrderWhereUniqueInput
+  disconnect: Boolean
+}
+
+input OrderLineUpdateArgs {
+  where: OrderLineWhereUniqueInput!
+  data: OrderLineUpdateInput!
+}
+
+input OrderLineCreateInput {
+  order: OrderRelateToOneForCreateInput
+  product: ProductRelateToOneForCreateInput
+  quantity: Int
+  price: Float
+  total: Float
+  selection: JSON
+}
+
+input OrderRelateToOneForCreateInput {
+  create: OrderCreateInput
+  connect: OrderWhereUniqueInput
+}
+
 type Order {
   id: ID!
   createdAt: DateTime
+  status: OrderStatusType
+  lines(
+    where: OrderLineWhereInput! = {}
+    orderBy: [OrderLineOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [OrderLine!]
+  linesCount(where: OrderLineWhereInput! = {}): Int
   total: Float
-  count: Int
   client: Client
-  product: Product
   metadata: JSON
   paymentMethod: OrderPaymentMethodType
 }
 
 scalar DateTime
   @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
+
+enum OrderStatusType {
+  PENDING
+  PAID
+  CANCELLED
+  DELIVERED
+}
 
 enum OrderPaymentMethodType {
   CASH
@@ -582,10 +662,10 @@ input OrderWhereInput {
   NOT: [OrderWhereInput!]
   id: IDFilter
   createdAt: DateTimeNullableFilter
+  status: OrderStatusTypeNullableFilter
+  lines: OrderLineManyRelationFilter
   total: FloatNullableFilter
-  count: IntNullableFilter
   client: ClientWhereInput
-  product: ProductWhereInput
   paymentMethod: OrderPaymentMethodTypeNullableFilter
 }
 
@@ -600,6 +680,19 @@ input DateTimeNullableFilter {
   not: DateTimeNullableFilter
 }
 
+input OrderStatusTypeNullableFilter {
+  equals: OrderStatusType
+  in: [OrderStatusType!]
+  notIn: [OrderStatusType!]
+  not: OrderStatusTypeNullableFilter
+}
+
+input OrderLineManyRelationFilter {
+  every: OrderLineWhereInput
+  some: OrderLineWhereInput
+  none: OrderLineWhereInput
+}
+
 input OrderPaymentMethodTypeNullableFilter {
   equals: OrderPaymentMethodType
   in: [OrderPaymentMethodType!]
@@ -610,19 +703,26 @@ input OrderPaymentMethodTypeNullableFilter {
 input OrderOrderByInput {
   id: OrderDirection
   createdAt: OrderDirection
+  status: OrderDirection
   total: OrderDirection
-  count: OrderDirection
   paymentMethod: OrderDirection
 }
 
 input OrderUpdateInput {
   createdAt: DateTime
+  status: OrderStatusType
+  lines: OrderLineRelateToManyForUpdateInput
   total: Float
-  count: Int
   client: ClientRelateToOneForUpdateInput
-  product: ProductRelateToOneForUpdateInput
   metadata: JSON
   paymentMethod: OrderPaymentMethodType
+}
+
+input OrderLineRelateToManyForUpdateInput {
+  disconnect: [OrderLineWhereUniqueInput!]
+  set: [OrderLineWhereUniqueInput!]
+  create: [OrderLineCreateInput!]
+  connect: [OrderLineWhereUniqueInput!]
 }
 
 input ClientRelateToOneForUpdateInput {
@@ -638,12 +738,17 @@ input OrderUpdateArgs {
 
 input OrderCreateInput {
   createdAt: DateTime
+  status: OrderStatusType
+  lines: OrderLineRelateToManyForCreateInput
   total: Float
-  count: Int
   client: ClientRelateToOneForCreateInput
-  product: ProductRelateToOneForCreateInput
   metadata: JSON
   paymentMethod: OrderPaymentMethodType
+}
+
+input OrderLineRelateToManyForCreateInput {
+  create: [OrderLineCreateInput!]
+  connect: [OrderLineWhereUniqueInput!]
 }
 
 input ClientRelateToOneForCreateInput {
@@ -705,6 +810,15 @@ type Mutation {
   updateCategories(data: [CategoryUpdateArgs!]!): [Category]
   deleteCategory(where: CategoryWhereUniqueInput!): Category
   deleteCategories(where: [CategoryWhereUniqueInput!]!): [Category]
+  createOrderLine(data: OrderLineCreateInput!): OrderLine
+  createOrderLines(data: [OrderLineCreateInput!]!): [OrderLine]
+  updateOrderLine(
+    where: OrderLineWhereUniqueInput!
+    data: OrderLineUpdateInput!
+  ): OrderLine
+  updateOrderLines(data: [OrderLineUpdateArgs!]!): [OrderLine]
+  deleteOrderLine(where: OrderLineWhereUniqueInput!): OrderLine
+  deleteOrderLines(where: [OrderLineWhereUniqueInput!]!): [OrderLine]
   createOrder(data: OrderCreateInput!): Order
   createOrders(data: [OrderCreateInput!]!): [Order]
   updateOrder(where: OrderWhereUniqueInput!, data: OrderUpdateInput!): Order
@@ -719,6 +833,27 @@ type Mutation {
   createInitialUser(
     data: CreateInitialUserInput!
   ): UserAuthenticationWithPasswordSuccess!
+  makeOrder(email: String, metadata: Metadata, orderId: String): Order
+  patchOrderLine(
+    orderId: String
+    orderLineId: String
+    orderLine: OrderLineItem
+  ): Order
+  customDeleteOrderLine(orderId: String, lineOrderId: String): Order
+}
+
+input Metadata {
+  direction: String
+  phone: String
+  payment: OrderPaymentMethodType
+}
+
+input OrderLineItem {
+  productId: String
+  quantity: Int
+  price: Float
+  total: Float
+  selection: JSON
 }
 
 union UserAuthenticationWithPasswordResult =
@@ -789,6 +924,14 @@ type Query {
   ): [Category!]
   category(where: CategoryWhereUniqueInput!): Category
   categoriesCount(where: CategoryWhereInput! = {}): Int
+  orderLines(
+    where: OrderLineWhereInput! = {}
+    orderBy: [OrderLineOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [OrderLine!]
+  orderLine(where: OrderLineWhereUniqueInput!): OrderLine
+  orderLinesCount(where: OrderLineWhereInput! = {}): Int
   orders(
     where: OrderWhereInput! = {}
     orderBy: [OrderOrderByInput!]! = []
@@ -799,6 +942,7 @@ type Query {
   ordersCount(where: OrderWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
+  customGetOrder(orderId: String): Order
 }
 
 union AuthenticatedItem = User

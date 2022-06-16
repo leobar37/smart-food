@@ -29,15 +29,15 @@ model Client {
 }
 
 model Product {
-  id                 String    @id @default(cuid())
-  photo              Json?
-  name               String    @default("")
-  count              Int?
-  price              Float?
-  category           Category? @relation("Product_category", fields: [categoryId], references: [id])
-  categoryId         String?   @map("category")
-  options            Option[]  @relation("Option_product")
-  from_Order_product Order[]   @relation("Order_product")
+  id                     String      @id @default(cuid())
+  photo                  Json?
+  name                   String      @default("")
+  count                  Int?
+  price                  Float?
+  category               Category?   @relation("Product_category", fields: [categoryId], references: [id])
+  categoryId             String?     @map("category")
+  options                Option[]    @relation("Option_product")
+  from_OrderLine_product OrderLine[] @relation("OrderLine_product")
 
   @@index([categoryId])
 }
@@ -69,20 +69,40 @@ model Category {
   products Product[] @relation("Product_category")
 }
 
+model OrderLine {
+  id        String   @id @default(cuid())
+  order     Order?   @relation("OrderLine_order", fields: [orderId], references: [id])
+  orderId   String?  @map("order")
+  product   Product? @relation("OrderLine_product", fields: [productId], references: [id])
+  productId String?  @map("product")
+  quantity  Int?
+  price     Float?
+  total     Float?
+  selection Json?    @default("{}")
+
+  @@index([orderId])
+  @@index([productId])
+}
+
 model Order {
   id            String                  @id @default(cuid())
   createdAt     DateTime?               @default(now())
+  status        OrderStatusType?        @default(PENDING)
+  lines         OrderLine[]             @relation("OrderLine_order")
   total         Float?
-  count         Int?
   client        Client?                 @relation("Order_client", fields: [clientId], references: [id])
   clientId      String?                 @map("client")
-  product       Product?                @relation("Order_product", fields: [productId], references: [id])
-  productId     String?                 @map("product")
   metadata      Json?                   @default("{}")
   paymentMethod OrderPaymentMethodType?
 
   @@index([clientId])
-  @@index([productId])
+}
+
+enum OrderStatusType {
+  PENDING
+  PAID
+  CANCELLED
+  DELIVERED
 }
 
 enum OrderPaymentMethodType {
