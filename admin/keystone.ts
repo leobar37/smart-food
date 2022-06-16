@@ -4,7 +4,6 @@ import { withAuth, session } from './src/auth';
 import { insertSeedData } from './seed-data';
 import { extendGraphqlSchema} from './src/resolvers/schema';
 
-console.log("Starting Keystone 6 Admin");
 
 export default withAuth(
   config({
