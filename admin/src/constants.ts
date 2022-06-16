@@ -1,5 +1,6 @@
 import { PaymentMethods } from './types';
 
+
 export const PAYMENT_METHODS = [
   { value: PaymentMethods.CASH, label: 'Efectivo' },
   {
