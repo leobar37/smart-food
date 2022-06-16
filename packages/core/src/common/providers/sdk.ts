@@ -1,13 +1,15 @@
 import { Client} from '@smartfood/client';
 import { FactoryProvider , Inject} from '@nestjs/common'
-
+import { ConfigService} from '@nestjs/config'
 export const sdkProvider : FactoryProvider<Client> = {
     provide: 'SDK',
-    useFactory: () => {
+    useFactory: (configService : ConfigService) => {
+        const url = configService.get('SDK_ENDPOINT');
         return new Client({
-            endpoint  : process.env.SDK_ENDPOINT|| "http://localhost:5000/api/graphql",
+            endpoint  : url
         });
     },
+    inject : [ConfigService]
 }
 
 export const InjectSdk =() => Inject('SDK')
