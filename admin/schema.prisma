@@ -86,6 +86,7 @@ model OrderLine {
 
 model Order {
   id            String                  @id @default(cuid())
+  orderNumber   Int                     @default(autoincrement())
   createdAt     DateTime?               @default(now())
   status        OrderStatusType?        @default(PENDING)
   lines         OrderLine[]             @relation("OrderLine_order")

@@ -112,9 +112,17 @@ export const orderExtendGraphql = graphql.extend((base) => {
                 status: OrderStatusType.PENDING,
                 paymentMethod: args?.metadata?.payment as OrderPaymentMethodType,
               }, isNil),
+              include : {
+                lines : true
+              }
             });
-            console.log('orderCreted', orderCreted);
-            return orderCreted;
+            return prisma.order.findFirst({
+              where : {
+                id : {
+                  equals : orderCreted.id
+                }
+              }
+            });
           }
         },
       }),
@@ -182,7 +190,7 @@ export const orderExtendGraphql = graphql.extend((base) => {
                 quantity: args.orderLine.quantity,
                 total: product.price * args.orderLine.quantity,
                 orderId: args.orderId,
-                price: args.orderLine.price,
+                price: args?.orderLine?.price ?? product.price,
               },
             });
             lines.filter((d) => (d.id === orderLine.id ? orderLine : d));
@@ -202,6 +210,7 @@ export const orderExtendGraphql = graphql.extend((base) => {
                 selection: args.orderLine.selection,
                 quantity: args.orderLine.quantity,
                 orderId: args.orderId,
+                price :  args?.orderLine?.price ?? product.price,
                 total: product.price * args.orderLine.quantity,
               },
             });
