@@ -6,15 +6,15 @@ import { messengerData } from '../../common/data';
 import { buildWtsMessage, makeDictionayByIndex } from '@smartfood/common';
 import { Injectable } from '@nestjs/common';
 import { get } from 'lodash';
+import { Client} from '@smartfood/client'
 import { MessengerClient } from 'messaging-api-messenger';
 import { firstValueFrom } from 'rxjs';
 import { BUTTON_TYPE, MessengerEvent } from '../enums';
 import { MessengerEventBus } from '../eventBus';
-import { InjectMessenger } from '../../common/providers';
+import { InjectMessenger , InjectSdk } from '../../common/providers';
 import { MessengerWrapper, OrderService } from '../services';
 import { SessionManager } from '../session.manager';
-import { createMapper, messageUtils } from '../../common/utils';
-
+import { createMapper, messageUtils, messagePick  } from '../../common/utils';
 @Injectable()
 export class ConfirmeOrder {
   constructor(
@@ -23,6 +23,7 @@ export class ConfirmeOrder {
     private messengerWrapper: MessengerWrapper,
     private orderService: OrderService,
     private sessionManager: SessionManager,
+    @InjectSdk() private readonly sdk: Client,
   ) {
     this.handleShippingAddress();
     this.handlePayment();
@@ -66,7 +67,7 @@ export class ConfirmeOrder {
           const source$ = this.messengerWrapper.awaitResponse(
             MessengerEvent.POSTBACK,
             [ACTIONS.RESET_SHIPPING_INFORMATION, ACTIONS.CONFIRM_DIRECTION],
-          )(async () => {
+          )(senderId, async () => {
             await this.messengerClient.sendButtonTemplate(senderId, message, [
               {
                 title: 'Volver a ingresar',
@@ -95,13 +96,48 @@ export class ConfirmeOrder {
   async sendOrderConfirmation(senderId: string) {
     const session = this.sessionManager.getSession(senderId);
     const msg = session.getOrderHandler().toMessage();
-    this.messengerClient.sendButtonTemplate(senderId, msg, [
-      {
-        title: 'Confirmar',
-        type: BUTTON_TYPE.URL,
-        url: buildWtsMessage(msg),
-      },
-    ]);
+
+    const source$ = this.messengerWrapper.awaitResponse(
+      MessengerEvent.POSTBACK,
+      ['CONFIRM'],
+    )(senderId, async () => {
+      this.messengerClient.sendButtonTemplate(senderId, msg, [
+        {
+          title: 'Confirmar',
+          type: BUTTON_TYPE.POSTBACK,
+          payload: 'CONFIRM',
+        },
+      ]);
+    });
+    const decision = await firstValueFrom(source$);
+    const postback = messagePick.postBack(decision);
+    if (postback == 'CONFIRM') {
+      const requestQuantity = async () => {
+        const source$ = this.messengerWrapper
+          .sendText(senderId, '¿Cuantas unidades desea?')
+          .pipe(this.messengerWrapper.onlyTextOperator);
+        const decision = await firstValueFrom(source$);
+        const quantity = parseInt(decision, 10);
+        return quantity;
+      };
+      let quantity = await requestQuantity();
+      let rep = true;
+      while(isNaN(quantity) && rep){
+        const yes =  await this.messengerWrapper.confirm(senderId , messageUtils.format("Lo que a ingreseado no parece un número, ¿Desea intentarlo de nuevo?"));
+        if(!yes){
+          rep = false;
+          break;
+        }
+        quantity = await requestQuantity();
+      }
+    }
+    // this.sdk.patchOrder({
+    //   email : "",
+    //   metadata : {
+    //     direction: 
+    //   }
+    // })
+    return postback;
   }
 
   async requestPaymentMethod(senderid: string) {

@@ -2,9 +2,11 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "commonjs",
-    "strict": true,
-    "noEmit": true,
+    "lib": ["ES2018", "ESNext.AsyncIterable"],
+    "strict": false,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   }
 }

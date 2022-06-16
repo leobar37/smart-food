@@ -8,6 +8,7 @@ options {
 id
 name
 limit
+label
 subOptions {
  id
   name
@@ -37,7 +38,9 @@ subOptions {
 export type GetProductsParams = {
   responseType: ProductResponseType;
   categoryId?: string;
+  productId?: string;
 };
+
 export const buildGetProductsDocument = (params: GetProductsParams) => {
   const { responseType } = Object.assign(
     { responseType: 'product-only' } as GetProductsParams,
@@ -51,6 +54,12 @@ export const buildGetProductsDocument = (params: GetProductsParams) => {
       }
     }`);
   }
+  if(params?.productId){
+    filters.push(` id: {
+      equals : "${params.productId}"
+    }`);
+  }
+
   const filterWhere = `where : {
     ${filters.join(' ')}
   }`;
@@ -64,3 +73,19 @@ export const buildGetProductsDocument = (params: GetProductsParams) => {
   }
     `;
 };
+
+export type GetSubOptionsParams = {
+  optionId: string;
+}
+export const buildgetSubOptionsDocument = () => {
+  return `
+  query getSubOptions($optionId : ID! ) {
+    subOptions( where : {
+     id :$id
+   }){
+    id
+   name
+ }
+}
+  `
+}

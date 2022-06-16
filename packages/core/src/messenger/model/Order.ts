@@ -1,6 +1,7 @@
 import { PAYMENT_METHODS } from '../../common/constants';
-import { PaymentMethods, BuildeableProduct, Option } from '../../common/types';
+import { PaymentMethods} from '../../common/types';
 import { messageUtils } from '../../common/utils';
+import { Product , Option ,SubOption} from '@smartfood/client'
 export interface Metadata {
   direction: string;
   pickUpPerson: string;
@@ -10,18 +11,19 @@ export interface Metadata {
 }
 
 export interface OrderInfo {
-  productId: number;
-  options: { id: number; options: number[] }[];
+  productId: string;
+  options: { id: string; options: string[] }[];
   metadata: Metadata;
 }
 
 export class OrderHandler {
   productId: string;
-  optionsRaw: Map<number, Option[]>;
-  parentOption: Map<number, Option>;
-  selectedProduct: BuildeableProduct;
+  optionsRaw: Map<string, SubOption[]>;
+  parentOption: Map<string, Option>;
+  selectedProduct: Product;
   senderId: string;
   metadata: Metadata;
+
   constructor() {
     this.optionsRaw = new Map();
     this.parentOption = new Map();
@@ -30,10 +32,10 @@ export class OrderHandler {
     this.metadata = { ...this.metadata, ...metadata };
   }
 
-  addProduct(pr: BuildeableProduct) {
+  addProduct(pr: Product) {
     this.selectedProduct = pr;
   }
-  addOption(parentOption: Option, selected: Option) {
+  addOption(parentOption: Option, selected: SubOption) {
     const options = this.optionsRaw.get(parentOption.id);
     if (!options) {
       this.parentOption.set(parentOption.id, parentOption);
