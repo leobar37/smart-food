@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "commonjs",
+    "jsx": "react",
     "lib": ["ES2018", "ESNext.AsyncIterable"],
     "strict": false,
     "esModuleInterop": true,

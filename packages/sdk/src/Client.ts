@@ -3,13 +3,18 @@ import { GraphQLClient } from 'graphql-request';
 import get from 'lodash.get';
 import { SmartClientError } from './error';
 import {
-  buildGetCategoriesDocument,Order , buildGetOrderDocument, buildGetProductsDocument, CreateArgs, GetProductsParams,
-  buildOrderLineDocument,
-  PatchOrderLineArgs,
   buildDeleteOrderLineDocument,
-  DeleteOrderLineArgs,
+  buildGetCategoriesDocument,
+  buildGetOrderDocument,
+  buildGetProductsDocument,
   buildgetSubOptionsDocument,
-  GetSubOptionsParams
+  buildOrderLineDocument,
+  CreateOrderArgs,
+  DeleteOrderLineArgs,
+  GetProductsParams,
+  GetSubOptionsParams,
+  Order,
+  PatchOrderLineArgs,
 } from './graphql';
 import { Category, Product } from './types';
 
@@ -39,33 +44,42 @@ export class Client {
     formatError(data);
     return get(data, 'data.products', []);
   }
-  
+
   async getCategories(): Promise<Category[]> {
     const data = await this.client.rawRequest(buildGetCategoriesDocument());
     formatError(data);
     return get(data, 'data.categories', []);
   }
-  async patchOrder(args?: CreateArgs) : Promise<Order> {
-    const data = await this.client.rawRequest(buildGetOrderDocument("create") , args)
-    formatError(data);    
-    return get(data , "data.makeOrder" , {});
+  async patchOrder(args?: CreateOrderArgs): Promise<Order> {
+    const data = await this.client.rawRequest(
+      buildGetOrderDocument('create'),
+      args,
+    );
+    formatError(data);
+    return get(data, 'data.makeOrder', {});
   }
 
-  async patchOrderLine(args : PatchOrderLineArgs) {
-    const data = await this.client.rawRequest(buildOrderLineDocument() , args)
+  async patchOrderLine(args: PatchOrderLineArgs) {
+    const data = await this.client.rawRequest(buildOrderLineDocument(), args);
     formatError(data);
-    return get(data , "data.patchOrderLine" , {});
+    return get(data, 'data.patchOrderLine', {});
   }
-  async deleteOrderLine(args : DeleteOrderLineArgs) {
-    const data = await this.client.rawRequest(buildDeleteOrderLineDocument() , args)
+  async deleteOrderLine(args: DeleteOrderLineArgs) {
+    const data = await this.client.rawRequest(
+      buildDeleteOrderLineDocument(),
+      args,
+    );
     formatError(data);
-    return get(data , "data.customDeleteOrderLine" , {});
+    return get(data, 'data.customDeleteOrderLine', {});
   }
-  async getSubOptions(args : GetSubOptionsParams) {
-    const data = await this.client.rawRequest(buildgetSubOptionsDocument() , args)
+  async getSubOptions(args: GetSubOptionsParams) {
+    const data = await this.client.rawRequest(
+      buildgetSubOptionsDocument(),
+      args,
+    );
     formatError(data);
     console.log(data);
-    
-    return get(data , "data.subOptions" , []);
+
+    return get(data, 'data.subOptions', []);
   }
 }

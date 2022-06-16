@@ -6,6 +6,7 @@ fragment OrderFragement on Order {
        total
        metadata
        status
+       orderNumber
        lines {
          id
          quantity
@@ -47,9 +48,10 @@ export type Order = {
   metadata: OrderMetadata;
   status: string;
   lines: OrderLine[];
+  orderNumber : number
 };
 
-export type CreateArgs = {
+export type CreateOrderArgs = {
   email?: string;
   orderId?: string;
   metadata?: {
@@ -61,13 +63,13 @@ export type CreateArgs = {
 
 export type PatchOrderLineArgs = {
   orderId: string;
-  orderLineId : string;
+  orderLineId ?: string;
   orderLine : {
-     productId : string;
-      quantity : number;
-      price : number;
-      total : number;
-      selection : any;
+      productId : string;
+      quantity? : number;
+      price?: number;
+      total ?: number;
+      selection ?: any;
   } 
 }
 

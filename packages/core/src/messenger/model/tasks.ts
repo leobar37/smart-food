@@ -18,7 +18,9 @@ export class SelectBuildeableOptionTask extends Task {
   constructor(avalailableOptions: Record<string, string>, options: Option[]) {
     super('Select an option to build');
     this.avalailableOptions = avalailableOptions;
-    this.prevOption = options.shift();
+    this.prevOption = options.shift(); 
+
+    
     this.options = options;
     this.selection = [];
   }

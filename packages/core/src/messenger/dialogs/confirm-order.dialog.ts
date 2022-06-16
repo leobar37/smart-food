@@ -1,20 +1,20 @@
 /* eslint-disable prettier/prettier */
-import { ACTIONS } from '../actions';
-import { FLOWS } from '../flows';
-import { PAYMENT_METHODS } from '../../common';
-import { messengerData } from '../../common/data';
-import { buildWtsMessage, makeDictionayByIndex } from '@smartfood/common';
 import { Injectable } from '@nestjs/common';
+import { Client } from '@smartfood/client';
+import { makeDictionayByIndex } from '@smartfood/common';
 import { get } from 'lodash';
-import { Client} from '@smartfood/client'
 import { MessengerClient } from 'messaging-api-messenger';
 import { firstValueFrom } from 'rxjs';
+import { PAYMENT_METHODS } from '../../common';
+import { messengerData } from '../../common/data';
+import { InjectMessenger, InjectSdk } from '../../common/providers';
+import { createMapper, messagePick, messageUtils } from '../../common/utils';
+import { ACTIONS } from '../actions';
 import { BUTTON_TYPE, MessengerEvent } from '../enums';
 import { MessengerEventBus } from '../eventBus';
-import { InjectMessenger , InjectSdk } from '../../common/providers';
+import { FLOWS } from '../flows';
 import { MessengerWrapper, OrderService } from '../services';
 import { SessionManager } from '../session.manager';
-import { createMapper, messageUtils, messagePick  } from '../../common/utils';
 @Injectable()
 export class ConfirmeOrder {
   constructor(
@@ -95,7 +95,8 @@ export class ConfirmeOrder {
 
   async sendOrderConfirmation(senderId: string) {
     const session = this.sessionManager.getSession(senderId);
-    const msg = session.getOrderHandler().toMessage();
+    const orderHandler = session.getOrderHandler();
+    const msg = orderHandler.toMessage();
 
     const source$ = this.messengerWrapper.awaitResponse(
       MessengerEvent.POSTBACK,
@@ -122,22 +123,55 @@ export class ConfirmeOrder {
       };
       let quantity = await requestQuantity();
       let rep = true;
-      while(isNaN(quantity) && rep){
-        const yes =  await this.messengerWrapper.confirm(senderId , messageUtils.format("Lo que a ingreseado no parece un número, ¿Desea intentarlo de nuevo?"));
-        if(!yes){
+      while (isNaN(quantity) && rep) {
+        const yes = await this.messengerWrapper.confirm(
+          senderId,
+          messageUtils.format(
+            'Lo que a ingreseado no parece un número, ¿Desea intentarlo de nuevo?',
+          ),
+        );
+        if (!yes) {
           rep = false;
           break;
         }
         quantity = await requestQuantity();
       }
+      orderHandler.quantity = quantity;
+      await this.saveOrder(senderId);
     }
-    // this.sdk.patchOrder({
-    //   email : "",
-    //   metadata : {
-    //     direction: 
-    //   }
-    // })
+
     return postback;
+  }
+
+  private async saveOrder(senderId: string) {
+    const session = this.sessionManager.getSession(senderId);
+    const orderHandler = session.getOrderHandler();
+    const orderSerialized = orderHandler.serializeOrder();
+    const order = await this.sdk.patchOrder({
+      metadata: {
+        direction: orderSerialized.metadata.direction,
+        payment: orderSerialized.metadata.payment as any,
+        phone: orderSerialized.metadata.phone,
+      },
+    });
+
+    
+    const itemSerialized = orderHandler.serializeOrderLine();
+    await this.sdk.patchOrderLine({
+      orderId: order.id,
+      orderLine: itemSerialized.orderLine,
+      orderLineId: null,
+    });
+    await this.messengerClient.sendText(
+      senderId,
+      messageUtils.format(
+        'Su pedido se ha realizado con éxito',
+        messageUtils.separator,
+        "Llamaremos para coordinar la entrega",
+        `Nro de Orden: ${order.orderNumber}`,
+      ),
+    );
+    return order;
   }
 
   async requestPaymentMethod(senderid: string) {
