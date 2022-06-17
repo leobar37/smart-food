@@ -10,12 +10,11 @@ import {
 } from '@keystone-6/core/fields';
 import { OrderEnum, ORDER_STATUS, PAYMENT_METHODS } from '../constants';
 import { get } from 'lodash';
-
 export const Order = list({
   ui: {
     labelField: 'orderNumber',
     listView: {
-      initialColumns: ['client', 'orderNumber', 'status'],
+      initialColumns: ['client', 'orderNumber', 'status' , "createdAt"],
     },
   },
   access : {

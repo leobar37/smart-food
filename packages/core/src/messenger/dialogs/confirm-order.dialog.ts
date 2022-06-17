@@ -154,7 +154,6 @@ export class ConfirmeOrder {
         phone: orderSerialized.metadata.phone,
       },
     });
-
     
     const itemSerialized = orderHandler.serializeOrderLine();
     await this.sdk.patchOrderLine({

@@ -16,7 +16,7 @@ if (!sessionSecret) {
 const { withAuth } = createAuth({
   listKey: 'User',
   identityField: 'email',
-  sessionData: 'name',
+  sessionData: 'id name rol email',
   secretField: 'password',
   initFirstItem: {
     fields: ['name', 'email', 'password'],

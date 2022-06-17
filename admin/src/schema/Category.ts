@@ -1,12 +1,22 @@
 import { list } from '@keystone-6/core';
-import {
-    relationship, text
-} from '@keystone-6/core/fields';
-
+import { relationship, text } from '@keystone-6/core/fields';
 
 export const Category = list({
-    fields: {
-      name: text(),
-      products: relationship({ ref: 'Product.category', many: true }),
-    },
-  });
+  access : {
+    operation : {
+      create : (...args) => {
+
+        return  true;
+      },
+      query : (...args) => {
+        
+        return true;
+      }
+    }
+  },
+  description : "Categoria",
+  fields: {
+    name: text(),
+    products: relationship({ ref: 'Product.category', many: true }),
+  },
+});
