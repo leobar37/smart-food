@@ -5,7 +5,13 @@ type User {
   id: ID!
   name: String
   email: String
+  rol: UserRolType
   password: PasswordState
+}
+
+enum UserRolType {
+  ADMIN
+  STAFF
 }
 
 type PasswordState {
@@ -24,6 +30,7 @@ input UserWhereInput {
   id: IDFilter
   name: StringFilter
   email: StringFilter
+  rol: UserRolTypeNullableFilter
 }
 
 input IDFilter {
@@ -71,10 +78,18 @@ input NestedStringFilter {
   not: NestedStringFilter
 }
 
+input UserRolTypeNullableFilter {
+  equals: UserRolType
+  in: [UserRolType!]
+  notIn: [UserRolType!]
+  not: UserRolTypeNullableFilter
+}
+
 input UserOrderByInput {
   id: OrderDirection
   name: OrderDirection
   email: OrderDirection
+  rol: OrderDirection
 }
 
 enum OrderDirection {
@@ -85,6 +100,7 @@ enum OrderDirection {
 input UserUpdateInput {
   name: String
   email: String
+  rol: UserRolType
   password: String
 }
 
@@ -96,6 +112,7 @@ input UserUpdateArgs {
 input UserCreateInput {
   name: String
   email: String
+  rol: UserRolType
   password: String
 }
 

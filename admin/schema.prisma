@@ -12,9 +12,10 @@ generator client {
 }
 
 model User {
-  id       String @id @default(cuid())
-  name     String @default("")
-  email    String @unique @default("")
+  id       String       @id @default(cuid())
+  name     String       @default("")
+  email    String       @unique @default("")
+  rol      UserRolType?
   password String
 }
 
@@ -97,6 +98,11 @@ model Order {
   paymentMethod OrderPaymentMethodType?
 
   @@index([clientId])
+}
+
+enum UserRolType {
+  ADMIN
+  STAFF
 }
 
 enum OrderStatusType {
