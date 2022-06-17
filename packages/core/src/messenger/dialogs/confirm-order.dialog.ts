@@ -174,7 +174,7 @@ export class ConfirmeOrder {
   }
 
   async requestPaymentMethod(senderid: string) {
-    const selection = PAYMENT_METHODS.selection;
+    const selection = PAYMENT_METHODS;
     const dictionary = makeDictionayByIndex(selection);
     const message = messageUtils.format(
       `¿Por que medio de pago deseas pagar?`,
