@@ -9,7 +9,7 @@
 **Components what should be present in storybook**
  
 - Button
-- Typografia
+- Typography
 - Branding
 - SlideCounter
 - Tooltip
