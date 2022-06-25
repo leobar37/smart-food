@@ -46,8 +46,8 @@ export class OrderHandler {
   }
 
   paymentMethodMessage() {
-    const method = PAYMENT_METHODS.selection.find(
-      (el) => el.id === this.metadata.paymentMethod,
+    const method = PAYMENT_METHODS.find(
+      (el) => el.value === this.metadata.paymentMethod,
     );
     return messageUtils.format('**Forma de pago:**', '', `➖ ${method.label}`);
   }
