@@ -78,8 +78,6 @@ export class Client {
       args,
     );
     formatError(data);
-    console.log(data);
-
     return get(data, 'data.subOptions', []);
   }
 }
