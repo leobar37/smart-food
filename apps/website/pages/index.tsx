@@ -4,7 +4,7 @@ import type { NextPage } from 'next';
 
 const Home: NextPage = () => {
   return (
-    <Box>
+    <Box justifyContent={"space-between"}>
       <Component />
     </Box>
   );
