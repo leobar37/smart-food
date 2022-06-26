@@ -9,7 +9,9 @@
     "dev": "turbo run dev",
     "dev:libs": "yarn turbo run dev --filter=@smartfood/common --filter=@smartfood/core --filter=@smartfood/client --filter=@smartfood/ui",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "prepare": "husky install",
+    "pre-commit": " "
   },
   "workspaces": {
     "nohoist": [
@@ -39,7 +41,8 @@
     "rollup": "^2.75.6",
     "turbo": "^1.2.16",
     "vite": "^2.9.12",
-    "@smartfood/ui" : "*"
+    "@smartfood/ui": "*",
+    "husky": "^8.0.0"
   },
   "dependencies": {
     "@chakra-ui/storybook-addon": "^4.0.1",
