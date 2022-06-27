@@ -9,7 +9,8 @@
     "dev": "turbo run dev",
     "dev:libs": "yarn turbo run dev --filter=@smartfood/common --filter=@smartfood/core --filter=@smartfood/client --filter=@smartfood/ui",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "prepare": "husky install"
   },
   "workspaces": {
     "nohoist": [
@@ -27,6 +28,7 @@
   "packageManager": "yarn@1.22.17",
   "devDependencies": {
     "@babel/core": "^7.18.5",
+    "@smartfood/ui": "*",
     "@storybook/addon-actions": "^6.5.9",
     "@storybook/addon-essentials": "^6.5.9",
     "@storybook/addon-interactions": "^6.5.9",
@@ -36,13 +38,14 @@
     "@storybook/react": "^6.5.9",
     "@storybook/testing-library": "^0.0.13",
     "babel-loader": "^8.2.5",
+    "husky": "^8.0.0",
     "rollup": "^2.75.6",
     "turbo": "^1.2.16",
-    "vite": "^2.9.12",
-    "@smartfood/ui" : "*"
+    "vite": "^2.9.12"
   },
   "dependencies": {
     "@chakra-ui/storybook-addon": "^4.0.1",
-    "@manypkg/cli": "^0.19.1"
+    "@manypkg/cli": "^0.19.1",
+    "pretty-quick": "^3.1.3"
   }
 }
