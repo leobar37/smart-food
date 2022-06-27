@@ -1,7 +1,9 @@
-import { default as Button } from './button';
-import { default as Radio} from './radio'
+import Button from './button';
+import Radio from './radio';
+import Popover from './popover';
 
 export default {
   Button,
-  Radio
+  Radio,
+  Popover,
 };
