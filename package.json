@@ -10,7 +10,8 @@
     "dev:libs": "yarn turbo run dev --filter=@smartfood/common --filter=@smartfood/core --filter=@smartfood/client --filter=@smartfood/ui",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "postinstall": "yarn chakra-cli tokens  packages/ui/src/theme/index.ts"
   },
   "workspaces": {
     "nohoist": [
@@ -28,6 +29,7 @@
   "packageManager": "yarn@1.22.17",
   "devDependencies": {
     "@babel/core": "^7.18.5",
+    "@chakra-ui/cli": "^2.1.0",
     "@smartfood/ui": "*",
     "@storybook/addon-actions": "^6.5.9",
     "@storybook/addon-essentials": "^6.5.9",
