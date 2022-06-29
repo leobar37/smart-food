@@ -1,6 +1,7 @@
 import { PAYMENT_METHODS } from '../../common/constants';
-import { PaymentMethods, BuildeableProduct, Option } from '../../common/types';
+import { PaymentMethods } from '../../common/types';
 import { messageUtils } from '../../common/utils';
+import { Product, Option, SubOption } from '@smartfood/client';
 export interface Metadata {
   direction: string;
   pickUpPerson: string;
@@ -10,18 +11,19 @@ export interface Metadata {
 }
 
 export interface OrderInfo {
-  productId: number;
-  options: { id: number; options: number[] }[];
+  productId: string;
+  options: { id: string; options: string[] }[];
   metadata: Metadata;
 }
 
 export class OrderHandler {
   productId: string;
-  optionsRaw: Map<number, Option[]>;
-  parentOption: Map<number, Option>;
-  selectedProduct: BuildeableProduct;
+  optionsRaw: Map<string, SubOption[]>;
+  parentOption: Map<string, Option>;
+  selectedProduct: Product;
   senderId: string;
   metadata: Metadata;
+  quantity: number;
   constructor() {
     this.optionsRaw = new Map();
     this.parentOption = new Map();
@@ -30,10 +32,10 @@ export class OrderHandler {
     this.metadata = { ...this.metadata, ...metadata };
   }
 
-  addProduct(pr: BuildeableProduct) {
+  addProduct(pr: Product) {
     this.selectedProduct = pr;
   }
-  addOption(parentOption: Option, selected: Option) {
+  addOption(parentOption: Option, selected: SubOption) {
     const options = this.optionsRaw.get(parentOption.id);
     if (!options) {
       this.parentOption.set(parentOption.id, parentOption);
@@ -44,25 +46,45 @@ export class OrderHandler {
   }
 
   paymentMethodMessage() {
-    const method = PAYMENT_METHODS.selection.find(
-      (el) => el.id === this.metadata.paymentMethod,
+    const method = PAYMENT_METHODS.find(
+      (el) => el.value === this.metadata.paymentMethod,
     );
     return messageUtils.format('**Forma de pago:**', '', `➖ ${method.label}`);
   }
 
-  serialize(): OrderInfo {
+  serializeOrder() {
     const data = {
-      productId: this.selectedProduct.id,
-      options: Array.from(this.parentOption.values()).map((opt) => {
-        const options = this.optionsRaw.get(opt.id);
-        return {
-          id: opt.id,
-          options: options ? options.map((o) => o.id) : [],
-        };
-      }),
-      metadata: this.metadata,
+      metadata: {
+        direction: this.metadata.direction,
+        payment: this.metadata.paymentMethod,
+        phone: this.metadata.phone,
+      },
     };
     return data;
+  }
+
+  serializeOrderLine() {
+   
+    const options = Array.from(this.parentOption.values()).map((opt) => {
+      const options = this.optionsRaw.get(opt.id);
+      return {
+        id: opt.id,
+        options: options ? options.map((o) => o.id) : [],
+      };
+    });
+
+    return {
+      orderLine: {
+        productId: this.selectedProduct.id,
+        quantity: this.quantity,
+        selection:
+          options.length > 0
+            ? {
+                options: options,
+              }
+            : {},
+      },
+    };
   }
 
   shippingAddressMessage() {
@@ -79,6 +101,11 @@ export class OrderHandler {
       this.metadata.note,
     );
   }
+
+  reset(){
+    
+  }
+
   orderResumeMessage() {
     const messages = [];
     messages.push(`**Resumen de pedido:**`);

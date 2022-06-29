@@ -41,8 +41,16 @@ export class MessengerWrapper {
   }
 
   awaitResponse(...args: Parameters<MessengerEventBus['ofType']>) {
-    return (callback: AnyFunction): Observable<SuscribeResponse> => {
-      const source$ = concat(from(callback()), this.eventBus.ofType(...args));
+    return (
+      senderId: string,
+      callback: AnyFunction,
+    ): Observable<SuscribeResponse> => {
+      const source$ = concat(
+        from(callback()),
+        this.eventBus
+          .ofType(...args)
+          .pipe(filter((e) => e.message.sender.id === senderId)),
+      );
       return source$.pipe(skip(1)) as any;
     };
   }
@@ -64,7 +72,7 @@ export class MessengerWrapper {
   onlyTextOperator(source$: Observable<SuscribeResponse>) {
     return source$.pipe(pluck('message', 'message', 'text'));
   }
-  confirm(senderId: string, text: string): Promise<boolean> {
+  confirm(senderId: string, text: string ): Promise<boolean> {
     return firstValueFrom(
       this.sendText(senderId, text, {
         quickReplies: [

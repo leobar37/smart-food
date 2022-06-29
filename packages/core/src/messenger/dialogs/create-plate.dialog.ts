@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { ProductService } from '../../service/services/Product.service';
-import { Option } from '../../common/types';
+import { Option , SubOption } from '@smartfood/client';
 import { makeDictionayByIndex } from '@smartfood/common';
 import { Injectable } from '@nestjs/common';
 import { get } from 'lodash';
@@ -69,17 +69,15 @@ export class CreatePlateDialog {
         senderId,
         'No te entiendo, ¿quieres volver a intentarlo?',
       );
-
       if (confirm) {
         productId = await sendMessage();
       } else {
         break;
       }
     }
-
     const order = new OrderHandler();
     const product = await this.productBuildeableService.getProductById(
-      Number(productId),
+      productId,
     );
     order.addProduct(product);
     const session = this.sessionManager.getSession(userId);
@@ -87,18 +85,23 @@ export class CreatePlateDialog {
     } else {
       this.sessionManager.getSession(userId)?.storeOrder(order);
     }
+    console.log("productId", productId);
+    
     return productId;
   }
 
-  async processSelectBuildebleTask(senderId: string, producId: number) {
-    const options = await this.productBuildeableService.getOptionsByProductId(
-      producId,
-    );
-    const queueOptions = Object.assign([] as any as Option, options);
+  async processSelectBuildebleTask(senderId: string, producId: string) {
+    const product = await this.productBuildeableService.getCompleteProduct(producId);
+    
+    console.log(product);
+    
+    const queueOptions = Object.assign([] as any as Option,product.options);
 
     let option = queueOptions.shift();
 
     try {
+      console.log(option);
+      
       while (option) {
         await this.startRequestOptions(senderId, option);
         option = queueOptions.shift();
@@ -120,10 +123,9 @@ export class CreatePlateDialog {
   }
 
   async startRequestOptions(senderId: string, parent: Option) {
-    const options = await this.productBuildeableService.getOptionsByOptionsId(
-      parent.id,
-    );
-    const dictionary = makeDictionayByIndex(options);
+    const options = parent.subOptions;
+
+    const dictionary = makeDictionayByIndex<SubOption>(options);
     const mapper = createMapper(dictionary);
 
     const selection = new Set();
@@ -242,7 +244,7 @@ export class CreatePlateDialog {
     }
   }
 
-  async showConfirmationOptions(senderId: string, selection: Option[]) {
+  async showConfirmationOptions(senderId: string, selection: SubOption[]) {
     const selectionText =
       selection.length > 0
         ? selection.map((el) => `✅${el.name}`)
