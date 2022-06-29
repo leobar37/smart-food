@@ -38,7 +38,7 @@ export async function insertSeedData(context: KeystoneContext) {
           equals: input.name,
         },
       },
-      query: 'id',
+      query: 'id name',
     });
     if (!category[0]) {
       const newCategory = await context.query.Category.createOne({
@@ -46,6 +46,8 @@ export async function insertSeedData(context: KeystoneContext) {
           name: input.name,
         } as CategoryCreateInput,
       });
+      console.log(newCategory);
+
       console.log(`Created category ${newCategory.name}`);
 
       return newCategory;
@@ -80,47 +82,53 @@ export async function insertSeedData(context: KeystoneContext) {
           price: product.price,
           photo: product.photo,
           categoryId: category.id,
+          description : product.description,
+          isAvalaible : product.isAvalaible
         },
       });
       console.log(`Created product ${productSaved.name}`);
-      const optionsPrs = product.options.map(async (option) => {
-        const data = {
-          name: option.name,
-          label: option.label,
-          limit: option.limit,
-          product: {
-            connect: {
-              id: productSaved.id,
-            },
-          },
-        } as OptionCreateInput;
-        const optSaved = await context.query.Option.createOne({
-          data: data as OptionCreateInput,
-          query: 'id name',
-        });
-        console.log(
-          `Created option ${optSaved.name} fro product ${productSaved.name}`,
-        );
-        for await (const subOption of option.options) {
-          const dataSubOption = {
-            name: subOption.name,
-            option: {
-              connect: {
-                id: optSaved.id,
+      if ('options' in product) {
+        const optionsPrs = ((product as any).options ?? []).map(
+          async (option) => {
+            const data = {
+              name: option.name,
+              label: option.label,
+              limit: option.limit,
+              product: {
+                connect: {
+                  id: productSaved.id,
+                },
               },
-            },
-          } as SubOptionCreateInput;
-          const subOptionSaved = await context.query.SubOption.createOne({
-            data: dataSubOption,
-            query: 'id name',
-          });
-          console.log(
-            `create suboption ${subOptionSaved.name}  for option ${optSaved.name}`,
-          );
-        }
-        return optSaved;
-      });
-      const options = await Promise.all(optionsPrs);
+            } as OptionCreateInput;
+            const optSaved = await context.query.Option.createOne({
+              data: data as OptionCreateInput,
+              query: 'id name',
+            });
+            console.log(
+              `Created option ${optSaved.name} fro product ${productSaved.name}`,
+            );
+            for await (const subOption of option.options) {
+              const dataSubOption = {
+                name: subOption.name,
+                option: {
+                  connect: {
+                    id: optSaved.id,
+                  },
+                },
+              } as SubOptionCreateInput;
+              const subOptionSaved = await context.query.SubOption.createOne({
+                data: dataSubOption,
+                query: 'id name',
+              });
+              console.log(
+                `create suboption ${subOptionSaved.name}  for option ${optSaved.name}`,
+              );
+            }
+            return optSaved;
+          },
+        );
+        const options = await Promise.all(optionsPrs);
+      }
     }
   };
   for await (const categoy of data.categories) {

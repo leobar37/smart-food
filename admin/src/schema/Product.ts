@@ -1,5 +1,11 @@
 import { list } from '@keystone-6/core';
-import { float, integer, relationship, text } from '@keystone-6/core/fields';
+import {
+  float,
+  integer,
+  relationship,
+  text,
+  checkbox,
+} from '@keystone-6/core/fields';
 import { cloudinaryField } from '../libs/cloudinay';
 
 export const Product = list({
@@ -12,8 +18,19 @@ export const Product = list({
     price: float(),
     category: relationship({ ref: 'Category.products', many: false }),
     options: relationship({ ref: 'Option.product', many: true }),
+    description: text({
+      ui: {
+        displayMode: 'textarea',
+      },
+    }),
+    isAvalaible: checkbox({
+      defaultValue: true,
+    }),
   },
   ui: {
     labelField: 'name',
+    listView : {
+      initialColumns: ["name" , "category" , "price"]
+    }
   },
 });
