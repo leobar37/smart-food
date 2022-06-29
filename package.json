@@ -11,7 +11,8 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "prepare": "husky install",
-    "postinstall": "yarn chakra-cli tokens  packages/ui/src/theme/index.ts"
+    "gen:types": "yarn chakra-cli tokens  packages/ui/src/theme/index.ts",
+    "postinstall": ""
   },
   "workspaces": {
     "nohoist": [
