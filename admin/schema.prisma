@@ -38,6 +38,8 @@ model Product {
   category               Category?   @relation("Product_category", fields: [categoryId], references: [id])
   categoryId             String?     @map("category")
   options                Option[]    @relation("Option_product")
+  description            String      @default("")
+  isAvalaible            Boolean     @default(true)
   from_OrderLine_product OrderLine[] @relation("OrderLine_product")
 
   @@index([categoryId])

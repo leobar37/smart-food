@@ -214,6 +214,8 @@ type Product {
     skip: Int! = 0
   ): [Option!]
   optionsCount(where: OptionWhereInput! = {}): Int
+  description: String
+  isAvalaible: Boolean
 }
 
 type CloudinaryImage_File {
@@ -279,6 +281,8 @@ input ProductWhereInput {
   price: FloatNullableFilter
   category: CategoryWhereInput
   options: OptionManyRelationFilter
+  description: StringFilter
+  isAvalaible: BooleanFilter
 }
 
 input IntNullableFilter {
@@ -309,11 +313,18 @@ input OptionManyRelationFilter {
   none: OptionWhereInput
 }
 
+input BooleanFilter {
+  equals: Boolean
+  not: BooleanFilter
+}
+
 input ProductOrderByInput {
   id: OrderDirection
   name: OrderDirection
   count: OrderDirection
   price: OrderDirection
+  description: OrderDirection
+  isAvalaible: OrderDirection
 }
 
 input ProductUpdateInput {
@@ -323,6 +334,8 @@ input ProductUpdateInput {
   price: Float
   category: CategoryRelateToOneForUpdateInput
   options: OptionRelateToManyForUpdateInput
+  description: String
+  isAvalaible: Boolean
 }
 
 """
@@ -355,6 +368,8 @@ input ProductCreateInput {
   price: Float
   category: CategoryRelateToOneForCreateInput
   options: OptionRelateToManyForCreateInput
+  description: String
+  isAvalaible: Boolean
 }
 
 input CategoryRelateToOneForCreateInput {

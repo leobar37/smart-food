@@ -1,7 +1,27 @@
 import { ClientCreateInput } from '.keystone/types';
+// utils
+
+const makeSelectionText = (
+  selection: { option: string; selection: string[] }[],
+) => {
+  return `
+  ## Contenido
+  ${selection.map((s) => {
+    return `
+      **${s.option}** 
+       ${s.selection.map((d) => `- ${d}`).join(`\n`)}
+    `;
+  })}
+  `;
+};
+
+// data
 const categories = [
   {
     name: 'Armables',
+  },
+  {
+    name: 'Armados',
   },
 ];
 
@@ -50,6 +70,9 @@ export const fitnessProduct = {
   price: 25,
   category: 'Armables',
   photo: defaultImage,
+  description: 'Arma tu propio plato',
+  isAvalaible: true,
+
   options: [
     {
       name: 'base',
@@ -179,8 +202,165 @@ export const fitnessProduct = {
   ],
 };
 
+const ArmedPlates = [
+  {
+    name: 'Bajar de peso',
+    count: null,
+    price: 25,
+    category: 'Armados',
+    photo: defaultImage,
+    isAvalaible: true,
+    description: makeSelectionText([
+      {
+        option: 'Base',
+        selection: ['Mix Lechugas (255gr)'],
+      },
+      {
+        option: 'Proteína',
+        selection: ['Salmón Marinado 50 gr'],
+      },
+      {
+        option: 'Veggies',
+        selection: [
+          'Palta 45 gr',
+          'Choclo americano 30 gr',
+          'Tomate Cherry 40 gr',
+          'Pepinillo 40gr',
+        ],
+      },
+      {
+        option: 'Salsas',
+        selection: ['Acevichada - salada x 1 (1 1/2 oz) '],
+      },
+      {
+        option: 'Toppins',
+        selection: ['Canchita chulpi 20 gr', 'Chifle 20 gr'],
+      },
+    ]),
+  },
+  {
+    name: 'plato fit',
+    count: null,
+    price: 25,
+    category: 'Armados',
+    photo: defaultImage,
+    isAvalaible: true,
+    description: makeSelectionText([
+      {
+        option: 'Base',
+        selection: ['quinua multicolor  90 gr '],
+      },
+      {
+        option: 'Proteína',
+        selection: ['Filete de Pollo 70 gr '],
+      },
+      {
+        option: 'Veggies',
+        selection: [
+          'Palta 45 gr ',
+          'Choclo americano 30 gr',
+          'Pepino kyuri 40 gr ',
+          'Durazno 35 gr ',
+        ],
+      },
+      {
+        option: 'Salsas',
+        selection: ['Acevichada - salada  (1 1/2oz) '],
+      },
+      {
+        option: 'Toppins',
+        selection: ['smart hot -picante (1 1/2 oz)'],
+      },
+    ]),
+  },
+  {
+    name: 'Definición',
+    count: null,
+    price: 25,
+    category: 'Armados',
+    photo: defaultImage,
+    isAvalaible: true,
+    description: makeSelectionText([
+      {
+        option: 'Base',
+        selection: ['Arroz integral 80 g'],
+      },
+      {
+        option: 'Proteina',
+        selection: ['Pollo Teriyaki - dulce. 60 gr '],
+      },
+      {
+        option: 'Veggies ',
+        selection: [
+          'Palta 45 gr',
+          'Choclo americano 30 gr',
+          'Lechuga hidroponica  35 gr ',
+          'Zanahoria Rayada 30 gr ',
+        ],
+      },
+      {
+        option: 'Salsas',
+        selection: [
+          'Maracuyá - agridulce ( 1 1/2 oz)',
+          'Smart hot - picante ( 1 1/2 oz)',
+        ],
+      },
+      {
+        option: 'Toppins',
+        selection: [
+          'Canchita chulpi 20 gr',
+          'Nori crocante 5 gr',
+          ' Aros de cebolla 50 gr',
+        ],
+      },
+    ]),
+  },
+  {
+    name: 'Subir de peso',
+    count: null,
+    price: 25,
+    category: 'Armados',
+    photo: defaultImage,
+    isAvalaible: true,
+    description: makeSelectionText([
+      {
+        option: 'Base',
+        selection: ['Arroz integral 80 g'],
+      },
+      {
+        option: 'Proteina',
+        selection: ['Pollo Teriyaki - dulce. 60 gr '],
+      },
+      {
+        option: 'Veggies ',
+        selection: [
+          'Palta 45 gr',
+          'Choclo americano 30 gr',
+          'Lechuga hidroponica  35 gr ',
+          'Zanahoria Rayada 30 gr ',
+        ],
+      },
+      {
+        option: 'Salsas',
+        selection: [
+          'Maracuyá - agridulce ( 1 1/2 oz)',
+          'Smart hot - picante ( 1 1/2 oz)',
+        ],
+      },
+      {
+        option: 'Toppins',
+        selection: [
+          'Canchita chulpi 20 gr',
+          'Nori crocante 5 gr',
+          ' Aros de cebolla 50 gr',
+        ],
+      },
+    ]),
+  },
+];
+
 export const data = {
-  products: [fitnessProduct],
+  products: [fitnessProduct, ...ArmedPlates],
   categories,
   AnonymusClient,
 };
