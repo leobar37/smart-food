@@ -12,13 +12,14 @@
     "@chakra-ui/react": "^2.2.1",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
+    "@smartfood/client": "*",
+    "@smartfood/common": "*",
+    "@smartfood/ui": "*",
     "framer-motion": "^6",
     "next": "12.1.6",
     "react": "18.1.0",
     "react-dom": "18.1.0",
-    "@smartfood/ui": "*",
-    "@smartfood/common": "*",
-    "@smartfood/client": "*"
+    "react-icons": "^4.4.0"
   },
   "devDependencies": {
     "@types/node": "17.0.42",
