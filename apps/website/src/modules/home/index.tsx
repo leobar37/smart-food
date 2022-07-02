@@ -48,30 +48,25 @@ const HomePage: NextPage = () => {
       >
         <Container
           sx={{
-            py: '12',
+            py: 10,
             textColor: 'white',
           }}
         >
-          <Stack py="3" spacing={5} alignItems={'center'}>
-            <Stack
-              direction={'column'}
-              justifyContent="center"
-              textAlign={'center'}
-              spacing={4}
-            >
+          <Stack spacing={5}>
+            <Stack direction={'column'} spacing={4}>
               <Brand color="black" />
               <Box
                 as="span"
                 fontWeight={'medium'}
                 sx={{
-                  textAlign: 'center',
+                  textAlign: 'start',
                 }}
               >
                 <Text as="p">Address: Example street 21</Text>
                 <Text as="p">Telephone: Example street 21</Text>
               </Box>
             </Stack>
-            <Stack direction={'column'} textAlign="center" spacing={4}>
+            <Stack direction={'column'} spacing={4}>
               <Text fontWeight={'semibold'}>Contenido</Text>
               <List>
                 <ListItem>Inicio</ListItem>
@@ -80,15 +75,15 @@ const HomePage: NextPage = () => {
                 <ListItem>Nosostros</ListItem>
               </List>
             </Stack>
-            <Stack direction={'column'} textAlign="center" spacing={4}>
+            <Stack direction={'column'} spacing={4}>
               <Text fontWeight={'semibold'}>Legal</Text>
               <List>
                 <ListItem>Término y condiciones</ListItem>
                 <ListItem>Política de privacidad</ListItem>
               </List>
             </Stack>
-            <Stack textAlign={'center'}>
-              <BookIcon fontSize={'8xl'} mx={'auto'} />
+            <Stack>
+              <BookIcon />
               <Text>Libro de reclamaciones</Text>
             </Stack>
           </Stack>
