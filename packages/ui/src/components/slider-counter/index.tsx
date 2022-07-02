@@ -4,7 +4,6 @@ import { GoPlus, GoDash } from 'react-icons/go';
 const baseStyle = {
   borderRadius: '50%',
   boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.2)',
-
   '&:disabled': {
     background: '#FCFCFD',
     boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.2)',
@@ -21,8 +20,8 @@ export type SliderCounterProps = {
   value?: string | number;
   plusDisabled?: boolean;
   minusDisabled?: boolean;
-  OnPlus?: () => void;
-  OnMinus?: () => void;
+  onPlus?: () => void;
+  onMinus?: () => void;
   size?: SliderCounterSizes;
 };
 
@@ -51,8 +50,8 @@ const getStyleBySize = (size: SliderCounterSizes) => {
 
 export const SliderCounter: React.FC<SliderCounterProps> = ({
   value = 0,
-  OnPlus = () => {},
-  OnMinus = () => {},
+  onPlus = () => {},
+  onMinus = () => {},
   plusDisabled,
   minusDisabled,
   size = 'normal',
@@ -63,7 +62,7 @@ export const SliderCounter: React.FC<SliderCounterProps> = ({
     <HStack spacing="14px">
       <IconButton
         disabled={minusDisabled}
-        onClick={OnMinus}
+        onClick={onMinus}
         sx={{ ...baseStyle, ...buttonStyle }}
         aria-label="minus-button"
         icon={<GoDash color="#646082" />}
@@ -71,7 +70,7 @@ export const SliderCounter: React.FC<SliderCounterProps> = ({
       <Text sx={textStyle}>{value}</Text>
       <IconButton
         disabled={plusDisabled}
-        onClick={OnPlus}
+        onClick={onPlus}
         sx={{ ...baseStyle, ...buttonStyle }}
         colorScheme="smartgreen"
         aria-label="plus-button"
