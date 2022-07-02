@@ -9,7 +9,8 @@
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "react-icons": "^4.4.0"
+    "react-icons": "^4.4.0",
+    "@smartfood/common": "*"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^22.0.0",
