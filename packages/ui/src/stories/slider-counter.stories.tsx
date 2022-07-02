@@ -8,7 +8,7 @@ export default {
 } as ComponentMeta<any>;
 
 const Template = (args: any) => {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(100);
 
   return (
     <VStack mt="16">
@@ -16,8 +16,8 @@ const Template = (args: any) => {
         <SliderCounter
           {...args}
           value={('0' + value).slice(-2)}
-          OnPlus={() => setValue((prev) => prev + 1)}
-          OnMinus={() => setValue((prev) => prev - 1)}
+          onPlus={() => setValue((prev) => prev + 20)}
+          onMinus={() => setValue((prev) => prev - 1)}
         />
       </HStack>
     </VStack>
