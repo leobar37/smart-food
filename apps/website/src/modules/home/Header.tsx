@@ -1,13 +1,10 @@
-import { NextPage } from 'next';
-import { Box, Container, HStack, Image, Text } from '@chakra-ui/react';
-import { Brand, CartIcon, MenuIcon } from '@smartfood/ui';
-import { NavBar } from '@App/components';
+import { Box, Image, Text } from '@chakra-ui/react';
 
 const Header = () => {
   return (
     <Box
       sx={{
-        height: '40vh',
+        height: ['40vh', null, '70vh'],
         position: 'relative',
         width: '100vw',
       }}
@@ -44,16 +41,28 @@ const Header = () => {
             backdropFilter: 'blur(5px)',
             color: 'white',
             textAlign: 'center',
-            py: '3',
-            px: 5,
+            py: [3, null, 6, 8],
+            px: [5, null, null, 12],
+            h2: {
+              fontSize: ['lg', null, 'xl', '2xl', '5xl'],
+              textTransform: 'uppercase',
+              fontWeight: 'semibold',
+            },
           }}
           borderRadius={'md'}
         >
-          <Text fontSize="lg">¡Ya puedes realizar</Text>
-          <Text color="smartgray.700" fontWeight={'semibold'} fontSize="lg">
+          <Text as="h2">¡Ya puedes realizar</Text>
+          <Text
+            as="h2"
+            color="smartgray.700"
+            fontWeight={'semibold'}
+            fontSize="lg"
+          >
             Tu pedido!
           </Text>
-          <Text fontSize="lg">Es hora de un cambio inteligente</Text>
+          <Text as="h3" fontSize={['md', null, 'lg']}>
+            Es hora de un cambio inteligente
+          </Text>
         </Box>
       </Box>
     </Box>

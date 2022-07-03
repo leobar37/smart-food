@@ -6,7 +6,6 @@ import Header from './Header';
 import { useBreakpintValue } from '@smartfood/ui';
 const HomePage: NextPage = () => {
   const breakpoint = useBreakpintValue();
-  console.log(breakpoint);
 
   return (
     <Box>

@@ -3,89 +3,55 @@ import {
   chakra,
   HStack,
   IconButton,
-  Link,
-  SystemStyleObject,
   useBoolean,
   useBreakpointValue,
   VStack,
 } from '@chakra-ui/react';
-import {} from '@emotion/react';
-import { matcher } from '@smartfood/common';
 import { Brand, CartIcon, MenuIcon } from '@smartfood/ui';
-import { FC, ReactNode, useMemo } from 'react';
+import { FC } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
+import LinkItem from './LinkItem';
 
 const CloseIcon = chakra(AiOutlineClose);
+
+const BtnIcon = chakra(IconButton, {
+  baseStyle: {
+    m: 0,
+    p: 1,
+    bg: 'transparent',
+    svg: {
+      color: 'smartgray.500',
+      fontSize: ['xl', null, '2xl'],
+    },
+    _hover: {
+      bg: 'gray.300',
+    },
+  },
+});
+
+const Nav = chakra('nav', {
+  baseStyle: {
+    display: 'flex',
+    w: 'full',
+    bg: 'white',
+    px: ['2', null, '4'],
+    py: ['2', null, '4'],
+    mx: 'auto',
+    maxW: '8xl',
+    overflow: 'visible',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    alignContent: 'center',
+  },
+});
 
 type Properties = {
   brandSize: 'sm' | 'lg';
 };
 
-const BaseLink = chakra(Link, {
-  baseStyle: {
-    my: 2,
-    pl: 3,
-    textDecoration: 'none!important',
-    borderBottomWidth: '1px',
-    borderBottomColor: 'transparent',
-    _hover: {
-      borderBottomWidth: '1px',
-      borderBottomColor: 'smartgreen.700',
-    },
-  },
-});
-type LinkItemProps = {
-  variant?: 'mobile' | 'desktop';
-  selected?: boolean;
-  children: ReactNode;
-};
-
-const LinkItem: FC<LinkItemProps> = ({ variant, children, selected }) => {
-  const perVariant = useMemo(
-    () =>
-      matcher<SystemStyleObject, Exclude<LinkItemProps['variant'], undefined>>(
-        variant,
-      )({
-        desktop: {
-          ...(selected ? {} : {}),
-        },
-        mobile: {
-          ...(selected
-            ? {
-                position: 'relative',
-                '&:before': {
-                  content: "''",
-                  position: 'absolute',
-                  width: '3px',
-                  h: 'full',
-                  bg: 'smartgreen.700',
-                  top: '0',
-                  left: 0,
-                },
-              }
-            : {}),
-        },
-      }),
-    [variant, selected],
-  );
-
-  return (
-    <BaseLink
-      sx={{
-        ...perVariant,
-      }}
-    >
-      {children}
-    </BaseLink>
-  );
-};
-LinkItem.defaultProps = {
-  selected: false,
-  variant: 'mobile',
-};
-
 export const NavBar: FC = () => {
   const [navBarState, navbarActions] = useBoolean(false);
+
   const propertiesByBr = useBreakpointValue<Properties>({
     base: {
       brandSize: 'sm',
@@ -97,6 +63,7 @@ export const NavBar: FC = () => {
   const items = ['Inicio', 'Arma tu plato', 'Carta', 'Nosotros'];
   const items$ = items.map((d, idx) => <LinkItem key={idx}>{d}</LinkItem>);
   const isVisibleMenuButton = useBreakpointValue([true, null, false]);
+
   return (
     <Box
       sx={{
@@ -105,61 +72,31 @@ export const NavBar: FC = () => {
         position: 'relative',
       }}
     >
-      <HStack
-        as="nav"
-        w="full"
-        bg="white"
-        py="2"
-        px="2"
-        overflow={'visible'}
-        alignItems={'center'}
-        justifyContent={'space-between'}
-      >
-        <Brand size={propertiesByBr?.brandSize} />
+      <Nav as="nav">
+        <Box flex="20%">
+          <Brand size={propertiesByBr?.brandSize} />
+        </Box>
         <HStack
+          flex="60%"
           display={['none', null, 'flex']}
-          mx="auto"
-          flexGrow={1}
+          alignSelf="center"
           justifyContent="center"
           spacing={3}
         >
           {items$}
         </HStack>
-        <HStack>
-          <IconButton
-            bg="transparent"
-            m="0"
-            p="0"
-            aria-label="carrito"
-            icon={
-              <CartIcon fontSize={['xl', null, '2xl']} color="smartgray.500" />
-            }
-          />
-          <IconButton
-            m="0"
-            p="0"
-            bg="transparent"
+        <HStack flex="20%" justifyContent="flex-end">
+          <BtnIcon aria-label="carrito" icon={<CartIcon />} />
+          <BtnIcon
             display={isVisibleMenuButton ? 'initial' : 'none'}
-            _hover={{
-              bg: 'gray.300',
-            }}
             aria-label="menu"
             onClick={() => {
               navbarActions.toggle();
             }}
-            icon={
-              navBarState ? (
-                <CloseIcon fontSize={['xl', null, '2xl']} />
-              ) : (
-                <MenuIcon
-                  fontSize={['xl', null, '2xl']}
-                  color="smartgray.500"
-                />
-              )
-            }
+            icon={navBarState ? <CloseIcon /> : <MenuIcon />}
           />
         </HStack>
-      </HStack>
+      </Nav>
       <Box
         sx={{
           position: 'absolute',
