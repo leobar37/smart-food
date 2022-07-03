@@ -11,20 +11,20 @@ import { Brand, CartIcon, MenuIcon } from '@smartfood/ui';
 import { FC } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import LinkItem from './LinkItem';
-
+import { Global } from '@emotion/react';
 const CloseIcon = chakra(AiOutlineClose);
 
 const BtnIcon = chakra(IconButton, {
   baseStyle: {
     m: 0,
-    p: 1,
+    p: 2,
     bg: 'transparent',
     svg: {
       color: 'smartgray.500',
       fontSize: ['xl', null, '2xl'],
     },
     _hover: {
-      bg: 'gray.300',
+      bg: 'gray.200',
     },
   },
 });
@@ -124,3 +124,5 @@ export const NavBar: FC = () => {
     </Box>
   );
 };
+
+export default NavBar;

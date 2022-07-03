@@ -2,12 +2,18 @@ import {
   Box,
   Container,
   createIcon,
+  Flex,
+  HStack,
+  IconButton,
   List,
   ListItem,
   Stack,
   Text,
+  chakra,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import { Brand } from '@smartfood/ui';
+import { FiFacebook, FiInstagram } from 'react-icons/fi';
 
 const BookIcon = createIcon({
   displayName: 'BookIcon',
@@ -26,7 +32,23 @@ const BookIcon = createIcon({
   viewBox: '0 0 73 55',
 });
 
+const ListFooter = chakra(Stack, {
+  baseStyle: {
+    display: 'flex',
+    direction: 'column',
+    alignItems: 'center',
+    textAlign: 'center',
+    '.list': {
+      mt: 2,
+      fontSize: ['md', null, 'sm', 'md'],
+    },
+  },
+});
 export const Footer = () => {
+  const brandSize = useBreakpointValue<'sm' | 'lg'>({
+    base: 'sm',
+    md: 'lg',
+  });
   return (
     <Box
       sx={{
@@ -35,61 +57,88 @@ export const Footer = () => {
       }}
     >
       <Container
+        maxWidth={'7xl'}
         sx={{
-          py: 10,
+          py: [5, null, 10],
           textColor: 'white',
         }}
       >
-        <Stack spacing={5} justifyContent="center">
+        <Stack
+          w="full"
+          spacing={[5, null, 6]}
+          justifyContent={['center', null, 'space-between']}
+          direction={['column', null, 'row']}
+        >
           <Stack
-            textAlign="center"
-            alignItems={'center'}
-            direction={'column'}
-            spacing={4}
+            textAlign={['center', null, 'left']}
+            alignItems={['center', null, 'flex-start']}
+            direction={['column']}
+            spacing={2}
           >
-            <Brand color="black" />
+            <Brand color="black" size={brandSize} />
             <Box
               as="span"
               fontWeight={'medium'}
+              mt={2}
               sx={{
-                textAlign: 'center',
+                textAlign: ['center', 'start'],
               }}
             >
               <Text as="p">Address: Example street 21</Text>
               <Text as="p">Telephone: Example street 21</Text>
             </Box>
           </Stack>
-          <Stack
-            direction={'column'}
-            spacing={4}
-            alignItems={'center'}
-            textAlign="center"
-          >
+          <ListFooter>
             <Text fontWeight={'semibold'}>Contenido</Text>
-            <List>
+            <List className="list">
               <ListItem>Inicio</ListItem>
               <ListItem>Arma tu plato</ListItem>
               <ListItem>Carta</ListItem>
               <ListItem>Nosostros</ListItem>
             </List>
-          </Stack>
-          <Stack
-            direction={'column'}
-            spacing={4}
-            alignItems={'center'}
-            textAlign="center"
-          >
+          </ListFooter>
+          <ListFooter>
             <Text fontWeight={'semibold'}>Legal</Text>
-            <List>
+            <List className="list">
               <ListItem>Término y condiciones</ListItem>
               <ListItem>Política de privacidad</ListItem>
             </List>
-          </Stack>
+          </ListFooter>
+
           <Stack alignItems={'center'}>
             <BookIcon fontSize={'8xl'} />
             <Text>Libro de reclamaciones</Text>
           </Stack>
         </Stack>
+        <Flex
+          justifyContent={'space-between'}
+          my="4"
+          borderTopWidth={'2px'}
+          borderTopColor="white"
+          py="4"
+        >
+          <Text as="p" fontSize="md">
+            @2022 SmartFood. All rights reserved.
+          </Text>
+          <HStack
+            sx={{
+              alignItems: 'center',
+              a: {
+                bg: 'transparent',
+                svg: {
+                  fontSize: '2xl',
+                },
+              },
+            }}
+          >
+            <IconButton as="a" aria-label="Facebook">
+              <FiFacebook />
+            </IconButton>
+            <IconButton as="a" aria-label="Instagram">
+              <FiInstagram />
+            </IconButton>
+          </HStack>
+        </Flex>
       </Container>
     </Box>
   );

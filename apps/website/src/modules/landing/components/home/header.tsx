@@ -6,7 +6,7 @@ const Header = () => {
       sx={{
         height: ['40vh', null, '70vh'],
         position: 'relative',
-        width: '100vw',
+        width: '100%',
       }}
     >
       <Image

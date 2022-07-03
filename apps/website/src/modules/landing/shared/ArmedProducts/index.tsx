@@ -1,12 +1,4 @@
-import {
-  Container,
-  Heading,
-  Stack,
-  Text,
-  Link,
-  Box,
-  useBreakpointValue,
-} from '@chakra-ui/react';
+import { Box, Link, Stack, Text, useBreakpointValue } from '@chakra-ui/react';
 import { ExoticCard } from '@smartfood/ui';
 const defaultProps = {
   title: 'Arma tu Poke Bowl',
