@@ -1,11 +1,22 @@
-import type { AppProps } from 'next/app';
 import { ChakraProvider } from '@chakra-ui/react';
-import { theme } from '@smartfood/ui';
+import { theme, useBreakpintValue } from '@smartfood/ui';
+import type { AppProps } from 'next/app';
+import { FC, ReactElement, ReactNode } from 'react';
+const ConnectedApp: FC<{
+  children: ReactNode;
+}> = ({ children }) => {
+  const breakpoint = useBreakpintValue();
+  console.log(breakpoint);
+
+  return children as ReactElement;
+};
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider theme={theme}>
-      <Component {...pageProps} />
+      <ConnectedApp>
+        <Component {...pageProps} />
+      </ConnectedApp>
     </ChakraProvider>
   );
 }
