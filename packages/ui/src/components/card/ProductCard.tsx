@@ -97,11 +97,7 @@ export const CardProduct: FC<CardProductProps> = ({
         textAlign={'start'}
         alignSelf={'center'}
       >
-        <Text
-          color="smartgreen.700"
-          fontSize={'2xl'}
-          fontWeight={['light', 'semibold']}
-        >
+        <Text color="smartgreen.700" fontSize={'2xl'} fontWeight={['semibold']}>
           {content.title} {breakpoint}
         </Text>
         {descriptionNode}
