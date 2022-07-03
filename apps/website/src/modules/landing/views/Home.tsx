@@ -1,9 +1,9 @@
-import { NavBar } from '@App/components';
-import { ArmedProducts, Footer, ProductsLine } from '@App/shared';
-import { Box, Heading } from '@chakra-ui/react';
-import { NextPage } from 'next';
-import Header from './Header';
+import { Box } from '@chakra-ui/react';
 import { useBreakpintValue } from '@smartfood/ui';
+import { NextPage } from 'next';
+import Header from '../components/home/header';
+import { ArmedProducts, Footer, ProductsLine } from '../shared';
+import NavBar from '../shared/navbar';
 const HomePage: NextPage = () => {
   const breakpoint = useBreakpintValue();
 
