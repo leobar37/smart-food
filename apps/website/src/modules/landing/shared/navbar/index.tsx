@@ -124,3 +124,5 @@ export const NavBar: FC = () => {
     </Box>
   );
 };
+
+export default NavBar;

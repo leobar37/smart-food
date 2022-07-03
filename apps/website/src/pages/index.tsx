@@ -1,4 +1,4 @@
-import Home from '../modules/home';
+import Home from '../modules/landing/views/Home';
 export default Home;
 
 // header
