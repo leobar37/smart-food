@@ -1,5 +1,6 @@
 import {
   Box,
+  chakra,
   Container,
   createIcon,
   Flex,
@@ -9,7 +10,6 @@ import {
   ListItem,
   Stack,
   Text,
-  chakra,
   useBreakpointValue,
 } from '@chakra-ui/react';
 import { Brand } from '@smartfood/ui';
@@ -36,11 +36,22 @@ const ListFooter = chakra(Stack, {
   baseStyle: {
     display: 'flex',
     direction: 'column',
-    alignItems: 'center',
-    textAlign: 'center',
+    alignItems: ['center', null, 'flex-start'],
+    textAlign: ['center', null, 'start'],
     '.list': {
       mt: 2,
       fontSize: ['md', null, 'sm', 'md'],
+    },
+  },
+});
+
+const BtSocialIcon = chakra(IconButton, {
+  baseStyle: {
+    cursor: 'pointer',
+    m: 2,
+    _hover: {
+      bg: 'transparent',
+      transform: 'scale(1.08)',
     },
   },
 });
@@ -51,6 +62,7 @@ export const Footer = () => {
   });
   return (
     <Box
+      as="footer"
       sx={{
         bg: 'smartgreen.700',
         w: 'full',
@@ -131,12 +143,12 @@ export const Footer = () => {
               },
             }}
           >
-            <IconButton as="a" aria-label="Facebook">
+            <BtSocialIcon as="a" aria-label="Facebook">
               <FiFacebook />
-            </IconButton>
-            <IconButton as="a" aria-label="Instagram">
+            </BtSocialIcon>
+            <BtSocialIcon as="a" aria-label="Instagram">
               <FiInstagram />
-            </IconButton>
+            </BtSocialIcon>
           </HStack>
         </Flex>
       </Container>

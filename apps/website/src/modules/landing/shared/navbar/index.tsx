@@ -8,10 +8,10 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { Brand, CartIcon, MenuIcon } from '@smartfood/ui';
+import NextLink from 'next/link';
 import { FC } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import LinkItem from './LinkItem';
-import { Global } from '@emotion/react';
 const CloseIcon = chakra(AiOutlineClose);
 
 const BtnIcon = chakra(IconButton, {
@@ -73,9 +73,11 @@ export const NavBar: FC = () => {
       }}
     >
       <Nav as="nav">
-        <Box flex="20%">
-          <Brand size={propertiesByBr?.brandSize} />
-        </Box>
+        <NextLink href={'/'}>
+          <Box as="a" flex="20%" cursor={'pointer'}>
+            <Brand size={propertiesByBr?.brandSize} />
+          </Box>
+        </NextLink>
         <HStack
           flex="60%"
           display={['none', null, 'flex']}
