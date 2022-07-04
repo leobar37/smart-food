@@ -10,7 +10,7 @@ export const Default = () => {
   return (
     <VStack mt="16">
       <HStack>
-        <Input placeholder="demo input" />
+        <Input placeholder="Demo input" />
       </HStack>
     </VStack>
   );

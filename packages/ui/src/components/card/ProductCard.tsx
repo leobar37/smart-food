@@ -5,10 +5,11 @@ import {
   SystemStyleObject,
   Text,
   VStack,
+  BoxProps,
 } from '@chakra-ui/react';
 import { matcher } from '@smartfood/common';
 import { cloneElement, FC, ReactNode } from 'react';
-import { useBreakpintValue } from '../../hooks';
+
 type CardProductProps = {
   content: {
     title: string;
@@ -19,7 +20,7 @@ type CardProductProps = {
   button: ReactNode;
   counter: ReactNode;
   size?: 'mobile' | 'desktop';
-};
+} & BoxProps;
 
 const BoxContent = chakra(Box, {
   baseStyle: {
@@ -44,8 +45,8 @@ export const CardProduct: FC<CardProductProps> = ({
   button,
   counter,
   size,
+  ...props
 }) => {
-  const breakpoint = useBreakpintValue();
   const descriptionNode = matcher<ReactNode, CardProductProps['size']>(size)({
     desktop: (
       <Text fontSize={'md'} color="smartgray.700">
@@ -87,7 +88,7 @@ export const CardProduct: FC<CardProductProps> = ({
     ...properties.buttonSx,
   });
   return (
-    <BoxContent>
+    <BoxContent {...props}>
       <VStack
         px="2"
         py={3}
@@ -98,7 +99,7 @@ export const CardProduct: FC<CardProductProps> = ({
         alignSelf={'center'}
       >
         <Text color="smartgreen.700" fontSize={'2xl'} fontWeight={['semibold']}>
-          {content.title} {breakpoint}
+          {content.title}
         </Text>
         {descriptionNode}
         {counter}

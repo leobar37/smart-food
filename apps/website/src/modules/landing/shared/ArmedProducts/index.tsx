@@ -17,9 +17,12 @@ export const ArmedProducts = () => {
     <Box
       sx={{
         textAlign: 'center',
-        bg: '#CBF1C8',
         py: [4, null, 6],
         px: [2, null, 4],
+        backgroundImage: `bg-stains.png`,
+        backgroundPosition: 'center 105%',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
       }}
     >
       <Text
@@ -31,7 +34,7 @@ export const ArmedProducts = () => {
       >
         Arma lo más te guste
       </Text>
-      <Text fontSize={['md', null, 'xl']}>
+      <Text fontSize={['md', null, 'xl']} maxWidth="5xl" mx="auto">
         Arma tu plato o bebida como más te guste, elige los ingrediemte que más
         te gusten. Tenemos + de 25 ingredientes para crearlos.
       </Text>
