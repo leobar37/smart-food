@@ -127,6 +127,7 @@ export const Footer = () => {
           my="4"
           borderTopWidth={'2px'}
           borderTopColor="white"
+          alignItems={'center'}
           py="4"
         >
           <Text as="p" fontSize="md">
