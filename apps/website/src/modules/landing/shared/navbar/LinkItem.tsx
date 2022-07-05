@@ -1,7 +1,7 @@
 import { chakra, Link, SystemStyleObject } from '@chakra-ui/react';
 import { matcher } from '@smartfood/common';
 import { FC, ReactNode, useMemo } from 'react';
-
+import NextLink from 'next/link';
 const BaseLink = chakra(Link, {
   baseStyle: {
     my: 2,
@@ -19,9 +19,10 @@ export type LinkItemProps = {
   variant?: 'mobile' | 'desktop';
   selected?: boolean;
   children: ReactNode;
+  url: string;
 };
 
-const LinkItem: FC<LinkItemProps> = ({ variant, children, selected }) => {
+const LinkItem: FC<LinkItemProps> = ({ variant, children, selected, url }) => {
   const perVariant = useMemo(
     () =>
       matcher<SystemStyleObject, Exclude<LinkItemProps['variant'], undefined>>(
@@ -51,14 +52,16 @@ const LinkItem: FC<LinkItemProps> = ({ variant, children, selected }) => {
   );
 
   return (
-    <BaseLink
-      fontSize={['sm', null, 'md', 'md']}
-      sx={{
-        ...perVariant,
-      }}
-    >
-      {children}
-    </BaseLink>
+    <NextLink href={url}>
+      <BaseLink
+        fontSize={['sm', null, 'md', 'md']}
+        sx={{
+          ...perVariant,
+        }}
+      >
+        {children}
+      </BaseLink>
+    </NextLink>
   );
 };
 LinkItem.defaultProps = {

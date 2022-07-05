@@ -1,6 +1,43 @@
-import { Box, Button, Container, Flex, Stack, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  Stack,
+  Text,
+  chakra,
+  useBreakpointValue,
+} from '@chakra-ui/react';
 import { CardProduct, SliderCounter } from '@smartfood/ui';
 import { HiChevronDoubleRight } from 'react-icons/hi';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+import { useRef } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Navigation } from 'swiper';
+
+const SliderWrapper = chakra('div', {
+  baseStyle: {
+    '.bullet': {
+      width: 3,
+      height: 3,
+    },
+    '.swiper-pagination-bullet-active': {
+      bg: 'smartgreen.500',
+    },
+    '.swiper-pagination': {
+      position: 'absolute',
+      bottom: 0,
+      zIndex: 50,
+    },
+    '.swiper-button-prev,.swiper-button-next': {
+      color: 'smartgreen.500',
+      top: '40%',
+    },
+  },
+});
+
 const productProps = {
   content: {
     title: 'Plato 1',
@@ -15,35 +52,83 @@ const productProps = {
 };
 
 export const ProductsLine = () => {
+  const paginationRef = useRef(null);
+  const cardSize = useBreakpointValue({
+    base: 'mobile',
+    lg: 'desktop',
+  });
   return (
     <Container
       sx={{
         my: 5,
       }}
+      maxWidth={['3xl', null, '4xl', '6xl']}
     >
       <Box
         sx={{
           textAlign: 'center',
           py: '3',
+          px: 1,
+          my: [2, null, 4],
         }}
       >
         <Text
           fontWeight={'semibold'}
-          fontSize={'2xl'}
+          fontSize={['2xl', null, '3xl', '4xl']}
           textColor={'smartgreen.700'}
           textAlign="center"
           my={2}
         >
           Prueba nuestros armados para ti
         </Text>
-        <Text>
+        <Text fontSize={['sm', null, 'md', 'xl']}>
           Elige entre toda la variedad de platos deliciosos que hemos armado
           pensando en ti.
         </Text>
       </Box>
-      <Stack>
-        <CardProduct size="mobile" {...productProps} />
-      </Stack>
+      <SliderWrapper>
+        <Swiper
+          centeredSlides
+          pagination={{
+            renderBullet: (idx, className) => {
+              return `<span class="bullet ${className}"></span>`;
+            },
+          }}
+          breakpoints={{
+            0: {
+              slidesPerView: 1,
+            },
+            700: {
+              slidesPerView: 1,
+              spaceBetween: 15,
+              initialSlide: 1,
+              centeredSlides: true,
+            },
+
+            1200: {
+              slidesPerView: 2,
+              spaceBetween: -10,
+              initialSlide: 1,
+              centeredSlides: false,
+            },
+          }}
+          modules={[Pagination, Navigation]}
+          navigation
+        >
+          {Array.from({ length: 5 }).map((_, idx) => (
+            <SwiperSlide key={idx}>
+              <CardProduct
+                mb="16"
+                mx={['auto']}
+                size={cardSize as any}
+                {...productProps}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </SliderWrapper>
+      <Box className="el" ref={paginationRef}></Box>
+      <Box className=".pag"></Box>
       <Flex justifyContent={'center'} my={6}>
         <Button
           variant={'solid'}
@@ -51,7 +136,7 @@ export const ProductsLine = () => {
           colorScheme="smartgreen"
           rightIcon={<HiChevronDoubleRight />}
         >
-          Ver Todo
+          Ver Carta{' '}
         </Button>
       </Flex>
     </Container>

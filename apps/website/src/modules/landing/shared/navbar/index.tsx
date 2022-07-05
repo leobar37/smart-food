@@ -7,11 +7,12 @@ import {
   useBreakpointValue,
   VStack,
 } from '@chakra-ui/react';
-import { Brand, CartIcon, MenuIcon } from '@smartfood/ui';
+import { Brand, CartIcon, MenuIcon, useWindowScroll } from '@smartfood/ui';
 import NextLink from 'next/link';
 import { FC } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import LinkItem from './LinkItem';
+import { cx } from '@chakra-ui/utils';
 const CloseIcon = chakra(AiOutlineClose);
 
 const BtnIcon = chakra(IconButton, {
@@ -45,13 +46,34 @@ const Nav = chakra('nav', {
   },
 });
 
+const NavWrapper = chakra('div', {
+  baseStyle: {
+    w: 'full',
+    bg: 'white',
+    position: 'relative',
+    '&.fixed': {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      zIndex: 150,
+      backdropFilter: 'blur(5px)',
+      opacity: 0.9,
+    },
+  },
+});
+
 type Properties = {
   brandSize: 'sm' | 'lg';
 };
 
+type NavBarItem = {
+  title: string;
+  url: string;
+};
+
 export const NavBar: FC = () => {
   const [navBarState, navbarActions] = useBoolean(false);
-
+  const scrollY = useWindowScroll();
   const propertiesByBr = useBreakpointValue<Properties>({
     base: {
       brandSize: 'sm',
@@ -60,18 +82,34 @@ export const NavBar: FC = () => {
       brandSize: 'lg',
     },
   });
-  const items = ['Inicio', 'Arma tu plato', 'Carta', 'Nosotros'];
-  const items$ = items.map((d, idx) => <LinkItem key={idx}>{d}</LinkItem>);
+  const items: NavBarItem[] = [
+    {
+      title: 'Inicio',
+      url: '/',
+    },
+    {
+      title: 'Arma tu plato',
+      url: '/armatuplato',
+    },
+    {
+      title: 'Carta',
+      url: '/menu',
+    },
+    // {
+    //   title: 'Nosotros',
+    //   url: '/us',
+    // },
+  ];
+
+  const items$ = items.map((d, idx) => (
+    <LinkItem url={d.url} key={idx}>
+      {d.title}
+    </LinkItem>
+  ));
   const isVisibleMenuButton = useBreakpointValue([true, null, false]);
 
   return (
-    <Box
-      sx={{
-        w: 'full',
-        bg: 'white',
-        position: 'relative',
-      }}
-    >
+    <NavWrapper className={cx(`${scrollY > 100 && 'fixed'}`)}>
       <Nav as="nav">
         <NextLink href={'/'}>
           <Box as="a" flex="20%" cursor={'pointer'}>
@@ -119,11 +157,13 @@ export const NavBar: FC = () => {
           }}
         >
           {items.map((item, idx) => (
-            <LinkItem key={idx}>{item}</LinkItem>
+            <LinkItem url={item.url} key={idx}>
+              {item.title}
+            </LinkItem>
           ))}
         </VStack>
       </Box>
-    </Box>
+    </NavWrapper>
   );
 };
 
