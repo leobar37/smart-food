@@ -1,21 +1,24 @@
 import {
   Box,
   Button,
+  chakra,
   Container,
   Flex,
-  Stack,
   Text,
-  chakra,
   useBreakpointValue,
 } from '@chakra-ui/react';
 import { CardProduct, SliderCounter } from '@smartfood/ui';
-import { HiChevronDoubleRight } from 'react-icons/hi';
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
 import { useRef } from 'react';
+import { HiChevronDoubleRight } from 'react-icons/hi';
+import { Navigation, Pagination } from 'swiper';
+
+import 'swiper/css';
+
+import 'swiper/css/navigation';
+
+import 'swiper/css/pagination';
+
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Navigation } from 'swiper';
 
 const SliderWrapper = chakra('div', {
   baseStyle: {
@@ -33,6 +36,7 @@ const SliderWrapper = chakra('div', {
     },
     '.swiper-button-prev,.swiper-button-next': {
       color: 'smartgreen.500',
+      display: ['none', null, 'initial'],
       top: '40%',
     },
   },
@@ -57,6 +61,7 @@ export const ProductsLine = () => {
     base: 'mobile',
     lg: 'desktop',
   });
+
   return (
     <Container
       sx={{
@@ -127,8 +132,7 @@ export const ProductsLine = () => {
           ))}
         </Swiper>
       </SliderWrapper>
-      <Box className="el" ref={paginationRef}></Box>
-      <Box className=".pag"></Box>
+
       <Flex justifyContent={'center'} my={6}>
         <Button
           variant={'solid'}
