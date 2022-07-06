@@ -7,7 +7,7 @@ type LandingLayoutProps = {
 };
 export const LandingLayout: FC<LandingLayoutProps> = ({ children }) => {
   return (
-    <Box>
+    <Box mt={'20'}>
       <NavBar />
       {children}
       <Footer />
