@@ -33,6 +33,7 @@ const SliderWrapper = chakra('div', {
     },
     '.swiper-button-prev,.swiper-button-next': {
       color: 'smartgreen.500',
+      display: ['none', null, 'initial'],
       top: '40%',
     },
   },
@@ -56,6 +57,11 @@ export const ProductsLine = () => {
   const cardSize = useBreakpointValue({
     base: 'mobile',
     lg: 'desktop',
+  });
+
+  const sliderNavigation = useBreakpointValue({
+    base: false,
+    lg: true,
   });
   return (
     <Container
