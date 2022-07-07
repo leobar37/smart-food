@@ -1,16 +1,20 @@
-import { IconButton, HStack, Text } from '@chakra-ui/react';
-import { GoPlus, GoDash } from 'react-icons/go';
+import { HStack, IconButton, Text } from '@chakra-ui/react';
+import { GoDash, GoPlus } from 'react-icons/go';
 
 const baseStyle = {
   borderRadius: '50%',
-  boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.2)',
+  shadow: 'md',
   '&:disabled': {
-    background: '#FCFCFD',
-    boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.2)',
-    color: '#646082',
+    background: 'white',
+    shadow: 'md',
+    color: 'smartgray.500',
     '&:hover': {
-      background: '#FCFCFD',
+      color: 'smartgray.500',
     },
+  },
+  '&:hover': {
+    background: 'smartgreen.500',
+    color: 'white',
   },
 };
 
@@ -65,14 +69,13 @@ export const SliderCounter: React.FC<SliderCounterProps> = ({
         onClick={onMinus}
         sx={{ ...baseStyle, ...buttonStyle }}
         aria-label="minus-button"
-        icon={<GoDash color="#646082" />}
+        icon={<GoDash />}
       />
       <Text sx={textStyle}>{value}</Text>
       <IconButton
         disabled={plusDisabled}
         onClick={onPlus}
         sx={{ ...baseStyle, ...buttonStyle }}
-        colorScheme="smartgreen"
         aria-label="plus-button"
         icon={<GoPlus size="15" />}
       />
