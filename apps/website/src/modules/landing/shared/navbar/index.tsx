@@ -50,12 +50,11 @@ const NavWrapper = chakra('div', {
   baseStyle: {
     w: 'full',
     bg: 'white',
-    position: 'relative',
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    zIndex: 150,
     '&.fixed': {
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      zIndex: 150,
       backdropFilter: 'blur(5px)',
       opacity: 0.9,
     },
@@ -93,7 +92,7 @@ export const NavBar: FC = () => {
     },
     {
       title: 'Carta',
-      url: '/menu',
+      url: '/carta',
     },
     // {
     //   title: 'Nosotros',
