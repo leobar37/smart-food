@@ -5,6 +5,7 @@ import { BsCheck } from 'react-icons/bs';
 
 export interface StepperItemProps extends PropsWithChildren {
   index?: number;
+  size?: 'normal' | 'small';
 }
 
 const centerStyle: CSSProperties = {
@@ -19,9 +20,8 @@ const Dot = chakra('div', {
     ...centerStyle,
     top: 'auto',
     margin: 0,
-    width: '12px',
-    height: '12px',
     borderRadius: '50%',
+    transition: 'background 150ms',
   },
 });
 
@@ -30,8 +30,9 @@ const DotInside = chakra('div', {
     ...centerStyle,
     borderRadius: '50%',
     margin: 'auto',
-    width: '6px',
-    height: '6px',
+    width: '50%',
+    height: '50%',
+    transition: 'background 300ms',
   },
 });
 
@@ -40,7 +41,7 @@ const dotAnim = keyframes`
     transform: translate(-50%, -50%) scale(1);
   }
   50% {
-    transform: translate(-50%, -50%) scale(1.7);
+    transform: translate(-50%, -50%) scale(1.6);
   }
   100% {
     transform: translate(-50%, -50%) scale(1);
@@ -62,26 +63,37 @@ const checkStyle: CSSProperties = {
   height: 'calc(100% + 3px)',
 };
 
-export const StepperItem: FC<StepperItemProps> = ({ children, index }) => {
+export const StepperItem: FC<StepperItemProps> = ({
+  children,
+  index,
+  size,
+}) => {
   const { step, setStep } = useContext(StepperContext);
 
   const isActive = step >= index;
   const isComplete = step > index;
+  const isCurrent = step === index;
+
+  const isSmall = size === 'small';
 
   return (
     <Box position="relative" margin="0 !important">
       <Dot
+        width={isSmall ? '8px' : '16px'}
+        height={isSmall ? '8px' : '16px'}
+        transitionDelay={isCurrent ? '150ms' : '0'}
         animation={
-          step === index
-            ? `${dotAnim} forwards 400ms ease-in-out 150ms`
-            : undefined
+          isCurrent ? `${dotAnim} forwards 400ms ease-in-out 150ms` : undefined
         }
-        bg={isActive ? 'smartgreen.700' : 'white'}
+        bg={isActive ? 'smartgreen.700' : isSmall ? 'smartgray.200' : 'white'}
       >
         {isComplete ? (
           <BsCheck style={checkStyle} />
         ) : (
-          <DotInside bg={isActive ? 'white' : 'smartgray.200'} />
+          <DotInside
+            bg={isActive ? 'white' : 'smartgray.200'}
+            transitionDelay={isCurrent ? '150ms' : '0'}
+          />
         )}
       </Dot>
       <Box position="absolute" mt="5px">
@@ -91,6 +103,7 @@ export const StepperItem: FC<StepperItemProps> = ({ children, index }) => {
           transform="translateX(-50%)"
           color={isActive ? 'smartgreen.700' : 'smartgray.300'}
           fontWeight={isActive ? 'bold' : 'normal'}
+          fontSize={isSmall ? '12px' : '16px'}
           userSelect="none"
         >
           {children}
