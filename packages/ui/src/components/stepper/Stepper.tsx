@@ -1,10 +1,11 @@
-import { FC, Children, createContext, useMemo, cloneElement } from 'react';
+import { FC, Children, createContext, cloneElement } from 'react';
 import { chakra, Stack } from '@chakra-ui/react';
 
 export interface StepperProps {
   value?: number;
   onChange?: (index: number) => void;
-  children: JSX.Element[]; // No puede tener un solo elemento :eyes:
+  size?: 'normal' | 'small';
+  children: JSX.Element[];
 }
 
 interface StepperContextProps {
@@ -17,24 +18,21 @@ export const StepperContext = createContext<StepperContextProps>(null);
 const Bar = chakra('div', {
   baseStyle: {
     position: 'absolute',
-    width: '100%',
+    width: 'calc(100% - 20px)',
     height: '2px',
     bg: 'smartgray.100',
     overflow: 'hidden',
   },
 });
 
-export const Stepper: FC<StepperProps> = ({ value, onChange, ...props }) => {
-  //TODO: test optimization
-  const children = useMemo(
-    () =>
-      Children.map(props.children, (child, index) =>
-        cloneElement(child, {
-          ...child.props,
-          index,
-        }),
-      ),
-    [],
+export const Stepper: FC<StepperProps> = ({
+  value,
+  onChange,
+  size,
+  ...props
+}) => {
+  const children = Children.map(props.children, (child, index) =>
+    cloneElement(child, { ...child.props, index, size }),
   );
 
   const stepsCount = children.length - 1;
@@ -42,8 +40,10 @@ export const Stepper: FC<StepperProps> = ({ value, onChange, ...props }) => {
   return (
     <StepperContext.Provider value={{ step: value, setStep: onChange }}>
       <Stack
-        width="100%"
         position="relative"
+        width="100%"
+        height="100%"
+        padding="10px"
         flexDir="row"
         justifyContent="space-between"
       >
@@ -63,4 +63,5 @@ export const Stepper: FC<StepperProps> = ({ value, onChange, ...props }) => {
 Stepper.defaultProps = {
   value: 0,
   onChange: () => {},
+  size: 'normal',
 };
