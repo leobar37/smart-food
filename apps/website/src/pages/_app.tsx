@@ -1,23 +1,34 @@
+import { HYDRATION_KEY } from '@App/helpers/hydration';
 import { ChakraProvider } from '@chakra-ui/react';
-import { theme, useBreakpintValue } from '@smartfood/ui';
-import type { AppProps } from 'next/app';
-import { FC, ReactElement, ReactNode } from 'react';
+import { theme } from '@smartfood/ui';
+import type { AppProps as NextAppProps } from 'next/app';
+import { FC, ReactNode, useState } from 'react';
+import { Hydrate, QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 const ConnectedApp: FC<{
   children: ReactNode;
 }> = ({ children }) => {
-  const breakpoint = useBreakpintValue();
-  console.log(breakpoint);
-
-  return children as ReactElement;
+  return <ChakraProvider theme={theme}>{children}</ChakraProvider>;
 };
 
+type AppProps = {
+  pageProps: {
+    dehydratedState: any;
+  };
+} & NextAppProps;
+
 function MyApp({ Component, pageProps }: AppProps) {
+  const [queryClient] = useState(() => new QueryClient());
   return (
-    <ChakraProvider theme={theme}>
-      <ConnectedApp>
-        <Component {...pageProps} />
-      </ConnectedApp>
-    </ChakraProvider>
+    <QueryClientProvider client={queryClient}>
+      <Hydrate state={pageProps[HYDRATION_KEY]}>
+        <ConnectedApp>
+          <Component {...pageProps} />
+        </ConnectedApp>
+
+        <ReactQueryDevtools />
+      </Hydrate>
+    </QueryClientProvider>
   );
 }
 

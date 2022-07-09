@@ -16,6 +16,7 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 import { noop } from 'lodash';
+
 export const ModalCheckout = () => {
   return (
     <Modal isOpen={false} onClose={noop} isCentered>

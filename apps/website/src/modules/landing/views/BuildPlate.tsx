@@ -3,13 +3,14 @@ import {
   Button,
   chakra,
   Container,
+  HStack,
   Link,
   Stack,
   VStack,
 } from '@chakra-ui/react';
 import { ResumenPreview, SelectSection } from '../components/buildplate';
 import { LandingLayout } from '../landingLayout';
-
+import { Stepper, StepperItem } from '@smartfood/ui';
 const Title = chakra('h2', {
   baseStyle: {
     mx: 'auto',
@@ -28,6 +29,13 @@ const BuildPlatePage = () => {
         <Stack direction={'row'}>
           <Box flex={['100%', null, '50%']} w="full">
             <Title>Arma tu plato</Title>
+            <HStack my={3} w="full" justifyContent={'center'} height="42px">
+              <Stepper value={1} onChange={(prev) => {}} size={'normal'}>
+                <StepperItem>Base y proteína</StepperItem>
+                <StepperItem>Veggies</StepperItem>
+                <StepperItem>Salsas y toppings</StepperItem>
+              </Stepper>
+            </HStack>
             <SelectSection />
             <SelectSection />
             <SelectSection />

@@ -1,19 +1,20 @@
-const orderFragment = `
-fragment OrderFragement on Order {
-    id 
-       createdAt
-       paymentMethod
-       total
-       metadata
-       status
-       orderNumber
-       lines {
-         id
-         quantity
-         price
-         total
-       }   
-   }
+import { gql } from 'graphql-request';
+const orderFragment = gql`
+  fragment OrderFragement on Order {
+    id
+    createdAt
+    paymentMethod
+    total
+    metadata
+    status
+    orderNumber
+    lines {
+      id
+      quantity
+      price
+      total
+    }
+  }
 `;
 
 export enum OrderPaymentMethodType {
@@ -48,7 +49,7 @@ export type Order = {
   metadata: OrderMetadata;
   status: string;
   lines: OrderLine[];
-  orderNumber : number
+  orderNumber: number;
 };
 
 export type CreateOrderArgs = {
@@ -63,56 +64,62 @@ export type CreateOrderArgs = {
 
 export type PatchOrderLineArgs = {
   orderId: string;
-  orderLineId ?: string;
-  orderLine : {
-      productId : string;
-      quantity? : number;
-      price?: number;
-      total ?: number;
-      selection ?: any;
-  } 
-}
+  orderLineId?: string;
+  orderLine: {
+    productId: string;
+    quantity?: number;
+    price?: number;
+    total?: number;
+    selection?: any;
+  };
+};
 
 export type DeleteOrderLineArgs = {
   orderId: string;
-  lineOrderId : string;
-}
+  lineOrderId: string;
+};
 
 export const buildOrderLineDocument = () => {
-  return `
-  ${orderFragment}
-   mutation patchOrderLine($orderId: String, $orderLineId: String , $orderLine: OrderLineItem) {
-       patchOrderLine( orderId :  $orderId  , orderLineId  : $orderLineId ,  orderLine: $orderLine) {
-       ...OrderFragement
-       }
-  }
+  return gql`
+    ${orderFragment}
+    mutation patchOrderLine(
+      $orderId: String
+      $orderLineId: String
+      $orderLine: OrderLineItem
+    ) {
+      patchOrderLine(
+        orderId: $orderId
+        orderLineId: $orderLineId
+        orderLine: $orderLine
+      ) {
+        ...OrderFragement
+      }
+    }
   `;
 };
 
 export const buildDeleteOrderLineDocument = () => {
-  return `
-  ${orderFragment}
-  mutation deleteOrderLine ($orderId: String, $lineOrderId: String  ){
-    customDeleteOrderLine(orderId : $orderId ,  lineOrderId : $lineOrderId){
-       ...OrderFragement
+  return gql`
+    ${orderFragment}
+    mutation deleteOrderLine($orderId: String, $lineOrderId: String) {
+      customDeleteOrderLine(orderId: $orderId, lineOrderId: $lineOrderId) {
+        ...OrderFragement
+      }
     }
-    
-  }
-  `
-}
+  `;
+};
 
 export function buildGetOrderDocument(operation: Operation) {
   switch (operation) {
     case 'create': {
-      return `
+      return gql`
         ${orderFragment}
-        mutation createOrder($metadata:Metadata  , $email : String) {
-            makeOrder( metadata : $metadata , email  : $email) {
-             ...OrderFragement
-            }  
+        mutation createOrder($metadata: Metadata, $email: String) {
+          makeOrder(metadata: $metadata, email: $email) {
+            ...OrderFragement
           }
-          
-        `;
+        }
+      `;
     }
   }
 }
