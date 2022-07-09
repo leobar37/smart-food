@@ -8,8 +8,7 @@
     "start": "doppler run -- keystone start",
     "build": "doppler run -- keystone build",
     "postinstall": "doppler run -- keystone postinstall",
-    "seed-data": "doppler run -- keystone --seed-data",
-    "codegen": "graphql-codegen --config codegen.yml"
+    "seed-data": "doppler run -- keystone --seed-data"
   },
   "dependencies": {
     "@emotion/css": "^11.7.1",
