@@ -41,7 +41,7 @@ export const Stepper: FC<StepperProps> = ({
     <StepperContext.Provider value={{ step: value, setStep: onChange }}>
       <Stack
         position="relative"
-        width="100%"
+        width="80%"
         height="100%"
         padding="10px"
         flexDir="row"
