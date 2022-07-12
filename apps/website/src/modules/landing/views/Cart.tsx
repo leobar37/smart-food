@@ -1,7 +1,7 @@
 import { Button, Container, Stack, Text } from '@chakra-ui/react';
 import { ItemCart, SectionItems } from '../components/Cart';
 import Header from '../components/cartPage/header';
-import { ModalCheckout } from '../components/checkout';
+import { ModalCheckout, SendModal } from '../components/checkout';
 import { LandingLayout } from '../landingLayout';
 const CartPage = () => {
   return (
@@ -44,6 +44,7 @@ const CartPage = () => {
         </Stack>
       </Container>
       <ModalCheckout />
+      <SendModal />
     </LandingLayout>
   );
 };
