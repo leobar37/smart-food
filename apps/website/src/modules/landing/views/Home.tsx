@@ -5,7 +5,7 @@ import Header from '../components/home/header';
 import { ArmedProducts, Footer, ProductsLine } from '../shared';
 import NavBar from '../shared/navbar';
 import { useCategoriesWithProducts } from '../controllers';
-import { Product } from '@smartfood/client/V2';
+import { Product } from '@smartfood/client/v2';
 
 const dataDefault = {
   title: `Prueba nuestros armados para ti`,

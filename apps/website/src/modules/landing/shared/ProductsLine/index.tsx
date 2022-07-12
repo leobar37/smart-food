@@ -15,7 +15,7 @@ import { SliderWrapper } from './styles';
 import { FC } from 'react';
 import 'swiper/css/navigation';
 
-import { Product } from '@smartfood/client/V2';
+import { Product } from '@smartfood/client/v2';
 import 'swiper/css/pagination';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
