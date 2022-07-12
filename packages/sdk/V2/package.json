@@ -1,4 +1,4 @@
 {
-  "main": "dist/smartfood-client-V2.cjs.js",
-  "module": "dist/smartfood-client-V2.esm.js"
+  "main": "dist/smartfood-client-v2.cjs.js",
+  "module": "dist/smartfood-client-v2.esm.js"
 }

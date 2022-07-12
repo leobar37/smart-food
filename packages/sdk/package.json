@@ -9,7 +9,7 @@
   },
   "files": [
     "dist",
-    "V2"
+    "v2"
   ],
   "sideEffects": false,
   "repository": {
@@ -46,7 +46,7 @@
   "preconstruct": {
     "entrypoints": [
       "index.ts",
-      "V2/index.ts"
+      "v2/index.ts"
     ]
   }
 }
