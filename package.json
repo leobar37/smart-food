@@ -7,12 +7,12 @@
     "test": "turbo run test",
     "lint": "turbo run lint",
     "dev": "turbo run dev",
-    "dev:libs": "yarn turbo run dev --filter=@smartfood/common --filter=@smartfood/core --filter=@smartfood/ui",
+    "dev:libs": "yarn turbo run dev --filter=@smartfood/common --filter=@smartfood/core",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "prepare": "husky install",
     "gen:types": "yarn chakra-cli tokens  packages/ui/src/theme/index.ts",
-    "postinstall": "preconstruct dev && manypkg check"
+    "postinstall": "preconstruct dev && manypkg fix && manypkg check"
   },
   "workspaces": {
     "nohoist": [
@@ -56,7 +56,8 @@
   },
   "preconstruct": {
     "packages": [
-      "packages/sdk"
+      "packages/sdk",
+      "packages/ui"
     ]
   }
 }
