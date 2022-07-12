@@ -1,0 +1,4 @@
+{
+  "main": "dist/smartfood-client-V2.cjs.js",
+  "module": "dist/smartfood-client-V2.esm.js"
+}

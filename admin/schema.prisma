@@ -35,6 +35,7 @@ model Product {
   name                   String      @default("")
   count                  Int?
   price                  Float?
+  excerpt                String      @default("")
   category               Category?   @relation("Product_category", fields: [categoryId], references: [id])
   categoryId             String?     @map("category")
   options                Option[]    @relation("Option_product")
@@ -67,9 +68,11 @@ model SubOption {
 }
 
 model Category {
-  id       String    @id @default(cuid())
-  name     String    @default("")
-  products Product[] @relation("Product_category")
+  id          String    @id @default(cuid())
+  name        String    @default("")
+  description String    @default("")
+  title       String    @default("")
+  products    Product[] @relation("Product_category")
 }
 
 model OrderLine {

@@ -206,6 +206,7 @@ type Product {
   name: String
   count: Int
   price: Float
+  excerpt: String
   category: Category
   options(
     where: OptionWhereInput! = {}
@@ -234,7 +235,7 @@ All options are strings as they ultimately end up in a URL.
 """
 input CloudinaryImageFormat {
   """
-   Rewrites the filename to be this pretty string. Do not include `/` or `.`
+  Rewrites the filename to be this pretty string. Do not include `/` or `.`
   """
   prettyName: String
   width: String
@@ -279,6 +280,7 @@ input ProductWhereInput {
   name: StringFilter
   count: IntNullableFilter
   price: FloatNullableFilter
+  excerpt: StringFilter
   category: CategoryWhereInput
   options: OptionManyRelationFilter
   description: StringFilter
@@ -323,6 +325,7 @@ input ProductOrderByInput {
   name: OrderDirection
   count: OrderDirection
   price: OrderDirection
+  excerpt: OrderDirection
   description: OrderDirection
   isAvalaible: OrderDirection
 }
@@ -332,6 +335,7 @@ input ProductUpdateInput {
   name: String
   count: Int
   price: Float
+  excerpt: String
   category: CategoryRelateToOneForUpdateInput
   options: OptionRelateToManyForUpdateInput
   description: String
@@ -366,6 +370,7 @@ input ProductCreateInput {
   name: String
   count: Int
   price: Float
+  excerpt: String
   category: CategoryRelateToOneForCreateInput
   options: OptionRelateToManyForCreateInput
   description: String
@@ -523,6 +528,8 @@ input OptionRelateToOneForCreateInput {
 type Category {
   id: ID!
   name: String
+  description: String
+  title: String
   products(
     where: ProductWhereInput! = {}
     orderBy: [ProductOrderByInput!]! = []
@@ -542,6 +549,8 @@ input CategoryWhereInput {
   NOT: [CategoryWhereInput!]
   id: IDFilter
   name: StringFilter
+  description: StringFilter
+  title: StringFilter
   products: ProductManyRelationFilter
 }
 
@@ -554,10 +563,14 @@ input ProductManyRelationFilter {
 input CategoryOrderByInput {
   id: OrderDirection
   name: OrderDirection
+  description: OrderDirection
+  title: OrderDirection
 }
 
 input CategoryUpdateInput {
   name: String
+  description: String
+  title: String
   products: ProductRelateToManyForUpdateInput
 }
 
@@ -575,6 +588,8 @@ input CategoryUpdateArgs {
 
 input CategoryCreateInput {
   name: String
+  description: String
+  title: String
   products: ProductRelateToManyForCreateInput
 }
 

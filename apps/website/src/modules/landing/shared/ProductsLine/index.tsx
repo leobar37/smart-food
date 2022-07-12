@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  chakra,
   Container,
   Flex,
   Text,
@@ -11,36 +10,14 @@ import { CardProduct, SliderCounter } from '@smartfood/ui';
 import { useRef } from 'react';
 import { HiChevronDoubleRight } from 'react-icons/hi';
 import { Navigation, Pagination } from 'swiper';
-
 import 'swiper/css';
-
+import { SliderWrapper } from './styles';
+import { FC } from 'react';
 import 'swiper/css/navigation';
 
+import { Product } from '@smartfood/client/V2';
 import 'swiper/css/pagination';
-
 import { Swiper, SwiperSlide } from 'swiper/react';
-
-const SliderWrapper = chakra('div', {
-  baseStyle: {
-    '.bullet': {
-      width: 3,
-      height: 3,
-    },
-    '.swiper-pagination-bullet-active': {
-      bg: 'smartgreen.500',
-    },
-    '.swiper-pagination': {
-      position: 'absolute',
-      bottom: 0,
-      zIndex: 50,
-    },
-    '.swiper-button-prev,.swiper-button-next': {
-      color: 'smartgreen.500',
-      display: ['none', null, 'initial'],
-      top: '40%',
-    },
-  },
-});
 
 const productProps = {
   content: {
@@ -55,7 +32,17 @@ const productProps = {
   counter: <SliderCounter value={10} />,
 };
 
-export const ProductsLine = () => {
+type ProductsLineProps = {
+  title: string;
+  description: string;
+  products: Product[];
+};
+
+export const ProductsLine: FC<ProductsLineProps> = ({
+  title,
+  description,
+  products,
+}) => {
   const paginationRef = useRef(null);
   const cardSize = useBreakpointValue({
     base: 'mobile',
@@ -84,12 +71,9 @@ export const ProductsLine = () => {
           textAlign="center"
           my={2}
         >
-          Prueba nuestros armados para ti
+          {title}
         </Text>
-        <Text fontSize={['sm', null, 'md', 'xl']}>
-          Elige entre toda la variedad de platos deliciosos que hemos armado
-          pensando en ti.
-        </Text>
+        <Text fontSize={['sm', null, 'md', 'xl']}>{description}</Text>
       </Box>
       <SliderWrapper>
         <Swiper
@@ -120,19 +104,25 @@ export const ProductsLine = () => {
           modules={[Pagination, Navigation]}
           navigation
         >
-          {Array.from({ length: 5 }).map((_, idx) => (
+          {products.map((product, idx) => (
             <SwiperSlide key={idx}>
               <CardProduct
                 mb="16"
                 mx={['auto']}
                 size={cardSize as any}
-                {...productProps}
+                button={<Button>Agregar al carrito</Button>}
+                counter={<SliderCounter value={10} />}
+                content={{
+                  description: '',
+                  image: product.photo?.publicUrlTransformed ?? '',
+                  price: product.price,
+                  title: product.name,
+                }}
               />
             </SwiperSlide>
           ))}
         </Swiper>
       </SliderWrapper>
-
       <Flex justifyContent={'center'} my={6}>
         <Button
           variant={'solid'}

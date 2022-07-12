@@ -44,12 +44,12 @@ export async function insertSeedData(context: KeystoneContext) {
       const newCategory = await context.query.Category.createOne({
         data: {
           name: input.name,
+          description: input.description,
+          title: input.title,
         } as CategoryCreateInput,
+        query: 'id name',
       });
-      console.log(newCategory);
-
       console.log(`Created category ${newCategory.name}`);
-
       return newCategory;
     }
   };
@@ -82,8 +82,9 @@ export async function insertSeedData(context: KeystoneContext) {
           price: product.price,
           photo: product.photo,
           categoryId: category.id,
-          description : product.description,
-          isAvalaible : product.isAvalaible
+          description: product.description,
+          isAvalaible: product.isAvalaible,
+          excerpt: (product as any)?.excerpt ?? '',
         },
       });
       console.log(`Created product ${productSaved.name}`);
