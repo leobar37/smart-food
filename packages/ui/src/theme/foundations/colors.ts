@@ -2,6 +2,7 @@ import { transparentize } from '@chakra-ui/theme-tools';
 const colors = {
   smartgreen: {
     50: '#f0ffde',
+    100: '#e8f4db',
     500: '#72CB10',
     600: '#5ca509',
     700: '#72CB10',

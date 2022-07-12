@@ -3,6 +3,7 @@
 node_modules
 dist
 .rollup.cache
+yarn.lock
 
 # Logs
 logs
