@@ -1,7 +1,7 @@
 import { GraphQLError } from 'graphql';
 import { GraphQLClient } from 'graphql-request';
 import get from 'lodash.get';
-import { SmartClientError } from './error';
+import { formatError } from './utils';
 import {
   buildDeleteOrderLineDocument,
   buildGetCategoriesDocument,
@@ -20,16 +20,6 @@ import { Category, Product } from './types';
 
 type ClientOptions = {
   endpoint: string;
-};
-
-const formatError = (data: any) => {
-  if ('errors' in data) {
-    const errors: GraphQLError[] = Array.isArray(data?.errors)
-      ? data.errors
-      : [data.errors];
-    const message = errors.map((error) => error?.message ?? '').join('\n');
-    throw new SmartClientError(message);
-  }
 };
 
 export class Client {

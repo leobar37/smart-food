@@ -1,0 +1,31 @@
+query getProducts($includeOptions: Boolean!) {
+  products {
+    id
+    photo {
+      id
+      filename
+      originalFilename
+      mimetype
+      publicUrl
+      publicUrlTransformed
+    }
+    name
+    count
+    category {
+      name
+      id
+      productsCount
+    }
+    price
+    options @include(if: $includeOptions) {
+      id
+      name
+      limit
+      label
+      subOptions {
+        id
+        name
+      }
+    }
+  }
+}
