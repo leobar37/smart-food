@@ -11,6 +11,7 @@ fragment productFragment on Product {
   name
   count
   price
+  excerpt
 }
 
 query getProducts($includeOptions: Boolean!) {

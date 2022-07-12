@@ -1,20 +1,9 @@
-import { chakra, Link, SystemStyleObject } from '@chakra-ui/react';
+import { SystemStyleObject } from '@chakra-ui/react';
 import { matcher } from '@smartfood/common';
-import { FC, ReactNode, useMemo } from 'react';
 import NextLink from 'next/link';
-const BaseLink = chakra(Link, {
-  baseStyle: {
-    my: 2,
-    pl: 3,
-    textDecoration: 'none!important',
-    borderBottomWidth: '1px',
-    borderBottomColor: 'transparent',
-    _hover: {
-      borderBottomWidth: '1px',
-      borderBottomColor: 'smartgreen.700',
-    },
-  },
-});
+import { FC, ReactNode, useMemo } from 'react';
+import { BaseLink } from './styles';
+
 export type LinkItemProps = {
   variant?: 'mobile' | 'desktop';
   selected?: boolean;
@@ -29,7 +18,13 @@ const LinkItem: FC<LinkItemProps> = ({ variant, children, selected, url }) => {
         variant,
       )({
         desktop: {
-          ...(selected ? {} : {}),
+          ...(selected
+            ? {
+                textAlign: 'center',
+                borderBottomWidth: '2px',
+                borderBottomColor: 'smartgreen.500',
+              }
+            : {}),
         },
         mobile: {
           ...(selected
@@ -44,6 +39,7 @@ const LinkItem: FC<LinkItemProps> = ({ variant, children, selected, url }) => {
                   top: '0',
                   left: 0,
                 },
+                pl: 2,
               }
             : {}),
         },
