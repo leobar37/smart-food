@@ -34,10 +34,12 @@ export type BooleanFilter = {
 
 export type Category = {
   __typename?: 'Category';
+  description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
   products?: Maybe<Array<Product>>;
   productsCount?: Maybe<Scalars['Int']>;
+  title?: Maybe<Scalars['String']>;
 };
 
 export type CategoryProductsArgs = {
@@ -52,13 +54,17 @@ export type CategoryProductsCountArgs = {
 };
 
 export type CategoryCreateInput = {
+  description?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   products?: InputMaybe<ProductRelateToManyForCreateInput>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type CategoryOrderByInput = {
+  description?: InputMaybe<OrderDirection>;
   id?: InputMaybe<OrderDirection>;
   name?: InputMaybe<OrderDirection>;
+  title?: InputMaybe<OrderDirection>;
 };
 
 export type CategoryRelateToOneForCreateInput = {
@@ -78,17 +84,21 @@ export type CategoryUpdateArgs = {
 };
 
 export type CategoryUpdateInput = {
+  description?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   products?: InputMaybe<ProductRelateToManyForUpdateInput>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type CategoryWhereInput = {
   AND?: InputMaybe<Array<CategoryWhereInput>>;
   NOT?: InputMaybe<Array<CategoryWhereInput>>;
   OR?: InputMaybe<Array<CategoryWhereInput>>;
+  description?: InputMaybe<StringFilter>;
   id?: InputMaybe<IdFilter>;
   name?: InputMaybe<StringFilter>;
   products?: InputMaybe<ProductManyRelationFilter>;
+  title?: InputMaybe<StringFilter>;
 };
 
 export type CategoryWhereUniqueInput = {
@@ -1025,6 +1035,7 @@ export type Product = {
   category?: Maybe<Category>;
   count?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
+  excerpt?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   isAvalaible?: Maybe<Scalars['Boolean']>;
   name?: Maybe<Scalars['String']>;
@@ -1049,6 +1060,7 @@ export type ProductCreateInput = {
   category?: InputMaybe<CategoryRelateToOneForCreateInput>;
   count?: InputMaybe<Scalars['Int']>;
   description?: InputMaybe<Scalars['String']>;
+  excerpt?: InputMaybe<Scalars['String']>;
   isAvalaible?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   options?: InputMaybe<OptionRelateToManyForCreateInput>;
@@ -1065,6 +1077,7 @@ export type ProductManyRelationFilter = {
 export type ProductOrderByInput = {
   count?: InputMaybe<OrderDirection>;
   description?: InputMaybe<OrderDirection>;
+  excerpt?: InputMaybe<OrderDirection>;
   id?: InputMaybe<OrderDirection>;
   isAvalaible?: InputMaybe<OrderDirection>;
   name?: InputMaybe<OrderDirection>;
@@ -1103,6 +1116,7 @@ export type ProductUpdateInput = {
   category?: InputMaybe<CategoryRelateToOneForUpdateInput>;
   count?: InputMaybe<Scalars['Int']>;
   description?: InputMaybe<Scalars['String']>;
+  excerpt?: InputMaybe<Scalars['String']>;
   isAvalaible?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   options?: InputMaybe<OptionRelateToManyForUpdateInput>;
@@ -1117,6 +1131,7 @@ export type ProductWhereInput = {
   category?: InputMaybe<CategoryWhereInput>;
   count?: InputMaybe<IntNullableFilter>;
   description?: InputMaybe<StringFilter>;
+  excerpt?: InputMaybe<StringFilter>;
   id?: InputMaybe<IdFilter>;
   isAvalaible?: InputMaybe<BooleanFilter>;
   name?: InputMaybe<StringFilter>;
@@ -1438,6 +1453,23 @@ export type UserWhereUniqueInput = {
   id?: InputMaybe<Scalars['ID']>;
 };
 
+export type ProductFragmentFragment = {
+  __typename?: 'Product';
+  id: string;
+  name?: string | null;
+  count?: number | null;
+  price?: number | null;
+  photo?: {
+    __typename?: 'CloudinaryImage_File';
+    id?: string | null;
+    filename?: string | null;
+    originalFilename?: string | null;
+    mimetype?: string | null;
+    publicUrl?: string | null;
+    publicUrlTransformed?: string | null;
+  } | null;
+};
+
 export type GetProductsQueryVariables = Exact<{
   includeOptions: Scalars['Boolean'];
 }>;
@@ -1450,15 +1482,6 @@ export type GetProductsQuery = {
     name?: string | null;
     count?: number | null;
     price?: number | null;
-    photo?: {
-      __typename?: 'CloudinaryImage_File';
-      id?: string | null;
-      filename?: string | null;
-      originalFilename?: string | null;
-      mimetype?: string | null;
-      publicUrl?: string | null;
-      publicUrlTransformed?: string | null;
-    } | null;
     category?: {
       __typename?: 'Category';
       name?: string | null;
@@ -1477,29 +1500,74 @@ export type GetProductsQuery = {
         name?: string | null;
       }> | null;
     }> | null;
+    photo?: {
+      __typename?: 'CloudinaryImage_File';
+      id?: string | null;
+      filename?: string | null;
+      originalFilename?: string | null;
+      mimetype?: string | null;
+      publicUrl?: string | null;
+      publicUrlTransformed?: string | null;
+    } | null;
   }> | null;
 };
 
+export type GetCategoriesQueryVariables = Exact<{
+  includeProducts: Scalars['Boolean'];
+}>;
+
+export type GetCategoriesQuery = {
+  __typename?: 'Query';
+  categories?: Array<{
+    __typename?: 'Category';
+    id: string;
+    name?: string | null;
+    description?: string | null;
+    title?: string | null;
+    products?: Array<{
+      __typename?: 'Product';
+      id: string;
+      name?: string | null;
+      count?: number | null;
+      price?: number | null;
+      photo?: {
+        __typename?: 'CloudinaryImage_File';
+        id?: string | null;
+        filename?: string | null;
+        originalFilename?: string | null;
+        mimetype?: string | null;
+        publicUrl?: string | null;
+        publicUrlTransformed?: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+};
+
+export const ProductFragmentFragmentDoc = gql`
+  fragment productFragment on Product {
+    id
+    photo {
+      id
+      filename
+      originalFilename
+      mimetype
+      publicUrl
+      publicUrlTransformed
+    }
+    name
+    count
+    price
+  }
+`;
 export const GetProductsDocument = gql`
   query getProducts($includeOptions: Boolean!) {
     products {
-      id
-      photo {
-        id
-        filename
-        originalFilename
-        mimetype
-        publicUrl
-        publicUrlTransformed
-      }
-      name
-      count
       category {
         name
         id
         productsCount
       }
-      price
+      ...productFragment
       options @include(if: $includeOptions) {
         id
         name
@@ -1512,6 +1580,21 @@ export const GetProductsDocument = gql`
       }
     }
   }
+  ${ProductFragmentFragmentDoc}
+`;
+export const GetCategoriesDocument = gql`
+  query getCategories($includeProducts: Boolean!) {
+    categories {
+      id
+      name
+      description
+      title
+      products @include(if: $includeProducts) {
+        ...productFragment
+      }
+    }
+  }
+  ${ProductFragmentFragmentDoc}
 `;
 
 export type SdkFunctionWrapper = <T>(
@@ -1526,6 +1609,7 @@ const defaultWrapper: SdkFunctionWrapper = (
   _operationType,
 ) => action();
 const GetProductsDocumentString = print(GetProductsDocument);
+const GetCategoriesDocumentString = print(GetCategoriesDocument);
 export function getSdk(
   client: GraphQLClient,
   withWrapper: SdkFunctionWrapper = defaultWrapper,
@@ -1548,6 +1632,26 @@ export function getSdk(
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
         'getProducts',
+        'query',
+      );
+    },
+    getCategories(
+      variables: GetCategoriesQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: GetCategoriesQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<GetCategoriesQuery>(
+            GetCategoriesDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'getCategories',
         'query',
       );
     },

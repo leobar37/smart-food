@@ -7,7 +7,7 @@
     "test": "turbo run test",
     "lint": "turbo run lint",
     "dev": "turbo run dev",
-    "dev:libs": "yarn turbo run dev --filter=@smartfood/common --filter=@smartfood/core --filter=@smartfood/client --filter=@smartfood/ui",
+    "dev:libs": "yarn turbo run dev --filter=@smartfood/common --filter=@smartfood/core --filter=@smartfood/ui",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "prepare": "husky install",
