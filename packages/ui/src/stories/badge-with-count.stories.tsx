@@ -1,7 +1,7 @@
 import { BadgeWithCount } from '../components/BadgeWithCount';
 import { Meta } from '@storybook/react';
 import { IconButton } from '@chakra-ui/react';
-import { CartIcon } from '@smartfood/ui/src/icons';
+import { CartIcon } from '../icons';
 
 export default {
   title: 'Components / badgeWithCount',
