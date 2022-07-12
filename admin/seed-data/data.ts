@@ -18,42 +18,64 @@ const makeSelectionText = (
 // data
 const categories = [
   {
-    name: 'Armables',
+    name: 'armables',
+    // ** used for landing purposes
+    description: `Arma tu plato o bebida como más te guste, elige los ingrediemte que más te gusten. Tenemos + de 25 ingredientes para crearlos.`,
+    title: 'Arma lo que más te guste',
   },
   {
-    name: 'Armados',
+    name: 'armados',
+    title: `Prueba nuestros armados para ti`,
+    description: `Elige entre toda la variedad de platos deliciosos que hemos armado pensando en ti.`,
+  },
+  {
+    name: 'bebidas',
+    title: 'Bebidas',
+    description: `Elige cualquiera de las bebidas refrescantes que hemos armado para ti. También puedes escoger las bebidas para pre y post entrenamiento.`,
   },
 ];
 
 export const defaultImage = {
-  id: 'cl4ek81tt0000c0uqfe9jb47p',
+  id: 'cl5ialily00013wuqg3hrfp9n',
   _meta: {
-    url: 'http://res.cloudinary.com/wellnesspro/image/upload/v1655235070/cl4ek81tt0000c0uqfe9jb47p.jpg',
-    etag: '5d51ad5ed7fa7be3f3243a21740bc083',
+    url: 'http://res.cloudinary.com/wellnesspro/image/upload/v1657637549/cl5ialily00013wuqg3hrfp9n.avif',
+    etag: 'c4485e105434a243a494f0e37fb17155',
     tags: [],
     type: 'upload',
-    bytes: 2733895,
-    width: 3024,
-    format: 'jpg',
-    height: 4032,
+    bytes: 105687,
+    pages: 1,
+    width: 880,
+    format: 'avif',
+    height: 880,
     api_key: '827568399999768',
-    version: 1655235070,
-    asset_id: 'bbd9271b887ddd395a8b635644a330e8',
-    public_id: 'cl4ek81tt0000c0uqfe9jb47p',
-    signature: '71e4da8afc49c9ec19330bea789b0dfaec14d848',
-    created_at: '2022-06-14T19:31:10Z',
+    version: 1657637549,
+    asset_id: 'b97d1ac5052460c4a39e7ebdfed0d341',
+    public_id: 'cl5ialily00013wuqg3hrfp9n',
+    signature: 'e3f891392fb0f131669c06bb75e475f8f6243aac',
+    created_at: '2022-07-12T14:52:29Z',
     secure_url:
-      'https://res.cloudinary.com/wellnesspro/image/upload/v1655235070/cl4ek81tt0000c0uqfe9jb47p.jpg',
-    version_id: '614d4f1fdff79a51f6bba3d1ea69e874',
+      'https://res.cloudinary.com/wellnesspro/image/upload/v1657637549/cl5ialily00013wuqg3hrfp9n.avif',
+    version_id: '5596316388067e164052aa440b699bf1',
     access_mode: 'public',
     placeholder: false,
     resource_type: 'image',
     original_filename: 'file',
   },
   encoding: '7bit',
-  filename: 'IMG_3487.jpg',
-  mimetype: 'image/jpeg',
-  originalFilename: 'IMG_3487.jpg',
+  filename: 'example_image.avif',
+  mimetype: 'image/avif',
+  originalFilename: 'example_image.avif',
+};
+
+// generic plate
+const genericPlate = {
+  name: 'PLato',
+  count: null,
+  price: 25,
+  photo: defaultImage,
+  description: ``,
+  excerpt: `Mix de lechugas, quinua, chalaquita, atún, salsa de tiradito, salsa acevichada.`,
+  isAvalaible: true,
 };
 
 export const AnonymusClient = {
@@ -67,12 +89,11 @@ export const AnonymusClient = {
 export const fitnessProduct = {
   name: 'Smart bowl',
   count: null,
-  price: 25,
-  category: 'Armables',
+  price: 24.9,
+  category: 'armables',
   photo: defaultImage,
   description: 'Arma tu propio plato',
   isAvalaible: true,
-
   options: [
     {
       name: 'base',
@@ -207,7 +228,7 @@ const ArmedPlates = [
     name: 'Bajar de peso',
     count: null,
     price: 25,
-    category: 'Armados',
+    category: 'armados',
     photo: defaultImage,
     isAvalaible: true,
     description: makeSelectionText([
@@ -242,7 +263,7 @@ const ArmedPlates = [
     name: 'plato fit',
     count: null,
     price: 25,
-    category: 'Armados',
+    category: 'armados',
     photo: defaultImage,
     isAvalaible: true,
     description: makeSelectionText([
@@ -277,7 +298,7 @@ const ArmedPlates = [
     name: 'Definición',
     count: null,
     price: 25,
-    category: 'Armados',
+    category: 'armados',
     photo: defaultImage,
     isAvalaible: true,
     description: makeSelectionText([
@@ -319,7 +340,7 @@ const ArmedPlates = [
     name: 'Subir de peso',
     count: null,
     price: 25,
-    category: 'Armados',
+    category: 'armados',
     photo: defaultImage,
     isAvalaible: true,
     description: makeSelectionText([
@@ -359,8 +380,16 @@ const ArmedPlates = [
   },
 ];
 
+const productsByCategory = (name: string) => {
+  return Array.from({ length: 5 }).map((_, idx) => ({
+    ...genericPlate,
+    category: name,
+    name: name + idx,
+  }));
+};
+
 export const data = {
-  products: [fitnessProduct, ...ArmedPlates],
+  products: [fitnessProduct, ...ArmedPlates, ...productsByCategory('bebidas')],
   categories,
   AnonymusClient,
 };

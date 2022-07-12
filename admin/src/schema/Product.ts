@@ -16,6 +16,11 @@ export const Product = list({
     name: text(),
     count: integer(),
     price: float(),
+    excerpt: text({
+      ui: {
+        displayMode: 'textarea',
+      },
+    }),
     category: relationship({ ref: 'Category.products', many: false }),
     options: relationship({ ref: 'Option.product', many: true }),
     description: text({
@@ -29,8 +34,8 @@ export const Product = list({
   },
   ui: {
     labelField: 'name',
-    listView : {
-      initialColumns: ["name" , "category" , "price"]
-    }
+    listView: {
+      initialColumns: ['name', 'category', 'price'],
+    },
   },
 });

@@ -8,7 +8,8 @@
     "generate": "graphql-codegen --watch"
   },
   "files": [
-    "dist"
+    "dist",
+    "v2"
   ],
   "sideEffects": false,
   "repository": {
@@ -41,5 +42,11 @@
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-terser": "^7.0.2"
   },
-  "peerDependencies": {}
+  "peerDependencies": {},
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts",
+      "v2/index.ts"
+    ]
+  }
 }

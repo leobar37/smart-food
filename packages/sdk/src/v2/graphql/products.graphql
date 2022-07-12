@@ -1,22 +1,26 @@
+fragment productFragment on Product {
+  id
+  photo {
+    id
+    filename
+    originalFilename
+    mimetype
+    publicUrl
+    publicUrlTransformed
+  }
+  name
+  count
+  price
+}
+
 query getProducts($includeOptions: Boolean!) {
   products {
-    id
-    photo {
-      id
-      filename
-      originalFilename
-      mimetype
-      publicUrl
-      publicUrlTransformed
-    }
-    name
-    count
     category {
       name
       id
       productsCount
     }
-    price
+    ...productFragment
     options @include(if: $includeOptions) {
       id
       name
@@ -26,6 +30,18 @@ query getProducts($includeOptions: Boolean!) {
         id
         name
       }
+    }
+  }
+}
+
+query getCategories($includeProducts: Boolean!) {
+  categories {
+    id
+    name
+    description
+    title
+    products @include(if: $includeProducts) {
+      ...productFragment
     }
   }
 }
