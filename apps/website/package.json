@@ -12,7 +12,7 @@
     "@chakra-ui/react": "^2.2.1",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
-    "@smartfood/client": "*",
+    "@smartfood/client": "0.0.2",
     "@smartfood/common": "*",
     "@smartfood/ui": "*",
     "framer-motion": "^6",
