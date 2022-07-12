@@ -7,9 +7,7 @@ import { cacheKeys } from '../constants';
 export const productsHandler: GetServerSideProps = async () => {
   const client = new QueryClient();
   await client.prefetchQuery(cacheKeys.products, () =>
-    cmsClient.getProducts({
-      responseType: 'product-only',
-    }),
+    cmsClient.products.list({}),
   );
   return {
     props: witHydration(client)({}),

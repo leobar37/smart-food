@@ -10,8 +10,8 @@
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "@smartfood/common": "*",
-    "@smartfood/client": "*"
+    "@smartfood/client": "*",
+    "@smartfood/common": "*"
   },
   "peerDependencies": {
     "@nestjs/common": "^8.0.0",
@@ -19,13 +19,16 @@
     "rxjs": "^7.5.5"
   },
   "devDependencies": {
+    "@nestjs/common": "^8.0.0",
+    "@nestjs/core": "^8.0.0",
     "@rollup/plugin-commonjs": "^22.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-typescript": "^8.3.3",
-    "rollup": "^2.72.1",
+    "rollup": "^2.75.6",
     "rollup-plugin-dts": "^4.2.2",
     "rollup-plugin-peer-deps-external": "^2.2.4",
-    "rollup-plugin-terser": "^7.0.2"
+    "rollup-plugin-terser": "^7.0.2",
+    "rxjs": "^7.2.0"
   }
 }
