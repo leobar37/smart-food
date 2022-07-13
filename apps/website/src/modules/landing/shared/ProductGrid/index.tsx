@@ -60,12 +60,12 @@ export const ProductsGrid: FC<ProductsGridProps> = ({
             content={{
               title: pr?.name ?? '',
               description: pr?.excerpt ?? '',
-              image: pr.photo?.publicUrlTransformed || '',
-              price: pr.price || 0,
+              image: pr?.photo?.publicUrlTransformed || '',
+              price: pr?.price || 0,
             }}
             counter={<SliderCounter value={10} />}
             button={<Button>Agregar al carrito</Button>}
-            key={pr.id}
+            key={pr?.id}
           />
         ))}
       </Flex>

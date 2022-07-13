@@ -25,7 +25,7 @@ export const ArmedProducts = () => {
       variant={cardVariant}
       title={`Arma tu ${product.name}`}
       link={<Link>Haz Click</Link>}
-      src={product.photo?.publicUrlTransformed ?? ''}
+      src={product?.photo?.publicUrlTransformed ?? ''}
       subTitle={`A sólo S/.${product.price}`}
     />
   ));
