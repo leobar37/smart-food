@@ -57,7 +57,8 @@
   "preconstruct": {
     "packages": [
       "packages/sdk",
-      "packages/ui"
+      "packages/ui",
+      "packages/common"
     ]
   }
 }

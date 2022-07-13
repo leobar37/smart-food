@@ -1,0 +1,37 @@
+fragment OrderFragment on OrderOutput {
+  id
+  orderNumber
+  createdAt
+  status
+  linesCount
+  total
+  metadata
+}
+
+mutation patchOrder($email: String, $metadata: Metadata, $orderId: String) {
+  makeOrder(email: $email, metadata: $metadata, orderId: $orderId) {
+    ...OrderFragment
+  }
+}
+
+mutation patchOrderLine(
+  $orderId: String
+  $orderLineId: String
+  $orderLine: OrderLineItem
+) {
+  patchOrderLine(
+    orderId: $orderId
+    orderLineId: $orderLineId
+    orderLine: $orderLine
+  ) {
+    ...OrderFragment
+    lines {
+      id
+      selection
+      quantity
+      orderId
+      total
+      productId
+    }
+  }
+}

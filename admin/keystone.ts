@@ -2,8 +2,7 @@ import { config } from '@keystone-6/core';
 import { lists } from './src/schema';
 import { withAuth, session } from './src/auth';
 import { insertSeedData } from './seed-data';
-import { extendGraphqlSchema} from './src/resolvers/schema';
-
+import { extendGraphqlSchema } from './src/customSchema';
 
 export default withAuth(
   config({

@@ -444,8 +444,10 @@ export type Mutation = {
   deleteUser?: Maybe<User>;
   deleteUsers?: Maybe<Array<Maybe<User>>>;
   endSession: Scalars['Boolean'];
-  makeOrder?: Maybe<Order>;
-  patchOrderLine?: Maybe<Order>;
+  /** You can create a edit a order with this mutation */
+  makeOrder?: Maybe<OrderOutput>;
+  /** A line describes the relationship between the and the product */
+  patchOrderLine?: Maybe<OrderOutput>;
   updateCategories?: Maybe<Array<Maybe<Category>>>;
   updateCategory?: Maybe<Category>;
   updateClient?: Maybe<Client>;
@@ -866,8 +868,16 @@ export type OrderLineItem = {
   price?: InputMaybe<Scalars['Float']>;
   productId?: InputMaybe<Scalars['String']>;
   quantity?: InputMaybe<Scalars['Int']>;
+  /**
+   *
+   *         metadata about this line
+   *         options : {
+   *            id  : string,
+   *            options  : string[]
+   *          }
+   *
+   */
   selection?: InputMaybe<Scalars['JSON']>;
-  total?: InputMaybe<Scalars['Float']>;
 };
 
 export type OrderLineManyRelationFilter = {
@@ -881,6 +891,17 @@ export type OrderLineOrderByInput = {
   price?: InputMaybe<OrderDirection>;
   quantity?: InputMaybe<OrderDirection>;
   total?: InputMaybe<OrderDirection>;
+};
+
+export type OrderLineOutput = {
+  __typename?: 'OrderLineOutput';
+  id?: Maybe<Scalars['String']>;
+  orderId?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['Float']>;
+  productId?: Maybe<Scalars['String']>;
+  quantity?: Maybe<Scalars['Int']>;
+  selection?: Maybe<Scalars['JSON']>;
+  total?: Maybe<Scalars['Float']>;
 };
 
 export type OrderLineRelateToManyForCreateInput = {
@@ -938,6 +959,19 @@ export type OrderOrderByInput = {
   paymentMethod?: InputMaybe<OrderDirection>;
   status?: InputMaybe<OrderDirection>;
   total?: InputMaybe<OrderDirection>;
+};
+
+export type OrderOutput = {
+  __typename?: 'OrderOutput';
+  createdAt?: Maybe<Scalars['DateTime']>;
+  id?: Maybe<Scalars['String']>;
+  lines?: Maybe<Array<Maybe<OrderLineOutput>>>;
+  linesCount?: Maybe<Scalars['Int']>;
+  metadata?: Maybe<Scalars['JSON']>;
+  orderNumber?: Maybe<Scalars['Int']>;
+  paymentMethod?: Maybe<OrderPaymentMethodType>;
+  status?: Maybe<OrderStatusType>;
+  total?: Maybe<Scalars['Float']>;
 };
 
 export enum OrderPaymentMethodType {
@@ -1453,6 +1487,66 @@ export type UserWhereUniqueInput = {
   id?: InputMaybe<Scalars['ID']>;
 };
 
+export type OrderFragmentFragment = {
+  __typename?: 'OrderOutput';
+  id?: string | null;
+  orderNumber?: number | null;
+  createdAt?: any | null;
+  status?: OrderStatusType | null;
+  linesCount?: number | null;
+  total?: number | null;
+  metadata?: any | null;
+};
+
+export type PatchOrderMutationVariables = Exact<{
+  email?: InputMaybe<Scalars['String']>;
+  metadata?: InputMaybe<Metadata>;
+  orderId?: InputMaybe<Scalars['String']>;
+}>;
+
+export type PatchOrderMutation = {
+  __typename?: 'Mutation';
+  makeOrder?: {
+    __typename?: 'OrderOutput';
+    id?: string | null;
+    orderNumber?: number | null;
+    createdAt?: any | null;
+    status?: OrderStatusType | null;
+    linesCount?: number | null;
+    total?: number | null;
+    metadata?: any | null;
+  } | null;
+};
+
+export type PatchOrderLineMutationVariables = Exact<{
+  orderId?: InputMaybe<Scalars['String']>;
+  orderLineId?: InputMaybe<Scalars['String']>;
+  orderLine?: InputMaybe<OrderLineItem>;
+}>;
+
+export type PatchOrderLineMutation = {
+  __typename?: 'Mutation';
+  patchOrderLine?: {
+    __typename?: 'OrderOutput';
+    id?: string | null;
+    orderNumber?: number | null;
+    createdAt?: any | null;
+    status?: OrderStatusType | null;
+    linesCount?: number | null;
+    total?: number | null;
+    metadata?: any | null;
+    lines?: Array<{
+      __typename?: 'OrderLineOutput';
+      id?: string | null;
+      selection?: any | null;
+      quantity?: number | null;
+      orderId?: string | null;
+      total?: number | null;
+      productId?: string | null;
+    } | null> | null;
+  } | null;
+};
+
 export type ProductFragmentFragment = {
   __typename?: 'Product';
   id: string;
@@ -1543,6 +1637,17 @@ export type GetCategoriesQuery = {
   }> | null;
 };
 
+export const OrderFragmentFragmentDoc = gql`
+  fragment OrderFragment on OrderOutput {
+    id
+    orderNumber
+    createdAt
+    status
+    linesCount
+    total
+    metadata
+  }
+`;
 export const ProductFragmentFragmentDoc = gql`
   fragment productFragment on Product {
     id
@@ -1558,6 +1663,38 @@ export const ProductFragmentFragmentDoc = gql`
     count
     price
   }
+`;
+export const PatchOrderDocument = gql`
+  mutation patchOrder($email: String, $metadata: Metadata, $orderId: String) {
+    makeOrder(email: $email, metadata: $metadata, orderId: $orderId) {
+      ...OrderFragment
+    }
+  }
+  ${OrderFragmentFragmentDoc}
+`;
+export const PatchOrderLineDocument = gql`
+  mutation patchOrderLine(
+    $orderId: String
+    $orderLineId: String
+    $orderLine: OrderLineItem
+  ) {
+    patchOrderLine(
+      orderId: $orderId
+      orderLineId: $orderLineId
+      orderLine: $orderLine
+    ) {
+      ...OrderFragment
+      lines {
+        id
+        selection
+        quantity
+        orderId
+        total
+        productId
+      }
+    }
+  }
+  ${OrderFragmentFragmentDoc}
 `;
 export const GetProductsDocument = gql`
   query getProducts($includeOptions: Boolean!) {
@@ -1608,6 +1745,8 @@ const defaultWrapper: SdkFunctionWrapper = (
   _operationName,
   _operationType,
 ) => action();
+const PatchOrderDocumentString = print(PatchOrderDocument);
+const PatchOrderLineDocumentString = print(PatchOrderLineDocument);
 const GetProductsDocumentString = print(GetProductsDocument);
 const GetCategoriesDocumentString = print(GetCategoriesDocument);
 export function getSdk(
@@ -1615,6 +1754,46 @@ export function getSdk(
   withWrapper: SdkFunctionWrapper = defaultWrapper,
 ) {
   return {
+    patchOrder(
+      variables?: PatchOrderMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: PatchOrderMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<PatchOrderMutation>(
+            PatchOrderDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'patchOrder',
+        'mutation',
+      );
+    },
+    patchOrderLine(
+      variables?: PatchOrderLineMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: PatchOrderLineMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<PatchOrderLineMutation>(
+            PatchOrderLineDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'patchOrderLine',
+        'mutation',
+      );
+    },
     getProducts(
       variables: GetProductsQueryVariables,
       requestHeaders?: Dom.RequestInit['headers'],
