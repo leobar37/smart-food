@@ -1,66 +1,17 @@
 import {
   Box,
-  chakra,
   HStack,
-  IconButton,
   useBoolean,
   useBreakpointValue,
   VStack,
 } from '@chakra-ui/react';
+import { cx } from '@chakra-ui/utils';
 import { Brand, CartIcon, MenuIcon, useWindowScroll } from '@smartfood/ui';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 import { FC } from 'react';
-import { AiOutlineClose } from 'react-icons/ai';
 import LinkItem from './LinkItem';
-import { cx } from '@chakra-ui/utils';
-const CloseIcon = chakra(AiOutlineClose);
-
-const BtnIcon = chakra(IconButton, {
-  baseStyle: {
-    m: 0,
-    p: 2,
-    bg: 'transparent',
-    svg: {
-      color: 'smartgray.500',
-      fontSize: ['xl', null, '2xl'],
-    },
-    _hover: {
-      bg: 'gray.200',
-    },
-  },
-});
-
-const Nav = chakra('nav', {
-  baseStyle: {
-    display: 'flex',
-    w: 'full',
-    bg: 'white',
-    px: ['2', null, '4'],
-    py: ['2', null, '4'],
-    mx: 'auto',
-    maxW: '8xl',
-    overflow: 'visible',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    alignContent: 'center',
-  },
-});
-
-const NavWrapper = chakra('div', {
-  baseStyle: {
-    w: 'full',
-    bg: 'white',
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    zIndex: 150,
-    '&.fixed': {
-      backdropFilter: 'blur(5px)',
-      opacity: 0.9,
-    },
-  },
-});
-
+import { BtnIcon, CloseIcon, Nav, NavWrapper } from './styles';
 type Properties = {
   brandSize: 'sm' | 'lg';
 };
@@ -73,6 +24,7 @@ type NavBarItem = {
 export const NavBar: FC = () => {
   const [navBarState, navbarActions] = useBoolean(false);
   const scrollY = useWindowScroll();
+  const router = useRouter();
   const propertiesByBr = useBreakpointValue<Properties>({
     base: {
       brandSize: 'sm',
@@ -94,14 +46,14 @@ export const NavBar: FC = () => {
       title: 'Carta',
       url: '/carta',
     },
-    // {
-    //   title: 'Nosotros',
-    //   url: '/us',
-    // },
   ];
 
+  const compare = (path: string) => {
+    return path == router.pathname;
+  };
+
   const items$ = items.map((d, idx) => (
-    <LinkItem url={d.url} key={idx}>
+    <LinkItem variant="desktop" selected={compare(d.url)} url={d.url} key={idx}>
       {d.title}
     </LinkItem>
   ));
@@ -156,7 +108,7 @@ export const NavBar: FC = () => {
           }}
         >
           {items.map((item, idx) => (
-            <LinkItem url={item.url} key={idx}>
+            <LinkItem selected={compare(item.url)} url={item.url} key={idx}>
               {item.title}
             </LinkItem>
           ))}

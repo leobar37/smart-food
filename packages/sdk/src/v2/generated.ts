@@ -1459,6 +1459,7 @@ export type ProductFragmentFragment = {
   name?: string | null;
   count?: number | null;
   price?: number | null;
+  excerpt?: string | null;
   photo?: {
     __typename?: 'CloudinaryImage_File';
     id?: string | null;
@@ -1482,6 +1483,7 @@ export type GetProductsQuery = {
     name?: string | null;
     count?: number | null;
     price?: number | null;
+    excerpt?: string | null;
     category?: {
       __typename?: 'Category';
       name?: string | null;
@@ -1530,6 +1532,7 @@ export type GetCategoriesQuery = {
       name?: string | null;
       count?: number | null;
       price?: number | null;
+      excerpt?: string | null;
       photo?: {
         __typename?: 'CloudinaryImage_File';
         id?: string | null;
@@ -1557,6 +1560,7 @@ export const ProductFragmentFragmentDoc = gql`
     name
     count
     price
+    excerpt
   }
 `;
 export const GetProductsDocument = gql`
