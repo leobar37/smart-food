@@ -1,6 +1,5 @@
 import { PaymentMethods } from './types';
 
-
 export const PAYMENT_METHODS = [
   { value: PaymentMethods.CASH, label: 'Efectivo' },
   {
@@ -22,7 +21,9 @@ export enum OrderEnum {
   PAID = 'PAID',
   CANCELLED = 'CANCELLED',
   DELIVERED = 'DELIVERED',
+  STARTED = 'STARTED',
 }
+
 export const ORDER_STATUS = [
   {
     label: 'Pendiente',

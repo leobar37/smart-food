@@ -3,11 +3,10 @@
   "version": "0.0.1",
   "private": false,
   "scripts": {
-    "dev": "rollup -c --watch",
-    "build": "rollup -c"
+    "build": "preconstruct build"
   },
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "main": "dist/smartfood-common.cjs.js",
+  "module": "dist/smartfood-common.esm.js",
   "types": "dist/index.d.ts",
   "dependencies": {},
   "devDependencies": {
