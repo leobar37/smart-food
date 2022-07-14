@@ -1,3 +1,4 @@
+## Fragements
 fragment productFragment on Product {
   id
   photo {
@@ -13,6 +14,8 @@ fragment productFragment on Product {
   price
   excerpt
 }
+
+##  Queries
 
 query getProducts($includeOptions: Boolean!) {
   products {
