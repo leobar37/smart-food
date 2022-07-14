@@ -1,6 +1,7 @@
 import cmsLib from '@App/lib/cms';
 import { useQuery } from 'react-query';
 import { cacheKeys } from '../constants';
+
 export const useCategoriesWithProducts = () => {
   return useQuery(
     cacheKeys.products,

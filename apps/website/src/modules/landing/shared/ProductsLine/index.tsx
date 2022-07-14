@@ -7,30 +7,16 @@ import {
   useBreakpointValue,
 } from '@chakra-ui/react';
 import { CardProduct, SliderCounter } from '@smartfood/ui';
-import { useRef } from 'react';
+import { FC } from 'react';
 import { HiChevronDoubleRight } from 'react-icons/hi';
 import { Navigation, Pagination } from 'swiper';
 import 'swiper/css';
-import { SliderWrapper } from './styles';
-import { FC } from 'react';
 import 'swiper/css/navigation';
+import { SliderWrapper } from './styles';
 
 import { Product } from '@smartfood/client/v2';
 import 'swiper/css/pagination';
 import { Swiper, SwiperSlide } from 'swiper/react';
-
-const productProps = {
-  content: {
-    title: 'Plato 1',
-    description: `Mix de lechugas, quinua, chalaquita, atún, salsa de tiradito, salsa
-  acevichada.`,
-    image:
-      'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80',
-    price: 24.9,
-  },
-  button: <Button>Agregar al carrito</Button>,
-  counter: <SliderCounter value={10} />,
-};
 
 type ProductsLineProps = {
   title: string;
@@ -43,7 +29,6 @@ export const ProductsLine: FC<ProductsLineProps> = ({
   description,
   products,
 }) => {
-  const paginationRef = useRef(null);
   const cardSize = useBreakpointValue({
     base: 'mobile',
     lg: 'desktop',
@@ -113,10 +98,10 @@ export const ProductsLine: FC<ProductsLineProps> = ({
                 button={<Button>Agregar al carrito</Button>}
                 counter={<SliderCounter value={10} />}
                 content={{
-                  description: '',
+                  description: product?.excerpt ?? '',
                   image: product.photo?.publicUrlTransformed ?? '',
-                  price: product.price,
-                  title: product.name,
+                  price: product?.price ?? 0,
+                  title: product?.name ?? '',
                 }}
               />
             </SwiperSlide>
