@@ -12,6 +12,7 @@ fragment productFragment on Product {
   name
   count
   price
+  excerpt
 }
 
 ##  Queries

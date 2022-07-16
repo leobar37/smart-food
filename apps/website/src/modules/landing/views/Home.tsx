@@ -6,7 +6,7 @@ import { ArmedProducts, Footer, ProductsLine } from '../shared';
 import NavBar from '../shared/navbar';
 import { useCategoriesWithProducts } from '../controllers';
 import { Product } from '@smartfood/client/v2';
-
+import { PRODUCTS_FOR_BUILD_ID } from '../constants';
 const dataDefault = {
   title: `Prueba nuestros armados para ti`,
   description: ` Elige entre toda la variedad de platos deliciosos que hemos armado
@@ -17,7 +17,7 @@ const HomePage: NextPage = () => {
   const { data: categoryData } = useCategoriesWithProducts();
 
   const linesInHome = categoryData
-    ?.filter((d) => d.id !== 'cl5icazdg00029suqvnmlvk1v')
+    ?.filter((d) => d.id !== PRODUCTS_FOR_BUILD_ID)
     .map((category) => {
       return (
         <ProductsLine
@@ -28,6 +28,7 @@ const HomePage: NextPage = () => {
         />
       );
     });
+
   return (
     <Box>
       <NavBar />

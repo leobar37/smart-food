@@ -3,6 +3,7 @@ import { ItemCart, SectionItems } from '../components/Cart';
 import Header from '../components/cartPage/header';
 import { ModalCheckout, SendModal } from '../components/checkout';
 import { LandingLayout } from '../landingLayout';
+
 const CartPage = () => {
   return (
     <LandingLayout mt={8}>
