@@ -11,6 +11,19 @@ export class BrowserStorage implements Storage {
       localStorage.setItem(this.getKey(this.PREFIX), value);
     }
   }
+  setJson(key: string, value: any) {
+    if (value) {
+      this.set(key, JSON.stringify(value));
+    }
+  }
+  getJson<T extends any>(key: string): T {
+    const result = this.get(key);
+    if (result) {
+      return JSON.parse(result);
+    }
+    return null;
+  }
+
   get(key: string): string {
     if (this.isSupported()) {
       return localStorage.getItem(this.getKey(key));

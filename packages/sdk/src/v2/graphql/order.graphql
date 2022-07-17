@@ -35,3 +35,17 @@ mutation patchOrderLine(
     }
   }
 }
+
+mutation deleteOrderLine($orderId: String, $lineOrderId: String) {
+  customDeleteOrderLine(orderId: $orderId, lineOrderId: $lineOrderId) {
+    ...OrderFragment
+    lines {
+      id
+      selection
+      quantity
+      orderId
+      total
+      productId
+    }
+  }
+}

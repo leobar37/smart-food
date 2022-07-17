@@ -1,7 +1,7 @@
 import cmsLib from '@App/lib/cms';
 import { useQuery } from 'react-query';
 import { cacheKeys } from '../constants';
-
+import { useRouter } from 'next/router';
 export const useCategoriesWithProducts = () => {
   return useQuery(
     cacheKeys.products,
@@ -14,4 +14,10 @@ export const useCategoriesWithProducts = () => {
       enabled: false,
     },
   );
+};
+
+export const useSingleProduct = (id: string) => {
+  return useQuery([...cacheKeys.product, id], () => cmsLib.products.get(id), {
+    enabled: false,
+  });
 };

@@ -32,15 +32,7 @@
     "@graphql-codegen/typescript": "^2.7.1",
     "@graphql-codegen/typescript-graphql-request": "^4.5.1",
     "@graphql-codegen/typescript-operations": "^2.5.1",
-    "@rollup/plugin-commonjs": "^22.0.0",
-    "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^13.3.0",
-    "@rollup/plugin-typescript": "^8.3.3",
-    "@types/lodash.get": "^4.4.7",
-    "rollup-plugin-babel": "^4.4.0",
-    "rollup-plugin-dts": "^4.2.2",
-    "rollup-plugin-peer-deps-external": "^2.2.4",
-    "rollup-plugin-terser": "^7.0.2"
+    "@types/lodash.get": "^4.4.7"
   },
   "peerDependencies": {},
   "preconstruct": {

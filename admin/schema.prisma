@@ -94,7 +94,7 @@ model Order {
   id            String                  @id @default(cuid())
   orderNumber   Int                     @default(autoincrement())
   createdAt     DateTime?               @default(now())
-  status        OrderStatusType?        @default(PENDING)
+  status        OrderStatusType?        @default(IN_CART)
   lines         OrderLine[]             @relation("OrderLine_order")
   total         Float?
   client        Client?                 @relation("Order_client", fields: [clientId], references: [id])
@@ -115,6 +115,7 @@ enum OrderStatusType {
   PAID
   CANCELLED
   DELIVERED
+  IN_CART
 }
 
 enum OrderPaymentMethodType {

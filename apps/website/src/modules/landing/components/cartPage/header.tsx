@@ -5,7 +5,7 @@ export const Header = () => {
     <Box
       as="header"
       sx={{
-        height: ['25vh', null, '40vh', '50vh'],
+        height: ['25vh', null, '40vh', '38vh'],
         backgroundImage: `bg-stains.png`,
         backgroundPosition: 'center 105%',
         backgroundRepeat: 'no-repeat',

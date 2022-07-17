@@ -1,14 +1,43 @@
-import { Box, chakra, HStack, Link, Text, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  chakra,
+  HStack,
+  Link,
+  ModalBody,
+  Text,
+  VStack,
+  Modal,
+  ModalContent,
+  ModalOverlay,
+  useDisclosure,
+  ModalCloseButton,
+  UnorderedList,
+  ListItem,
+} from '@chakra-ui/react';
+import { FC, Fragment } from 'react';
+import {
+  modalResumeStateAtom,
+  resumePreviewAtomsAtom,
+  resumePreviewItemsAtom,
+  currentStepAtom,
+} from '../../atoms/buildProductAtoms';
+import {
+  useAtom,
+  ExtractAtomValue,
+  PrimitiveAtom,
+  useAtomValue,
+  useSetAtom,
+} from 'jotai';
 
 const ResumenContainer = chakra('aside', {
   baseStyle: {
-    bg: '#FCFCFD',
+    bg: 'white',
     p: '5',
-    shadow: 'xl',
     rounded: 'md',
-    mt: 9,
+    mt: [2, null, 9],
     maxW: '24rem',
     overflow: 'hidden',
+    w: ['20rem', '25rem'],
     '.title': {
       fontSize: '2xl',
       mx: 'auto',
@@ -19,7 +48,16 @@ const ResumenContainer = chakra('aside', {
   },
 });
 
-const ResumenItem = () => {
+type ResumenItemProps = {
+  itemAtom: PrimitiveAtom<ExtractAtomValue<typeof resumePreviewItemsAtom>[0]>;
+};
+const ResumenItem: FC<ResumenItemProps> = ({ itemAtom }) => {
+  const item = useAtomValue(itemAtom);
+  const stateModalResume = useResumePreviewModal();
+  const updateStep = useSetAtom(currentStepAtom);
+  if (item.subOptions.length == 0) {
+    return null;
+  }
   return (
     <VStack
       borderBottomColor={'gray.300'}
@@ -30,31 +68,45 @@ const ResumenItem = () => {
       alignItems={'flex-start'}
     >
       <Box position={'absolute'} top="0" right={'0'}>
-        <Link>Editar</Link>
+        <Link
+          onClick={() => {
+            updateStep(item.step);
+            stateModalResume.onClose();
+          }}
+        >
+          Editar
+        </Link>
       </Box>
-      {Array.from({ length: 2 }).map((_, idx) => (
-        <VStack key={idx} alignItems="flex-start">
-          <Text
-            fontWeight={['semibold', null, 'normal']}
-            fontSize={['base', null, 'lg']}
-            color="smartgreen.500"
-          >
-            Base
-          </Text>
-          <Text>Arroz Sushi</Text>
-        </VStack>
-      ))}
+      <VStack alignItems="flex-start">
+        <Text
+          fontWeight={['semibold', null, 'normal']}
+          fontSize={['base', null, 'lg']}
+          color="smartgreen.500"
+        >
+          {item.option?.name}
+        </Text>
+        <UnorderedList spacing={2}>
+          {item?.subOptions.map((item) => {
+            return (
+              <ListItem ml="3" key={item?.id}>
+                {item?.name}
+              </ListItem>
+            );
+          })}
+        </UnorderedList>
+      </VStack>
     </VStack>
   );
 };
 
-export const ResumenPreview = () => {
+const ResumeContent = () => {
+  const [resumeItemsAtoms, dispatch] = useAtom(resumePreviewAtomsAtom);
   return (
-    <ResumenContainer>
+    <Fragment>
       <Text className="title">Resumen</Text>
       <VStack alignItems={'flex-start'} mx="2">
-        {Array.from({ length: 4 }).map((_, idx) => (
-          <ResumenItem key={idx} />
+        {resumeItemsAtoms.map((item, idx) => (
+          <ResumenItem itemAtom={item as any} key={idx} />
         ))}
       </VStack>
       <HStack justifyContent={'space-between'} mt="4">
@@ -63,6 +115,55 @@ export const ResumenPreview = () => {
           S/. 24.90
         </Text>
       </HStack>
+    </Fragment>
+  );
+};
+
+export const ResumenPreview = () => {
+  return (
+    <ResumenContainer shadow={'xl'}>
+      <ResumeContent />
     </ResumenContainer>
+  );
+};
+
+export const useResumePreviewModal = () => {
+  const [state, setState] = useAtom(modalResumeStateAtom);
+
+  return useDisclosure({
+    isOpen: state,
+    onOpen: () => {
+      setState(true);
+    },
+    onClose: () => {
+      setState(false);
+    },
+  });
+};
+
+export const ResumenPreviewModal = () => {
+  const modalState = useResumePreviewModal();
+  return (
+    <Modal isOpen={modalState.isOpen} onClose={modalState.onClose}>
+      <ModalOverlay />
+      <ModalBody>
+        <ModalContent mx={5}>
+          <ModalCloseButton />
+          <ResumenContainer mx="auto">
+            <ResumeContent />
+            <Box w="full" display={'flex'} my="5">
+              <Link
+                onClick={modalState.onClose}
+                color={'smartgreen.500'}
+                fontSize="lg"
+                mx="auto"
+              >
+                Ocultar resumen
+              </Link>
+            </Box>
+          </ResumenContainer>
+        </ModalContent>
+      </ModalBody>
+    </Modal>
   );
 };

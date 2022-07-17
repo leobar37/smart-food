@@ -38,6 +38,22 @@ query getProducts($includeOptions: Boolean!) {
   }
 }
 
+query getProduct($id: ID, $includeOptions: Boolean!) {
+  product(where: { id: $id }) {
+    ...productFragment
+    options @include(if: $includeOptions) {
+      id
+      name
+      limit
+      label
+      subOptions {
+        id
+        name
+      }
+    }
+  }
+}
+
 query getCategories($includeProducts: Boolean!) {
   categories {
     id

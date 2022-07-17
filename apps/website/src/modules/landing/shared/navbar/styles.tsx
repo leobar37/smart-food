@@ -1,22 +1,7 @@
-import { chakra, IconButton, Link } from '@chakra-ui/react';
+import { chakra, Link } from '@chakra-ui/react';
 import { AiOutlineClose } from 'react-icons/ai';
 
 export const CloseIcon = chakra(AiOutlineClose);
-
-export const BtnIcon = chakra(IconButton, {
-  baseStyle: {
-    m: 0,
-    p: 2,
-    bg: 'transparent',
-    svg: {
-      color: 'smartgray.500',
-      fontSize: ['xl', null, '2xl'],
-    },
-    _hover: {
-      bg: 'gray.200',
-    },
-  },
-});
 
 export const Nav = chakra('nav', {
   baseStyle: {
@@ -42,10 +27,7 @@ export const NavWrapper = chakra('div', {
     top: 0,
     left: 0,
     zIndex: 150,
-    '&.fixed': {
-      backdropFilter: 'blur(5px)',
-      opacity: 0.9,
-    },
+    borderBottomWidth: '1px',
   },
 });
 

@@ -21,7 +21,7 @@ export enum OrderEnum {
   PAID = 'PAID',
   CANCELLED = 'CANCELLED',
   DELIVERED = 'DELIVERED',
-  STARTED = 'STARTED',
+  IN_CART = 'IN_CART',
 }
 
 export const ORDER_STATUS = [
@@ -40,5 +40,9 @@ export const ORDER_STATUS = [
   {
     label: 'Entregado',
     value: OrderEnum.DELIVERED,
+  },
+  {
+    label: 'En carrito',
+    value: OrderEnum.IN_CART,
   },
 ];
