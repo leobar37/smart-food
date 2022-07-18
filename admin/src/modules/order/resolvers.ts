@@ -248,7 +248,7 @@ export const getMutations = (base: BaseSchemaMeta) => {
    */
 
   const deleteOrderLine = graphql.field({
-    type: base.object('Order'),
+    type: OrderOutput,
     args: {
       orderId: graphql.arg({
         type: graphql.String,
@@ -274,13 +274,18 @@ export const getMutations = (base: BaseSchemaMeta) => {
           id: lineOrderId,
         },
       });
-      return prisma.order.findFirst({
+      const orderUpdated = await prisma.order.findUnique({
         where: {
-          id: {
-            equals: orderId,
-          },
+          id: orderId,
+        },
+        include: {
+          lines: true,
         },
       });
+      return {
+        ...orderUpdated,
+        linesCount: orderUpdated.lines.length,
+      } as any;
     },
   });
   return {

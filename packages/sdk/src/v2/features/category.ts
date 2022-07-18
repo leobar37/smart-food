@@ -1,12 +1,6 @@
-import { ClientV2 } from '../client';
 import { Category } from '../generated';
-
-export class Categories {
-  client: ClientV2;
-  constructor(client: ClientV2) {
-    this.client = client;
-  }
-
+import { Feature } from './base';
+export class Categories extends Feature {
   async list(options?: { relations: 'products'[] }): Promise<Category[]> {
     const { relations = [] } = options;
     const result = await this.client.wrap(

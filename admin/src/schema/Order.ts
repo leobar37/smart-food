@@ -14,20 +14,20 @@ export const Order = list({
   ui: {
     labelField: 'orderNumber',
     listView: {
-      initialColumns: ['client', 'orderNumber', 'status' , "createdAt"],
+      initialColumns: ['client', 'orderNumber', 'status', 'createdAt'],
     },
   },
-  access : {
-      // operation : {
-      //   create : () => false,
-      //   delete : () => false,
-      //   update :() => false,
-      //   query : () => false
-      // }
+  access: {
+    // operation : {
+    //   create : () => false,
+    //   delete : () => false,
+    //   update :() => false,
+    //   query : () => false
+    // }
   },
   fields: {
     orderNumber: integer({
-      label : "Número de orden",
+      label: 'Número de orden',
       db: {
         isNullable: false,
       },
@@ -35,8 +35,8 @@ export const Order = list({
         itemView: {
           fieldMode: 'read',
         },
-        createView : {
-          fieldMode : "edit"
+        createView: {
+          fieldMode: 'edit',
         },
       },
       defaultValue: {
@@ -51,7 +51,7 @@ export const Order = list({
     status: select({
       type: 'enum',
       options: ORDER_STATUS,
-      defaultValue: OrderEnum.PENDING,
+      defaultValue: OrderEnum.IN_CART,
       ui: {
         displayMode: 'select',
       },
@@ -61,8 +61,8 @@ export const Order = list({
       ref: 'OrderLine.order',
       many: true,
       ui: {
-        views :  require.resolve("../components/order/LineDetail.tsx")
-       },
+        views: require.resolve('../components/order/LineDetail.tsx'),
+      },
     }),
     total: float(),
     client: relationship({ ref: 'Client.orders', many: false }),

@@ -1,9 +1,16 @@
-import { Box, Link, Stack, Text, useBreakpointValue } from '@chakra-ui/react';
+import {
+  Box,
+  Link,
+  LinkBox,
+  LinkOverlay,
+  Stack,
+  Text,
+  useBreakpointValue,
+} from '@chakra-ui/react';
 import { ExoticCard } from '@smartfood/ui';
-import { DEMO_IMAGE } from '@App/constants';
-import { useCategoriesWithProducts } from '../../controllers';
+import NextLink from 'next/link';
 import { PRODUCTS_FOR_BUILD_ID } from '../../constants';
-
+import { useCategoriesWithProducts } from '../../controllers';
 export const ArmedProducts = () => {
   const cardVariant = useBreakpointValue<'small' | 'large'>({
     base: 'small',
@@ -20,14 +27,21 @@ export const ArmedProducts = () => {
   }
 
   const productsRender = buildeaBleCategory.products?.map((product) => (
-    <ExoticCard
-      key={product.id}
-      variant={cardVariant}
-      title={`Arma tu ${product.name}`}
-      link={<Link>Haz Click</Link>}
-      src={product?.photo?.publicUrlTransformed ?? ''}
-      subTitle={`A sólo S/.${product.price}`}
-    />
+    <LinkBox key={product.id}>
+      <ExoticCard
+        variant={cardVariant}
+        title={`Arma tu ${product.name}`}
+        link={
+          <NextLink passHref href={`/armatuplato/${product.id}`}>
+            <LinkOverlay>
+              <Link as="span">Haz Click</Link>
+            </LinkOverlay>
+          </NextLink>
+        }
+        src={product?.photo?.publicUrlTransformed ?? ''}
+        subTitle={`A sólo S/.${product.price}`}
+      />
+    </LinkBox>
   ));
   return (
     <Box

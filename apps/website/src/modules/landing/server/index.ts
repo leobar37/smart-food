@@ -38,3 +38,14 @@ export const armYourPlateHandler: GetServerSideProps = async () => {
     props: witHydration(client)({}),
   };
 };
+
+export const buildPlateHandler: GetServerSideProps = async (context) => {
+  const { id } = context?.params as { id: string };
+  const client = new QueryClient();
+  await client.prefetchQuery([...cacheKeys.product, id], () => {
+    return cmsClient.products.get(id);
+  });
+  return {
+    props: witHydration(client)({}),
+  };
+};

@@ -3,9 +3,7 @@
   "compilerOptions": {
     "target": "ES5",
     "module": "ESNext",
-    "outDir": "dist",
     "declaration": true,
-    "declarationDir": "types",
     "emitDeclarationOnly": true
   },
   "exclude": ["node_modules", "**/*.spec.ts"]
