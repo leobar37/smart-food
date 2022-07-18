@@ -4,3 +4,4 @@ export * from './slider-counter';
 export * from './stepper';
 export * from './cart-icon-with-counter';
 export * from './BadgeWithCount';
+export * from './btnIcon';

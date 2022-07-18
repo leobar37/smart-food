@@ -5,6 +5,7 @@ import type { AppProps as NextAppProps } from 'next/app';
 import { FC, ReactNode, useState } from 'react';
 import { Hydrate, QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { Global, css } from '@emotion/react';
 const ConnectedApp: FC<{
   children: ReactNode;
 }> = ({ children }) => {
@@ -24,8 +25,14 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Hydrate state={pageProps[HYDRATION_KEY]}>
         <ConnectedApp>
           <Component {...pageProps} />
+          <Global
+            styles={css`
+              body {
+                overflow-x: hidden;
+              }
+            `}
+          />
         </ConnectedApp>
-
         <ReactQueryDevtools />
       </Hydrate>
     </QueryClientProvider>

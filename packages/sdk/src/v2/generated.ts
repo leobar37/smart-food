@@ -402,8 +402,10 @@ export type KeystoneMeta = {
 
 export type Metadata = {
   direction?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
   payment?: InputMaybe<OrderPaymentMethodType>;
   phone?: InputMaybe<Scalars['String']>;
+  reference?: InputMaybe<Scalars['String']>;
 };
 
 export type Mutation = {
@@ -426,7 +428,7 @@ export type Mutation = {
   createSubOptions?: Maybe<Array<Maybe<SubOption>>>;
   createUser?: Maybe<User>;
   createUsers?: Maybe<Array<Maybe<User>>>;
-  customDeleteOrderLine?: Maybe<Order>;
+  customDeleteOrderLine?: Maybe<OrderOutput>;
   deleteCategories?: Maybe<Array<Maybe<Category>>>;
   deleteCategory?: Maybe<Category>;
   deleteClient?: Maybe<Client>;
@@ -1014,6 +1016,7 @@ export type OrderRelateToOneForUpdateInput = {
 export enum OrderStatusType {
   Cancelled = 'CANCELLED',
   Delivered = 'DELIVERED',
+  InCart = 'IN_CART',
   Paid = 'PAID',
   Pending = 'PENDING',
 }
@@ -1547,6 +1550,34 @@ export type PatchOrderLineMutation = {
   } | null;
 };
 
+export type DeleteOrderLineMutationVariables = Exact<{
+  orderId?: InputMaybe<Scalars['String']>;
+  lineOrderId?: InputMaybe<Scalars['String']>;
+}>;
+
+export type DeleteOrderLineMutation = {
+  __typename?: 'Mutation';
+  customDeleteOrderLine?: {
+    __typename?: 'OrderOutput';
+    id?: string | null;
+    orderNumber?: number | null;
+    createdAt?: any | null;
+    status?: OrderStatusType | null;
+    linesCount?: number | null;
+    total?: number | null;
+    metadata?: any | null;
+    lines?: Array<{
+      __typename?: 'OrderLineOutput';
+      id?: string | null;
+      selection?: any | null;
+      quantity?: number | null;
+      orderId?: string | null;
+      total?: number | null;
+      productId?: string | null;
+    } | null> | null;
+  } | null;
+};
+
 export type ProductFragmentFragment = {
   __typename?: 'Product';
   id: string;
@@ -1606,6 +1637,44 @@ export type GetProductsQuery = {
       publicUrlTransformed?: string | null;
     } | null;
   }> | null;
+};
+
+export type GetProductQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']>;
+  includeOptions: Scalars['Boolean'];
+}>;
+
+export type GetProductQuery = {
+  __typename?: 'Query';
+  product?: {
+    __typename?: 'Product';
+    id: string;
+    name?: string | null;
+    count?: number | null;
+    price?: number | null;
+    excerpt?: string | null;
+    options?: Array<{
+      __typename?: 'Option';
+      id: string;
+      name?: string | null;
+      limit?: number | null;
+      label?: string | null;
+      subOptions?: Array<{
+        __typename?: 'SubOption';
+        id: string;
+        name?: string | null;
+      }> | null;
+    }> | null;
+    photo?: {
+      __typename?: 'CloudinaryImage_File';
+      id?: string | null;
+      filename?: string | null;
+      originalFilename?: string | null;
+      mimetype?: string | null;
+      publicUrl?: string | null;
+      publicUrlTransformed?: string | null;
+    } | null;
+  } | null;
 };
 
 export type GetCategoriesQueryVariables = Exact<{
@@ -1700,6 +1769,22 @@ export const PatchOrderLineDocument = gql`
   }
   ${OrderFragmentFragmentDoc}
 `;
+export const DeleteOrderLineDocument = gql`
+  mutation deleteOrderLine($orderId: String, $lineOrderId: String) {
+    customDeleteOrderLine(orderId: $orderId, lineOrderId: $lineOrderId) {
+      ...OrderFragment
+      lines {
+        id
+        selection
+        quantity
+        orderId
+        total
+        productId
+      }
+    }
+  }
+  ${OrderFragmentFragmentDoc}
+`;
 export const GetProductsDocument = gql`
   query getProducts($includeOptions: Boolean!) {
     products {
@@ -1708,6 +1793,24 @@ export const GetProductsDocument = gql`
         id
         productsCount
       }
+      ...productFragment
+      options @include(if: $includeOptions) {
+        id
+        name
+        limit
+        label
+        subOptions {
+          id
+          name
+        }
+      }
+    }
+  }
+  ${ProductFragmentFragmentDoc}
+`;
+export const GetProductDocument = gql`
+  query getProduct($id: ID, $includeOptions: Boolean!) {
+    product(where: { id: $id }) {
       ...productFragment
       options @include(if: $includeOptions) {
         id
@@ -1751,7 +1854,9 @@ const defaultWrapper: SdkFunctionWrapper = (
 ) => action();
 const PatchOrderDocumentString = print(PatchOrderDocument);
 const PatchOrderLineDocumentString = print(PatchOrderLineDocument);
+const DeleteOrderLineDocumentString = print(DeleteOrderLineDocument);
 const GetProductsDocumentString = print(GetProductsDocument);
+const GetProductDocumentString = print(GetProductDocument);
 const GetCategoriesDocumentString = print(GetCategoriesDocument);
 export function getSdk(
   client: GraphQLClient,
@@ -1798,6 +1903,26 @@ export function getSdk(
         'mutation',
       );
     },
+    deleteOrderLine(
+      variables?: DeleteOrderLineMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: DeleteOrderLineMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<DeleteOrderLineMutation>(
+            DeleteOrderLineDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'deleteOrderLine',
+        'mutation',
+      );
+    },
     getProducts(
       variables: GetProductsQueryVariables,
       requestHeaders?: Dom.RequestInit['headers'],
@@ -1815,6 +1940,26 @@ export function getSdk(
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
         'getProducts',
+        'query',
+      );
+    },
+    getProduct(
+      variables: GetProductQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: GetProductQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<GetProductQuery>(
+            GetProductDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'getProduct',
         'query',
       );
     },

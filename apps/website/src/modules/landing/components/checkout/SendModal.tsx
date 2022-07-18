@@ -16,7 +16,7 @@ import { noop } from 'lodash';
 
 export const SendModal = () => {
   return (
-    <Modal isOpen={true} isCentered onClose={noop}>
+    <Modal isOpen={false} isCentered onClose={noop}>
       <ModalOverlay />
       <ModalContent padding={['5', null, '10', '12']} margin="4" maxWidth="3xl">
         <ModalHeader padding="0" mb="8">

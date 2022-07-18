@@ -4,3 +4,4 @@ export * from './arr';
 export * from './findByWords';
 export * from './whatssApp';
 export * from './matcher';
+export * from './shared-types';

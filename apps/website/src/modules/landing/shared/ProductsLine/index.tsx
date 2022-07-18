@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Text,
-  useBreakpointValue,
-} from '@chakra-ui/react';
-import { CardProduct, SliderCounter } from '@smartfood/ui';
+import { Box, Button, Container, Flex, Text } from '@chakra-ui/react';
 import { FC } from 'react';
 import { HiChevronDoubleRight } from 'react-icons/hi';
 import { Navigation, Pagination } from 'swiper';
@@ -17,7 +9,8 @@ import { SliderWrapper } from './styles';
 import { Product } from '@smartfood/client/v2';
 import 'swiper/css/pagination';
 import { Swiper, SwiperSlide } from 'swiper/react';
-
+import ProductCard from '../../components/productCard';
+import NextLink from 'next/link';
 type ProductsLineProps = {
   title: string;
   description: string;
@@ -29,11 +22,6 @@ export const ProductsLine: FC<ProductsLineProps> = ({
   description,
   products,
 }) => {
-  const cardSize = useBreakpointValue({
-    base: 'mobile',
-    lg: 'desktop',
-  });
-
   return (
     <Container
       sx={{
@@ -91,32 +79,23 @@ export const ProductsLine: FC<ProductsLineProps> = ({
         >
           {products.map((product, idx) => (
             <SwiperSlide key={idx}>
-              <CardProduct
-                mb="16"
-                mx={['auto']}
-                size={cardSize as any}
-                button={<Button>Agregar al carrito</Button>}
-                counter={<SliderCounter value={10} />}
-                content={{
-                  description: product?.excerpt ?? '',
-                  image: product.photo?.publicUrlTransformed ?? '',
-                  price: product?.price ?? 0,
-                  title: product?.name ?? '',
-                }}
-              />
+              <ProductCard product={product} />
             </SwiperSlide>
           ))}
         </Swiper>
       </SliderWrapper>
       <Flex justifyContent={'center'} my={6}>
-        <Button
-          variant={'solid'}
-          size="lg"
-          colorScheme="smartgreen"
-          rightIcon={<HiChevronDoubleRight />}
-        >
-          Ver Carta{' '}
-        </Button>
+        <NextLink passHref href={'/carta'}>
+          <Button
+            as="a"
+            variant={'solid'}
+            size="lg"
+            colorScheme="smartgreen"
+            rightIcon={<HiChevronDoubleRight />}
+          >
+            Ver Carta{' '}
+          </Button>
+        </NextLink>
       </Flex>
     </Container>
   );

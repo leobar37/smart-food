@@ -1,15 +1,12 @@
-import { ClientV2 } from '../client';
 import { Product } from '../generated';
-export class Products {
-  client: ClientV2;
-  constructor(client: ClientV2) {
-    this.client = client;
-  }
+import { Feature } from './base';
+import { ProductRelation } from '../types';
 
+export class Products extends Feature {
   async list({
     relations = [],
   }: {
-    relations?: 'products'[];
+    relations?: ProductRelation[];
   }): Promise<Product[]> {
     const result = await this.client.wrap(
       this.client.api.getProducts({
@@ -17,5 +14,16 @@ export class Products {
       }),
     );
     return result.products as Product[];
+  }
+
+  async get(id: string) {
+    const result = await this.client.wrap(
+      this.client.api.getProduct({
+        includeOptions: true,
+        id: id,
+      }),
+    );
+
+    return result.product;
   }
 }

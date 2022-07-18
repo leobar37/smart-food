@@ -20,20 +20,16 @@ type ExoticCardProps = {
   link: ReactNode;
 };
 
-const cardVariants: Variants = {
-
-};
-
 const imageVariants: Variants = {
   normal: {
-    scale: 1
+    scale: 1,
   },
   hover: {
     scale: 1.4,
   },
 };
 const BoxMotion = chakra(motion.div, {
-  shouldForwardProp: prop => isValidMotionProp(prop)  || prop === "children",
+  shouldForwardProp: (prop) => isValidMotionProp(prop) || prop === 'children',
 });
 const ImageMotion = chakra(motion.img);
 

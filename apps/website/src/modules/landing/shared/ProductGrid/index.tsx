@@ -1,14 +1,7 @@
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Text,
-  useBreakpointValue,
-} from '@chakra-ui/react';
-import { CardProduct, SliderCounter } from '@smartfood/ui';
+import { Box, Container, Flex, Text } from '@chakra-ui/react';
 import { Product } from '@smartfood/client/v2';
 import { FC } from 'react';
+import ProductCard from '../../components/productCard';
 
 type ProductsGridProps = {
   title: string;
@@ -21,10 +14,6 @@ export const ProductsGrid: FC<ProductsGridProps> = ({
   description,
   products,
 }) => {
-  const sizeProductCard = useBreakpointValue<'mobile' | 'desktop'>({
-    base: 'mobile',
-    lg: 'desktop',
-  });
   return (
     <Container
       maxWidth={'7xl'}
@@ -50,23 +39,8 @@ export const ProductsGrid: FC<ProductsGridProps> = ({
         <Text fontSize={['md', null, 'lg']}>{description}</Text>
       </Box>
       <Flex flexWrap={['wrap']} mx="auto" my="3" justifyContent="center">
-        {products.map((pr, idx) => (
-          <CardProduct
-            sx={{
-              my: [2, null, 4],
-              mx: [3, null, 6],
-            }}
-            size={sizeProductCard}
-            content={{
-              title: pr?.name ?? '',
-              description: pr?.excerpt ?? '',
-              image: pr?.photo?.publicUrlTransformed || '',
-              price: pr?.price || 0,
-            }}
-            counter={<SliderCounter value={10} />}
-            button={<Button>Agregar al carrito</Button>}
-            key={pr?.id}
-          />
+        {products.map((pr) => (
+          <ProductCard product={pr} key={pr?.id} />
         ))}
       </Flex>
     </Container>

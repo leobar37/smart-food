@@ -693,6 +693,7 @@ enum OrderStatusType {
   PAID
   CANCELLED
   DELIVERED
+  IN_CART
 }
 
 enum OrderPaymentMethodType {
@@ -927,7 +928,7 @@ type Mutation {
     orderLineId: String
     orderLine: OrderLineItem
   ): OrderOutput
-  customDeleteOrderLine(orderId: String, lineOrderId: String): Order
+  customDeleteOrderLine(orderId: String, lineOrderId: String): OrderOutput
 }
 
 type OrderOutput {
@@ -956,6 +957,8 @@ input Metadata {
   direction: String
   phone: String
   payment: OrderPaymentMethodType
+  name: String
+  reference: String
 }
 
 input OrderLineItem {

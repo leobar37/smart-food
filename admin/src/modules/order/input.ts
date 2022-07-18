@@ -14,6 +14,12 @@ export const getInputs = (base: BaseSchemaMeta) => {
       payment: graphql.arg({
         type: base.enum('OrderPaymentMethodType'),
       }),
+      name: graphql.arg({
+        type: graphql.String,
+      }),
+      reference: graphql.arg({
+        type: graphql.String,
+      }),
     },
   });
 

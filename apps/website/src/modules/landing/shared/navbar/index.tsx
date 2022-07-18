@@ -11,7 +11,8 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { FC } from 'react';
 import LinkItem from './LinkItem';
-import { BtnIcon, CloseIcon, Nav, NavWrapper } from './styles';
+import { CloseIcon, Nav, NavWrapper } from './styles';
+import { BtnIcon } from '@smartfood/ui';
 type Properties = {
   brandSize: 'sm' | 'lg';
 };
@@ -51,6 +52,10 @@ export const NavBar: FC = () => {
   const compare = (path: string) => {
     return path == router.pathname;
   };
+  /**
+   * If a option is not present in the navbar, then should not visible for the user
+   */
+  const notAllMatching = items.every((d) => !compare(d.url));
 
   const items$ = items.map((d, idx) => (
     <LinkItem variant="desktop" selected={compare(d.url)} url={d.url} key={idx}>
@@ -74,18 +79,23 @@ export const NavBar: FC = () => {
           justifyContent="center"
           spacing={3}
         >
-          {items$}
+          {!notAllMatching && items$}
         </HStack>
         <HStack flex="20%" justifyContent="flex-end">
-          <BtnIcon aria-label="carrito" icon={<CartIcon />} />
+          <NextLink passHref href={'/carrito'}>
+            <BtnIcon as={'a'} aria-label="carrito">
+              <CartIcon />
+            </BtnIcon>
+          </NextLink>
           <BtnIcon
             display={isVisibleMenuButton ? 'initial' : 'none'}
             aria-label="menu"
             onClick={() => {
               navbarActions.toggle();
             }}
-            icon={navBarState ? <CloseIcon /> : <MenuIcon />}
-          />
+          >
+            {navBarState ? <CloseIcon /> : <MenuIcon />}
+          </BtnIcon>
         </HStack>
       </Nav>
       <Box

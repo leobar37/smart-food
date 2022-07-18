@@ -1,17 +1,62 @@
+import { Box, Checkbox, Text, useToast, VStack } from '@chakra-ui/react';
+import { Option } from '@smartfood/client/v2';
+import { useAtomValue } from 'jotai';
+import { useUpdateAtom } from 'jotai/utils';
+import { FC, useEffect } from 'react';
 import {
-  Box,
-  HStack,
-  Text,
-  useBreakpointValue,
-  VStack,
-} from '@chakra-ui/react';
-import { SliderCounter } from '@smartfood/ui';
+  currentStepAtom,
+  trackSelectionFamily,
+} from '../../atoms/buildProductAtoms';
 
-export const SelectSection = () => {
-  const counterSize = useBreakpointValue<'small' | 'normal'>({
-    base: 'small',
-    lg: 'normal',
-  });
+type SelectSectionProps = {
+  option: Option;
+};
+
+export const SelectSection: FC<SelectSectionProps> = ({ option }) => {
+  const currentStep = useAtomValue(currentStepAtom);
+  const setSelection = useUpdateAtom(trackSelectionFamily(currentStep));
+  const selection = useAtomValue(trackSelectionFamily(currentStep));
+  const toast = useToast();
+
+  useEffect(() => {
+    if (!selection) {
+      setSelection({
+        id: option.id,
+        options: [],
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setSelection, selection]);
+
+  const onChange = (value: string) => {
+    const idsSet = new Set(selection?.options ?? []);
+    const isPresent = idsSet.has(value);
+    if (isPresent) {
+      idsSet.delete(value);
+    }
+
+    const isExceededLimit = Array.from(idsSet).length >= (option.limit ?? 1);
+
+    if (isExceededLimit) {
+      toast({
+        variant: 'solid',
+        position: 'top-right',
+        colorScheme: 'smartgreen',
+        status: 'success',
+        title: `Solo se permiten ${
+          option.limit
+        } ${option.name?.toLocaleLowerCase()}`,
+      });
+    }
+    if (!isExceededLimit && !isPresent) {
+      idsSet.add(value);
+    }
+    setSelection({
+      id: option.id,
+      options: [...Array.from(idsSet)],
+    });
+  };
+
   return (
     <VStack w="full" maxW={'350px'} mb="4" mx={['auto', null, '5']} spacing={4}>
       <Box w="full">
@@ -22,18 +67,31 @@ export const SelectSection = () => {
           my="2"
           color="smartgreen.500"
         >
-          Elige tu base
+          {option.name}
         </Text>
         <Text fontWeight={'normal'} fontSize={['base', null, 'lg']}>
-          Solo puedes escoger solo 01 opción
+          {option.label}
         </Text>
       </Box>
-      <VStack w="full" spacing={4}>
-        {Array.from({ length: 4 }).map((_, idx) => (
-          <HStack spacing={4} w="full" key={idx} justifyContent="start">
-            <SliderCounter value={1} size={counterSize} />
-            <Text fontSize={['base', null, 'md']}>Arroz Sushi</Text>
-          </HStack>
+      <VStack w="full" spacing={5} mt="3" alignItems={'start'}>
+        {(option?.subOptions ?? []).map((subOption, idx) => (
+          <Checkbox
+            isChecked={(selection?.options ?? []).some(
+              (d) => d == subOption.id,
+            )}
+            onChange={(e) => {
+              const value = e.target.value;
+              onChange(value);
+            }}
+            value={subOption.id}
+            key={idx}
+            colorScheme={'smartgreen'}
+            size="lg"
+          >
+            <Text fontSize={['base', null, 'md']} ml={3}>
+              {subOption.name}
+            </Text>
+          </Checkbox>
         ))}
       </VStack>
     </VStack>

@@ -1,18 +1,18 @@
 import {
   Box,
+  BoxProps,
   chakra,
   Image,
   SystemStyleObject,
   Text,
   VStack,
-  BoxProps,
 } from '@chakra-ui/react';
 import { matcher } from '@smartfood/common';
 import { cloneElement, FC, ReactNode } from 'react';
 
 type CardProductProps = {
   content: {
-    title: string;
+    title: ReactNode;
     description: string;
     price: number;
     image: string;
@@ -24,11 +24,11 @@ type CardProductProps = {
 
 const BoxContent = chakra(Box, {
   baseStyle: {
-    maxW: '450px',
+    maxW: '28rem',
     display: 'flex',
     rounded: 'md',
     bg: 'white',
-    shadow: 'md',
+    borderWidth: '1px',
   },
 });
 
@@ -90,15 +90,20 @@ export const CardProduct: FC<CardProductProps> = ({
   return (
     <BoxContent {...props}>
       <VStack
-        px="2"
         py={3}
+        px={4}
         height={'100%'}
         alignItems={['flex-start']}
         justifyContent="flex-end2"
         textAlign={'start'}
         alignSelf={'center'}
       >
-        <Text color="smartgreen.700" fontSize={'2xl'} fontWeight={['semibold']}>
+        <Text
+          as="div"
+          color="smartgreen.700"
+          fontSize={'2xl'}
+          fontWeight={['semibold']}
+        >
           {content.title}
         </Text>
         {descriptionNode}
