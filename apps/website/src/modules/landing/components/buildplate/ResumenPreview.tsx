@@ -14,7 +14,7 @@ import {
   UnorderedList,
   ListItem,
 } from '@chakra-ui/react';
-import { FC, Fragment } from 'react';
+import { FC } from 'react';
 import {
   modalResumeStateAtom,
   resumePreviewAtomsAtom,
@@ -102,7 +102,7 @@ const ResumenItem: FC<ResumenItemProps> = ({ itemAtom }) => {
 const ResumeContent = () => {
   const [resumeItemsAtoms, dispatch] = useAtom(resumePreviewAtomsAtom);
   return (
-    <Fragment>
+    <>
       <Text className="title">Resumen</Text>
       <VStack alignItems={'flex-start'} mx="2">
         {resumeItemsAtoms.map((item, idx) => (
@@ -115,7 +115,7 @@ const ResumeContent = () => {
           S/. 24.90
         </Text>
       </HStack>
-    </Fragment>
+    </>
   );
 };
 
