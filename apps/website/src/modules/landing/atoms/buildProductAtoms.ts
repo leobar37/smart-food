@@ -13,7 +13,7 @@ export const currentProductAtom = atom<Product>({} as any as Product);
 export const selectionAtom = atom<Record<number, Option>>((get) => {
   const product = get(currentProductAtom);
   const options = product.options;
-  const selection = (options ?? [])?.reduce((acc, curr, idx) => {
+  const selection = (options ?? []).reduce((acc, curr, idx) => {
     return {
       ...acc,
       [idx]: curr,

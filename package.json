@@ -12,7 +12,7 @@
     "build-storybook": "build-storybook",
     "prepare": "husky install",
     "gen:types": "yarn chakra-cli tokens  packages/ui/src/theme/index.ts",
-    "postinstall": "preconstruct dev && manypkg fix && manypkg check"
+    "postinstall": "preconstruct dev && manypkg check"
   },
   "workspaces": {
     "nohoist": [

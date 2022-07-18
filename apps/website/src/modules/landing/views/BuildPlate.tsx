@@ -115,6 +115,7 @@ const BuildPlatePage = () => {
         mt={['20', null, '8']}
         mb="8"
         maxWidth={'6xl'}
+        height={'80vh'}
       >
         <Stack direction={'row'}>
           <Box flex={['100%', null, '50%']} w="full">

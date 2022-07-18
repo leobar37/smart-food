@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Box, chakra } from '@chakra-ui/react';
-import { CartIcon } from '@smartfood/ui/src/icons';
+import { CartIcon } from '../../icons';
 
 export type CartIconWithNumberProps = {
   value?: number;

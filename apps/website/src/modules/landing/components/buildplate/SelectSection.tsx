@@ -1,4 +1,4 @@
-import { Box, Checkbox, Text, VStack, useToast } from '@chakra-ui/react';
+import { Box, Checkbox, Text, useToast, VStack } from '@chakra-ui/react';
 import { Option } from '@smartfood/client/v2';
 import { useAtomValue } from 'jotai';
 import { useUpdateAtom } from 'jotai/utils';
@@ -7,14 +7,17 @@ import {
   currentStepAtom,
   trackSelectionFamily,
 } from '../../atoms/buildProductAtoms';
+
 type SelectSectionProps = {
   option: Option;
 };
+
 export const SelectSection: FC<SelectSectionProps> = ({ option }) => {
   const currentStep = useAtomValue(currentStepAtom);
   const setSelection = useUpdateAtom(trackSelectionFamily(currentStep));
   const selection = useAtomValue(trackSelectionFamily(currentStep));
   const toast = useToast();
+
   useEffect(() => {
     if (!selection) {
       setSelection({
@@ -24,6 +27,35 @@ export const SelectSection: FC<SelectSectionProps> = ({ option }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setSelection, selection]);
+
+  const onChange = (value: string) => {
+    const idsSet = new Set(selection?.options ?? []);
+    const isPresent = idsSet.has(value);
+    if (isPresent) {
+      idsSet.delete(value);
+    }
+
+    const isExceededLimit = Array.from(idsSet).length >= (option.limit ?? 1);
+
+    if (isExceededLimit) {
+      toast({
+        variant: 'solid',
+        position: 'top-right',
+        colorScheme: 'smartgreen',
+        status: 'success',
+        title: `Solo se permiten ${
+          option.limit
+        } ${option.name?.toLocaleLowerCase()}`,
+      });
+    }
+    if (!isExceededLimit && !isPresent) {
+      idsSet.add(value);
+    }
+    setSelection({
+      id: option.id,
+      options: [...Array.from(idsSet)],
+    });
+  };
 
   return (
     <VStack w="full" maxW={'350px'} mb="4" mx={['auto', null, '5']} spacing={4}>
@@ -48,29 +80,8 @@ export const SelectSection: FC<SelectSectionProps> = ({ option }) => {
               (d) => d == subOption.id,
             )}
             onChange={(e) => {
-              if (selection.options.length >= (option.limit ?? 1)) {
-                toast({
-                  variant: 'solid',
-                  position: 'top-right',
-                  colorScheme: 'smartgreen',
-                  status: 'success',
-                  title: `Solo se permiten ${
-                    option.limit
-                  } ${option.name?.toLocaleLowerCase()}`,
-                });
-                return;
-              }
               const value = e.target.value;
-              const idsSet = new Set(selection?.options ?? []);
-              if (idsSet.has(value)) {
-                idsSet.delete(value);
-              } else {
-                idsSet.add(value);
-              }
-              setSelection({
-                id: option.id,
-                options: [...Array.from(idsSet)],
-              });
+              onChange(value);
             }}
             value={subOption.id}
             key={idx}
