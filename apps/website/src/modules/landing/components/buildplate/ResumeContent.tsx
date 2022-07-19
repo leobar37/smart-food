@@ -35,7 +35,7 @@ const ResumenItem: FC<ResumenItemProps> = ({ itemAtom, showEdit }) => {
   const stateModalResume = useResumePreviewModal();
   const updateStep = useSetAtom(currentStepAtom);
 
-  if (item.subOptions.length == 0) {
+  if (item.subOptions.length === 0) {
     return null;
   }
 

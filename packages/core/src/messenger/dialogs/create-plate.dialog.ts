@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { ProductService } from '../../service/services/Product.service';
-import { Option , SubOption } from '@smartfood/client';
+import { Option, SubOption } from '@smartfood/client';
 import { makeDictionayByIndex } from '@smartfood/common';
 import { Injectable } from '@nestjs/common';
 import { get } from 'lodash';
@@ -85,23 +85,25 @@ export class CreatePlateDialog {
     } else {
       this.sessionManager.getSession(userId)?.storeOrder(order);
     }
-    console.log("productId", productId);
-    
+    console.log('productId', productId);
+
     return productId;
   }
 
   async processSelectBuildebleTask(senderId: string, producId: string) {
-    const product = await this.productBuildeableService.getCompleteProduct(producId);
-    
+    const product = await this.productBuildeableService.getCompleteProduct(
+      producId,
+    );
+
     console.log(product);
-    
-    const queueOptions = Object.assign([] as any as Option,product.options);
+
+    const queueOptions = Object.assign([] as any as Option, product.options);
 
     let option = queueOptions.shift();
 
     try {
       console.log(option);
-      
+
       while (option) {
         await this.startRequestOptions(senderId, option);
         option = queueOptions.shift();
@@ -197,7 +199,7 @@ export class CreatePlateDialog {
           throw new BotError(senderId, 'CANCEL_ORDER');
         }
       }
-      if (limit == 0) {
+      if (limit === 0) {
         const selectedOption = options.filter((el) => selection.has(el.id));
         const confirm = await this.showConfirmationOptions(
           senderId,
