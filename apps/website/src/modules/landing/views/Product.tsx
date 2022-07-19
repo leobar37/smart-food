@@ -13,6 +13,7 @@ import { FC } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useSingleProduct } from '../controllers';
 import { LandingLayout } from '../landingLayout';
+import { isNil } from 'lodash';
 type ContentProps = {
   text: string;
 };
@@ -52,12 +53,14 @@ const ProductPage = () => {
   const router = useRouter();
   const { id } = router.query as { id: string };
   const { data: product } = useSingleProduct(id);
-  if (!product) {
+
+  if (isNil(product)) {
     return null;
   }
+
   const textDescription =
     product.description ||
-    (product?.description && product.description.length > 0)
+    (product.description && product.description.length > 0)
       ? product.description
       : product.excerpt;
 

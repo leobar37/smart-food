@@ -52,7 +52,7 @@ export const resumePreviewItemsAtom = atom((get) => {
   return Object.values(trackedSelection).map((obj, idx) => {
     const option = product.options?.find((b) => obj.id === b.id);
     const subOptions = obj.options.map((b) =>
-      option?.subOptions?.find((d) => d.id == b),
+      option?.subOptions?.find((d) => d.id === b),
     );
     return {
       step: idx,
@@ -72,7 +72,7 @@ export const currentStepAtom = atom(0);
 export const isLastStepAtom = atom((get) => {
   const product = get(currentProductAtom);
   const currentStep = get(currentStepAtom);
-  return !!((product?.options?.length ?? 1) - 1 == currentStep);
+  return !!((product?.options?.length ?? 1) - 1 === currentStep);
 });
 
 export const currentOptionsFamily = atomFamily((id: number) =>

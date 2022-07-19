@@ -1,13 +1,14 @@
 import {
   Box,
+  BoxProps,
   HStack,
   Link,
   ListItem,
   Text,
   UnorderedList,
   VStack,
-  BoxProps,
 } from '@chakra-ui/react';
+import { SubOption } from '@smartfood/client/v2';
 import {
   ExtractAtomValue,
   PrimitiveAtom,
@@ -33,16 +34,17 @@ const ResumenItem: FC<ResumenItemProps> = ({ itemAtom, showEdit }) => {
   const item = useAtomValue(itemAtom);
   const stateModalResume = useResumePreviewModal();
   const updateStep = useSetAtom(currentStepAtom);
+
   if (item.subOptions.length == 0) {
     return null;
   }
 
   const listSuboptions = (
     <UnorderedList spacing={2}>
-      {item?.subOptions.map((item) => {
+      {(item.subOptions as SubOption[]).map((subOption) => {
         return (
-          <ListItem ml="3" key={item?.id}>
-            {item?.name}
+          <ListItem ml="3" key={subOption.id}>
+            {subOption.name}
           </ListItem>
         );
       })}
