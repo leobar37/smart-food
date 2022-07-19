@@ -1,24 +1,85 @@
-import { Box, Container, Image, Stack, Text, Button } from '@chakra-ui/react';
-import { SliderCounter } from '@smartfood/ui';
+import {
+  Box,
+  Button,
+  Container,
+  HStack,
+  Image,
+  Stack,
+  Text,
+} from '@chakra-ui/react';
+import { BackButton, SliderCounter } from '@smartfood/ui';
+import { useRouter } from 'next/router';
+import { FC } from 'react';
+import ReactMarkdown from 'react-markdown';
+import { useSingleProduct } from '../controllers';
 import { LandingLayout } from '../landingLayout';
+type ContentProps = {
+  text: string;
+};
+
+const Content: FC<ContentProps> = ({ text }) => {
+  return (
+    <Box
+      mx="5"
+      sx={{
+        color: 'smartgray.500',
+        li: {
+          ml: '8',
+        },
+        ul: {
+          my: 2,
+        },
+      }}
+    >
+      <ReactMarkdown
+        components={{
+          h2: ({ children }) => {
+            return (
+              <Text my="2" fontWeight={'semibold'} fontSize="lg">
+                {children}
+              </Text>
+            );
+          },
+        }}
+      >
+        {text}
+      </ReactMarkdown>
+    </Box>
+  );
+};
+
 const ProductPage = () => {
+  const router = useRouter();
+  const { id } = router.query as { id: string };
+  const { data: product } = useSingleProduct(id);
+  if (!product) {
+    return null;
+  }
+  const textDescription =
+    product.description ||
+    (product?.description && product.description.length > 0)
+      ? product.description
+      : product.excerpt;
+
   return (
     <LandingLayout>
-      <Container maxWidth={'6xl'}>
+      <Container maxWidth={'6xl'} my="28" position={'relative'}>
         <Stack
           direction={['column', null, 'row']}
-          align={['initial', null, 'center']}
-          spacing={[1, null, 6]}
+          align={['initial', null, 'start']}
+          spacing={[1, null, 8]}
           sx={{
             my: 8,
           }}
         >
           <Box
             as="figure"
+            maxWidth={'32rem'}
             sx={{
               w: 'full',
               overflow: 'hidden',
               rounded: 'lg',
+              mt: ['initial', null, '12'],
             }}
           >
             <Image
@@ -27,18 +88,26 @@ const ProductPage = () => {
             />
           </Box>
           <Stack direction={'column'} spacing={4}>
-            <Text
-              fontSize={['2xl', null, '5xl']}
-              fontWeight="semibold"
-              color="smartgreen.500"
-            >
-              Plato 1
-            </Text>
-            <Text fontSize={['md', null, 'lg']}>
-              Arroz integral, quinua, mix de lechugas, salmón marinado, atún
-              marinado, palta, col morada, mango, salsa taré, shoyu, chalaquita,
-              togarashi, maní picado, nori.
-            </Text>
+            <HStack mt={['8']}>
+              <BackButton
+                onClick={() => {
+                  router.back();
+                }}
+                position={'absolute'}
+                left="2"
+                top={['-10', null, '-3']}
+              >
+                Volver
+              </BackButton>
+              <Text
+                fontSize={['2xl', null, '5xl']}
+                fontWeight="semibold"
+                color="smartgreen.500"
+              >
+                {product.name}
+              </Text>
+            </HStack>
+            <Content text={textDescription ?? ''} />
             <Stack spacing={3}>
               <SliderCounter value={1} />
               <Text
@@ -46,7 +115,7 @@ const ProductPage = () => {
                 fontSize={'2xl'}
                 color="smartgreen.500"
               >
-                S/ 24.90
+                {product.price} S/.
               </Text>
             </Stack>
             <Stack direction={['column', 'row']}>

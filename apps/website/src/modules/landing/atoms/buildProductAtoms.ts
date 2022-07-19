@@ -69,6 +69,12 @@ export const resumePreviewAtomsAtom = splitAtom(resumePreviewItemsAtom);
 
 export const currentStepAtom = atom(0);
 
+export const isLastStepAtom = atom((get) => {
+  const product = get(currentProductAtom);
+  const currentStep = get(currentStepAtom);
+  return !!((product?.options?.length ?? 1) - 1 == currentStep);
+});
+
 export const currentOptionsFamily = atomFamily((id: number) =>
   atom((get) => {
     const selection = get(selectionAtom);
@@ -77,3 +83,5 @@ export const currentOptionsFamily = atomFamily((id: number) =>
 );
 
 export const modalResumeStateAtom = atom(false);
+
+export const modalConfirmSelectionAtom = atom(false);

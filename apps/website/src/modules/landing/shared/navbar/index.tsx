@@ -79,7 +79,7 @@ export const NavBar: FC = () => {
           justifyContent="center"
           spacing={3}
         >
-          {!notAllMatching && items$}
+          {items$}
         </HStack>
         <HStack flex="20%" justifyContent="flex-end">
           <NextLink passHref href={'/carrito'}>
