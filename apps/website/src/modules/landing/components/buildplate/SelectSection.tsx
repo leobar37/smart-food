@@ -1,32 +1,29 @@
 import { Box, Checkbox, Text, useToast, VStack } from '@chakra-ui/react';
-import { Option } from '@smartfood/client/v2';
 import { useAtomValue } from 'jotai';
 import { useUpdateAtom } from 'jotai/utils';
 import { FC, useEffect } from 'react';
 import {
+  currentOptionsFamily,
   currentStepAtom,
   trackSelectionFamily,
 } from '../../atoms/buildProductAtoms';
 
-type SelectSectionProps = {
-  option: Option;
-};
-
-export const SelectSection: FC<SelectSectionProps> = ({ option }) => {
+export const SelectSection: FC = () => {
   const currentStep = useAtomValue(currentStepAtom);
+  const option = useAtomValue(currentOptionsFamily(currentStep));
   const setSelection = useUpdateAtom(trackSelectionFamily(currentStep));
   const selection = useAtomValue(trackSelectionFamily(currentStep));
   const toast = useToast();
 
   useEffect(() => {
-    if (!selection) {
+    if (!selection && option) {
       setSelection({
         id: option.id,
         options: [],
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setSelection, selection]);
+  }, [setSelection, selection, option]);
 
   const onChange = (value: string) => {
     const idsSet = new Set(selection?.options ?? []);
@@ -56,6 +53,10 @@ export const SelectSection: FC<SelectSectionProps> = ({ option }) => {
       options: [...Array.from(idsSet)],
     });
   };
+
+  if (!option) {
+    return null;
+  }
 
   return (
     <VStack w="full" maxW={'350px'} mb="4" mx={['auto', null, '5']} spacing={4}>

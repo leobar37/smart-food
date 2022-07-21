@@ -6,33 +6,29 @@ import {
   HStack,
   Link,
   Stack,
-  VStack,
   Text,
+  VStack,
 } from '@chakra-ui/react';
-import { Stepper, StepperItem } from '@smartfood/ui';
+import { BtnIcon, Stepper, StepperItem } from '@smartfood/ui';
 import { useAtomValue } from 'jotai';
 import { useUpdateAtom } from 'jotai/utils';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import {
-  currentOptionsFamily,
   currentProductAtom,
   currentStepAtom,
   selectionAtom,
 } from '../atoms/buildProductAtoms';
 import {
+  ModalConfirmationPlate,
   ResumenPreview,
   ResumenPreviewModal,
   SelectSection,
-  useResumePreviewModal,
+  FooterSelectSection,
 } from '../components/buildplate';
 import { useSingleProduct } from '../controllers';
 import { LandingLayout } from '../landingLayout';
-import { BiArrowBack } from 'react-icons/bi';
-import { BtnIcon } from '@smartfood/ui';
-
-const BackIcon = chakra(BiArrowBack);
-
+import { BackButton } from '@smartfood/ui';
 const Title = chakra('h2', {
   baseStyle: {
     mx: 'auto',
@@ -57,23 +53,16 @@ const Header = () => {
   return (
     <Box mt={4}>
       <HStack justifyContent={'center'}>
-        <BtnIcon
+        <BackButton
           position={['static', null, 'absolute']}
           top={['0', null, '5']}
-          display={'flex'}
           left={[0, null, '0', '-3rem']}
-          fontSize="2xl"
-          gap={'1rem'}
-          px="3"
           onClick={() => {
-            router.back();
+            router.push('/armatuplato');
           }}
         >
-          <BackIcon fontSize={'lg'} />{' '}
-          <Text fontSize={'md'} display={['none', null, null, 'block']}>
-            Volver
-          </Text>
-        </BtnIcon>
+          Volver
+        </BackButton>
         <Title>Arma tu {product.name}</Title>
       </HStack>
       <HStack my={3} w="full" justifyContent={'center'} height="42px">
@@ -85,19 +74,12 @@ const Header = () => {
   );
 };
 
-const SelectionSection = () => {
-  const currentStep = useAtomValue(currentStepAtom);
-  const currentOption = useAtomValue(currentOptionsFamily(currentStep));
-  return currentOption && <SelectSection option={currentOption} />;
-};
-
 const BuildPlatePage = () => {
   const router = useRouter();
   const id = router.query?.id as string;
   const { data: product } = useSingleProduct(id);
   const setProduct = useUpdateAtom(currentProductAtom);
-  const updateStep = useUpdateAtom(currentStepAtom);
-  const modalPreviewState = useResumePreviewModal();
+
   useEffect(() => {
     if (product) {
       setProduct(product);
@@ -115,57 +97,13 @@ const BuildPlatePage = () => {
         mt={['20', null, '8']}
         mb="8"
         maxWidth={'6xl'}
-        height={'80vh'}
+        minH={'80vh'}
       >
         <Stack direction={'row'}>
           <Box flex={['100%', null, '50%']} w="full">
             <Header />
-            <SelectionSection />
-            <VStack mt={'8'} alignItems={['center', null, 'flex-start']}>
-              <Link
-                display={['initial', null, 'none']}
-                color={'smartgreen.500'}
-                fontSize={'md'}
-                onClick={() => {
-                  modalPreviewState.onOpen();
-                }}
-              >
-                Ver Resumen
-              </Link>
-              <HStack justifyContent={'space-around'}>
-                <Button
-                  colorScheme={'smartgray'}
-                  variant="outline"
-                  minW={[null, null, '12rem']}
-                  onClick={() => {
-                    updateStep((prev) => {
-                      if (prev == 0) {
-                        return 0;
-                      }
-                      return prev - 1;
-                    });
-                  }}
-                  size="lg"
-                >
-                  Atrás
-                </Button>
-                <Button
-                  minW={[null, null, '12rem']}
-                  colorScheme={'smartgray'}
-                  onClick={() => {
-                    updateStep((prev) => {
-                      if (prev == 4) {
-                        return 0;
-                      }
-                      return prev + 1;
-                    });
-                  }}
-                  size="lg"
-                >
-                  Continuar
-                </Button>
-              </HStack>
-            </VStack>
+            <SelectSection />
+            <FooterSelectSection />
           </Box>
           <Box flex="40%" display={['none', null, 'block']}>
             <ResumenPreview />
@@ -173,6 +111,7 @@ const BuildPlatePage = () => {
         </Stack>
       </Container>
       <ResumenPreviewModal />
+      <ModalConfirmationPlate />
     </LandingLayout>
   );
 };

@@ -1585,6 +1585,7 @@ export type ProductFragmentFragment = {
   count?: number | null;
   price?: number | null;
   excerpt?: string | null;
+  description?: string | null;
   photo?: {
     __typename?: 'CloudinaryImage_File';
     id?: string | null;
@@ -1609,6 +1610,7 @@ export type GetProductsQuery = {
     count?: number | null;
     price?: number | null;
     excerpt?: string | null;
+    description?: string | null;
     category?: {
       __typename?: 'Category';
       name?: string | null;
@@ -1653,6 +1655,7 @@ export type GetProductQuery = {
     count?: number | null;
     price?: number | null;
     excerpt?: string | null;
+    description?: string | null;
     options?: Array<{
       __typename?: 'Option';
       id: string;
@@ -1696,6 +1699,7 @@ export type GetCategoriesQuery = {
       count?: number | null;
       price?: number | null;
       excerpt?: string | null;
+      description?: string | null;
       photo?: {
         __typename?: 'CloudinaryImage_File';
         id?: string | null;
@@ -1735,6 +1739,7 @@ export const ProductFragmentFragmentDoc = gql`
     count
     price
     excerpt
+    description
   }
 `;
 export const PatchOrderDocument = gql`

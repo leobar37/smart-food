@@ -3,6 +3,7 @@ import {
   useBreakpointValue,
   Link,
   LinkOverlay,
+  LinkBox,
 } from '@chakra-ui/react';
 import { Product } from '@smartfood/client/v2';
 import { CardProduct, SliderCounter } from '@smartfood/ui';
@@ -20,23 +21,31 @@ const ProductCard: FC<ProductCardProps> = ({ product }) => {
   });
 
   return (
-    <CardProduct
-      mb="16"
-      mx={['auto']}
-      size={cardSize as any}
-      button={<Button>Agregar al carrito</Button>}
-      counter={<SliderCounter value={10} />}
-      content={{
-        description: product?.excerpt ?? '',
-        image: product.photo?.publicUrlTransformed ?? '',
-        price: product?.price ?? 0,
-        title: (
-          <NextLink href={`/carta/${product.id}`} passHref>
-            <Link>{product?.name ?? ''}</Link>
-          </NextLink>
-        ),
-      }}
-    />
+    <LinkBox mb="16" width="max-content" mx={['auto']}>
+      <CardProduct
+        size={cardSize as any}
+        button={
+          <Button
+            onClick={() => {
+              console.log('this working');
+            }}
+          >
+            Agregar al carrito
+          </Button>
+        }
+        counter={<SliderCounter value={10} />}
+        content={{
+          description: product?.excerpt ?? '',
+          image: product.photo?.publicUrlTransformed ?? '',
+          price: product?.price ?? 0,
+          title: (
+            <NextLink href={`/carta/${product.id}`} passHref>
+              <LinkOverlay as={Link}>{product?.name ?? ''}</LinkOverlay>
+            </NextLink>
+          ),
+        }}
+      />
+    </LinkBox>
   );
 };
 

@@ -30,12 +30,14 @@ export const ArmedProducts = () => {
     <LinkBox key={product.id}>
       <ExoticCard
         variant={cardVariant}
-        title={`Arma tu ${product.name}`}
+        title={
+          <NextLink passHref href={`/armatuplato/${product.id}`}>
+            <LinkOverlay>{`Arma tu ${product.name}`}</LinkOverlay>
+          </NextLink>
+        }
         link={
           <NextLink passHref href={`/armatuplato/${product.id}`}>
-            <LinkOverlay>
-              <Link as="span">Haz Click</Link>
-            </LinkOverlay>
+            <LinkOverlay>Haz Click</LinkOverlay>
           </NextLink>
         }
         src={product?.photo?.publicUrlTransformed ?? ''}
@@ -43,6 +45,7 @@ export const ArmedProducts = () => {
       />
     </LinkBox>
   ));
+
   return (
     <Box
       sx={{
@@ -70,7 +73,7 @@ export const ArmedProducts = () => {
       <Stack
         width={'full'}
         my={[4, null, 8]}
-        spacing={5}
+        spacing={3}
         alignItems={'center'}
         justifyContent="center"
         w="full"
