@@ -15,7 +15,7 @@ type ExoticCardProps = {
   variant?: 'small' | 'large';
   src: string;
   alt?: string;
-  title: string;
+  title: ReactNode;
   subTitle: string;
   link: ReactNode;
 };

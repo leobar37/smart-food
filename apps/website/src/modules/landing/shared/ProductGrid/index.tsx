@@ -38,7 +38,13 @@ export const ProductsGrid: FC<ProductsGridProps> = ({
         </Text>
         <Text fontSize={['md', null, 'lg']}>{description}</Text>
       </Box>
-      <Flex flexWrap={['wrap']} mx="auto" my="3" justifyContent="center">
+      <Flex
+        flexWrap={['wrap']}
+        mx="auto"
+        maxWidth={'5xl'}
+        my="3"
+        justifyContent="center"
+      >
         {products.map((pr) => (
           <ProductCard product={pr} key={pr?.id} />
         ))}
