@@ -11,7 +11,5 @@ const breakpoints = {
 
 export const useBreakpoint = (breakpoint: keyof typeof breakpoints) => {
   const value = useBreakpointValue(breakpoints);
-  console.log(value);
-
   return value === breakpoint;
 };
