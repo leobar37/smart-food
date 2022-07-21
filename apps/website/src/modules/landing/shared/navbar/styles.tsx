@@ -23,7 +23,8 @@ export const NavWrapper = chakra('div', {
   baseStyle: {
     w: 'full',
     bg: 'white',
-    position: 'fixed',
+    height: '68px',
+    position: 'sticky',
     top: 0,
     left: 0,
     zIndex: 150,

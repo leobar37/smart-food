@@ -1,19 +1,11 @@
-import { Box } from '@chakra-ui/react';
-import { useBreakpintValue } from '@smartfood/ui';
 import { NextPage } from 'next';
 import Header from '../components/home/header';
-import { ArmedProducts, Footer, ProductsLine } from '../shared';
-import NavBar from '../shared/navbar';
+import { ArmedProducts, ProductsLine } from '../shared';
 import { useCategoriesWithProducts } from '../controllers';
 import { Product } from '@smartfood/client/v2';
 import { PRODUCTS_FOR_BUILD_ID } from '../constants';
-const dataDefault = {
-  title: `Prueba nuestros armados para ti`,
-  description: ` Elige entre toda la variedad de platos deliciosos que hemos armado
-  pensando en ti.`,
-};
+import { LandingLayout } from '../landingLayout';
 const HomePage: NextPage = () => {
-  const breakpoint = useBreakpintValue();
   const { data: categoryData } = useCategoriesWithProducts();
 
   const linesInHome = categoryData
@@ -30,13 +22,11 @@ const HomePage: NextPage = () => {
     });
 
   return (
-    <Box>
-      <NavBar />
+    <LandingLayout>
       <Header />
       <ArmedProducts />
       {linesInHome}
-      <Footer />
-    </Box>
+    </LandingLayout>
   );
 };
 

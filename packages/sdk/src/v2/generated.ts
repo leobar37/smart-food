@@ -1491,6 +1491,17 @@ export type UserWhereUniqueInput = {
 };
 
 export type OrderFragmentFragment = {
+  __typename?: 'Order';
+  id: string;
+  orderNumber?: number | null;
+  createdAt?: any | null;
+  status?: OrderStatusType | null;
+  linesCount?: number | null;
+  total?: number | null;
+  metadata?: any | null;
+};
+
+export type OrderOutputFragmentFragment = {
   __typename?: 'OrderOutput';
   id?: string | null;
   orderNumber?: number | null;
@@ -1499,6 +1510,44 @@ export type OrderFragmentFragment = {
   linesCount?: number | null;
   total?: number | null;
   metadata?: any | null;
+};
+
+export type GetOrderQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']>;
+}>;
+
+export type GetOrderQuery = {
+  __typename?: 'Query';
+  order?: {
+    __typename?: 'Order';
+    id: string;
+    orderNumber?: number | null;
+    createdAt?: any | null;
+    status?: OrderStatusType | null;
+    linesCount?: number | null;
+    total?: number | null;
+    metadata?: any | null;
+    lines?: Array<{
+      __typename?: 'OrderLine';
+      id: string;
+      selection?: any | null;
+      quantity?: number | null;
+      total?: number | null;
+    }> | null;
+  } | null;
+};
+
+export type GetOrderLineCountQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']>;
+}>;
+
+export type GetOrderLineCountQuery = {
+  __typename?: 'Query';
+  order?: {
+    __typename?: 'Order';
+    id: string;
+    linesCount?: number | null;
+  } | null;
 };
 
 export type PatchOrderMutationVariables = Exact<{
@@ -1714,7 +1763,18 @@ export type GetCategoriesQuery = {
 };
 
 export const OrderFragmentFragmentDoc = gql`
-  fragment OrderFragment on OrderOutput {
+  fragment OrderFragment on Order {
+    id
+    orderNumber
+    createdAt
+    status
+    linesCount
+    total
+    metadata
+  }
+`;
+export const OrderOutputFragmentFragmentDoc = gql`
+  fragment OrderOutputFragment on OrderOutput {
     id
     orderNumber
     createdAt
@@ -1742,13 +1802,35 @@ export const ProductFragmentFragmentDoc = gql`
     description
   }
 `;
-export const PatchOrderDocument = gql`
-  mutation patchOrder($email: String, $metadata: Metadata, $orderId: String) {
-    makeOrder(email: $email, metadata: $metadata, orderId: $orderId) {
+export const GetOrderDocument = gql`
+  query getOrder($id: ID) {
+    order(where: { id: $id }) {
       ...OrderFragment
+      lines {
+        id
+        selection
+        quantity
+        total
+      }
     }
   }
   ${OrderFragmentFragmentDoc}
+`;
+export const GetOrderLineCountDocument = gql`
+  query getOrderLineCount($id: ID) {
+    order(where: { id: $id }) {
+      id
+      linesCount
+    }
+  }
+`;
+export const PatchOrderDocument = gql`
+  mutation patchOrder($email: String, $metadata: Metadata, $orderId: String) {
+    makeOrder(email: $email, metadata: $metadata, orderId: $orderId) {
+      ...OrderOutputFragment
+    }
+  }
+  ${OrderOutputFragmentFragmentDoc}
 `;
 export const PatchOrderLineDocument = gql`
   mutation patchOrderLine(
@@ -1761,7 +1843,7 @@ export const PatchOrderLineDocument = gql`
       orderLineId: $orderLineId
       orderLine: $orderLine
     ) {
-      ...OrderFragment
+      ...OrderOutputFragment
       lines {
         id
         selection
@@ -1772,12 +1854,12 @@ export const PatchOrderLineDocument = gql`
       }
     }
   }
-  ${OrderFragmentFragmentDoc}
+  ${OrderOutputFragmentFragmentDoc}
 `;
 export const DeleteOrderLineDocument = gql`
   mutation deleteOrderLine($orderId: String, $lineOrderId: String) {
     customDeleteOrderLine(orderId: $orderId, lineOrderId: $lineOrderId) {
-      ...OrderFragment
+      ...OrderOutputFragment
       lines {
         id
         selection
@@ -1788,7 +1870,7 @@ export const DeleteOrderLineDocument = gql`
       }
     }
   }
-  ${OrderFragmentFragmentDoc}
+  ${OrderOutputFragmentFragmentDoc}
 `;
 export const GetProductsDocument = gql`
   query getProducts($includeOptions: Boolean!) {
@@ -1857,6 +1939,8 @@ const defaultWrapper: SdkFunctionWrapper = (
   _operationName,
   _operationType,
 ) => action();
+const GetOrderDocumentString = print(GetOrderDocument);
+const GetOrderLineCountDocumentString = print(GetOrderLineCountDocument);
 const PatchOrderDocumentString = print(PatchOrderDocument);
 const PatchOrderLineDocumentString = print(PatchOrderLineDocument);
 const DeleteOrderLineDocumentString = print(DeleteOrderLineDocument);
@@ -1868,6 +1952,45 @@ export function getSdk(
   withWrapper: SdkFunctionWrapper = defaultWrapper,
 ) {
   return {
+    getOrder(
+      variables?: GetOrderQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: GetOrderQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<GetOrderQuery>(GetOrderDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'getOrder',
+        'query',
+      );
+    },
+    getOrderLineCount(
+      variables?: GetOrderLineCountQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: GetOrderLineCountQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<GetOrderLineCountQuery>(
+            GetOrderLineCountDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'getOrderLineCount',
+        'query',
+      );
+    },
     patchOrder(
       variables?: PatchOrderMutationVariables,
       requestHeaders?: Dom.RequestInit['headers'],

@@ -10,7 +10,7 @@ export const LandingLayout: FC<LandingLayoutProps> = ({
   ...props
 }) => {
   return (
-    <Box mt={'20'} {...props}>
+    <Box mt="full" {...props}>
       <NavBar />
       {children}
       <Footer />

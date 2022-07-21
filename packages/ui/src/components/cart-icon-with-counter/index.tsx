@@ -14,22 +14,31 @@ export type CartIconWithNumberProps = {
 const CounterContainer = chakra('div', {
   baseStyle: {
     position: 'absolute',
-    width: '13px',
-    height: '13px',
+    width: '1rem',
+    height: '1rem',
     borderRadius: '50%',
-    fontSize: '10px',
-    top: '3px',
-    right: '3px',
+    fontSize: '11px',
+    transform: 'translate(-50%, -50%)',
+    top: '0',
+    left: '100%',
+    textAlign: 'center',
   },
 });
 
 export const CartIconWithCounter: FC<CartIconWithNumberProps> = (props) => {
   return (
-    <Box width={props.width} height={props.height}>
-      <CartIcon width="100%" height="100%" color={props.color} />
-      <CounterContainer bg={props.circleColor} color={props.counterColor}>
-        {props.value > 99 ? 99 : props.value}
-      </CounterContainer>
+    <Box width={props.width} height={props.height} position="relative">
+      <CartIcon
+        width="100%"
+        height="100%"
+        color={props.color}
+        display="block"
+      />
+      {props.value > 0 && (
+        <CounterContainer bg={props.circleColor} color={props.counterColor}>
+          {props.value > 99 ? 99 : props.value}
+        </CounterContainer>
+      )}
     </Box>
   );
 };

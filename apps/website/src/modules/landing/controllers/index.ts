@@ -1,11 +1,13 @@
 import cmsLib from '@App/lib/cms';
-import { Product } from '@smartfood/client/v2';
-import { useAtomValue } from 'jotai';
+import { Product, OrderOutput } from '@smartfood/client/v2';
+import { useAtomValue, useUpdateAtom } from 'jotai/utils';
 import get from 'lodash.get';
 import { useMemo } from 'react';
 import { useQuery } from 'react-query';
 import { queryAtom } from '../atoms/SearchAtoms';
+import { currentOrderAtom, orderLinesCountAtom } from '../atoms/cartAtoms';
 import { cacheKeys } from '../constants';
+
 export const useCategoriesWithProducts = () => {
   return useQuery(
     cacheKeys.products,
@@ -51,4 +53,24 @@ export const useSingleProduct = (id: string) => {
   return useQuery([...cacheKeys.product, id], () => cmsLib.products.get(id), {
     enabled: false,
   });
+};
+
+export const useOrderLinesCount = () => {
+  const setOrder = useUpdateAtom(currentOrderAtom);
+  const orderLinesCount = useAtomValue(orderLinesCountAtom);
+
+  useQuery(
+    'linesCount',
+    async () => {
+      const orderWithLineCount = await cmsLib.order.getOrderLinesCount();
+      setOrder(orderWithLineCount as OrderOutput);
+    },
+    {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      refetchOnMount: false,
+    },
+  );
+
+  return orderLinesCount;
 };

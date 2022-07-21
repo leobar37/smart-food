@@ -5,20 +5,21 @@ import {
   useBreakpointValue,
   VStack,
 } from '@chakra-ui/react';
-import { cx } from '@chakra-ui/utils';
+
 import {
   Brand,
   BtnIcon,
-  CartIcon,
   MenuIcon,
   useMounted,
-  useWindowScroll,
+  CartIconWithCounter,
 } from '@smartfood/ui';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { FC } from 'react';
 import LinkItem from './LinkItem';
 import { CloseIcon, Nav, NavWrapper } from './styles';
+import { useOrderLinesCount } from '../../controllers';
+
 type Properties = {
   brandSize: 'sm' | 'lg';
 };
@@ -30,8 +31,8 @@ type NavBarItem = {
 
 export const NavBar: FC = () => {
   const [navBarState, navbarActions] = useBoolean(false);
-  const scrollY = useWindowScroll();
   const router = useRouter();
+
   const propertiesByBr = useBreakpointValue<Properties>({
     base: {
       brandSize: 'sm',
@@ -40,7 +41,9 @@ export const NavBar: FC = () => {
       brandSize: 'lg',
     },
   });
+
   const isMounted = useMounted();
+
   const items: NavBarItem[] = [
     {
       title: 'Inicio',
@@ -65,6 +68,7 @@ export const NavBar: FC = () => {
       {d.title}
     </LinkItem>
   ));
+
   const isVisibleMenuButton = useBreakpointValue([true, null, false]);
 
   // this prevents this component from being rendered in the server, to avoid hidratation problems
@@ -72,9 +76,11 @@ export const NavBar: FC = () => {
     return null;
   }
 
+  const linesCount = useOrderLinesCount();
+
   return (
-    <NavWrapper className={cx(`${scrollY > 100 && 'fixed'}`)}>
-      <Nav as="nav">
+    <NavWrapper>
+      <Nav as="nav" height="100%">
         <NextLink href={'/'}>
           <Box as="a" flex="20%" cursor={'pointer'}>
             <Brand size={propertiesByBr?.brandSize} />
@@ -91,8 +97,8 @@ export const NavBar: FC = () => {
         </HStack>
         <HStack flex="20%" justifyContent="flex-end">
           <NextLink passHref href={'/carrito'}>
-            <BtnIcon as={'a'} aria-label="carrito">
-              <CartIcon />
+            <BtnIcon as={'a'} aria-label="carrito" position="relative">
+              <CartIconWithCounter value={linesCount} />
             </BtnIcon>
           </NextLink>
           <BtnIcon
