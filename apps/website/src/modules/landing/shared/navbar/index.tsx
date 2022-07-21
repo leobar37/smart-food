@@ -6,13 +6,19 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { cx } from '@chakra-ui/utils';
-import { Brand, CartIcon, MenuIcon, useWindowScroll } from '@smartfood/ui';
+import {
+  Brand,
+  BtnIcon,
+  CartIcon,
+  MenuIcon,
+  useMounted,
+  useWindowScroll,
+} from '@smartfood/ui';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { FC } from 'react';
 import LinkItem from './LinkItem';
 import { CloseIcon, Nav, NavWrapper } from './styles';
-import { BtnIcon } from '@smartfood/ui';
 type Properties = {
   brandSize: 'sm' | 'lg';
 };
@@ -34,6 +40,7 @@ export const NavBar: FC = () => {
       brandSize: 'lg',
     },
   });
+  const isMounted = useMounted();
   const items: NavBarItem[] = [
     {
       title: 'Inicio',
@@ -50,12 +57,8 @@ export const NavBar: FC = () => {
   ];
 
   const compare = (path: string) => {
-    return path == router.pathname;
+    return path === router.pathname;
   };
-  /**
-   * If a option is not present in the navbar, then should not visible for the user
-   */
-  const notAllMatching = items.every((d) => !compare(d.url));
 
   const items$ = items.map((d, idx) => (
     <LinkItem variant="desktop" selected={compare(d.url)} url={d.url} key={idx}>
@@ -63,6 +66,11 @@ export const NavBar: FC = () => {
     </LinkItem>
   ));
   const isVisibleMenuButton = useBreakpointValue([true, null, false]);
+
+  // this prevents this component from being rendered in the server, to avoid hidratation problems
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <NavWrapper className={cx(`${scrollY > 100 && 'fixed'}`)}>
