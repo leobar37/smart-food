@@ -18,14 +18,16 @@ fragment OrderOutputFragment on OrderOutput {
   metadata
 }
 
-query getOrder($id: ID) {
-  order(where: { id: $id }) {
-    ...OrderFragment
+query getOrder($orderId: String!) {
+  ecoOrder(orderId: $orderId) {
+    ...OrderOutputFragment
     lines {
       id
       selection
       quantity
+      orderId
       total
+      productId
     }
   }
 }

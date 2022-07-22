@@ -1,28 +1,55 @@
 import { Button, Container, Stack, Text } from '@chakra-ui/react';
+import { get } from 'lodash';
 import { ItemCart, SectionItems } from '../components/Cart';
 import Header from '../components/cartPage/header';
 import { ModalCheckout, SendModal } from '../components/checkout';
+import { useDetailedOrder } from '../controllers/cart';
 import { LandingLayout } from '../landingLayout';
+const ProductsSide = () => {
+  const detailedOrder = useDetailedOrder();
+  // TODO: add not result component
+  if (!detailedOrder) {
+    return null;
+  }
+  const { noArmedProducts } = detailedOrder;
+  return (
+    <SectionItems title="Pedidos de la carta">
+      {noArmedProducts.map((line, idx) => (
+        <ItemCart isEditable={false} line={line} key={idx} />
+      ))}
+    </SectionItems>
+  );
+};
+
+const ArmedProductsSide = () => {
+  const detailedOrder = useDetailedOrder();
+  //TODO: add not result component
+  if (!detailedOrder) {
+    return null;
+  }
+  const { armedProducts } = detailedOrder;
+
+  return (
+    <SectionItems title="Pedidos de la carta">
+      {armedProducts.map((line, idx) => (
+        <ItemCart isEditable line={line} key={idx} />
+      ))}
+    </SectionItems>
+  );
+};
 
 const CartPage = () => {
+  const detailedOrder = useDetailedOrder();
   return (
-    <LandingLayout mt={8}>
+    <LandingLayout>
       <Header />
       <Container as="section" maxW={'5xl'}>
         <Stack
           direction={['column', null, 'row']}
           justifyContent="space-between"
         >
-          <SectionItems title="Pedidos de la carta">
-            {Array.from({ length: 3 }).map((_, idx) => (
-              <ItemCart key={idx} />
-            ))}
-          </SectionItems>
-          <SectionItems title="Pedidos de la carta">
-            {Array.from({ length: 3 }).map((_, idx) => (
-              <ItemCart key={idx} />
-            ))}
-          </SectionItems>
+          <ProductsSide />
+          <ArmedProductsSide />
         </Stack>
         <Stack
           my={['2', null, '3']}
@@ -37,7 +64,7 @@ const CartPage = () => {
             fontSize={['xl', null, '2xl']}
             textAlign={'center'}
           >
-            Total: S/.100.00
+            Total: {get(detailedOrder, 'totalPrice', 0)} S/.
           </Text>
           <Button size={'lg'} colorScheme={'smartgreen'}>
             Realizar pedido

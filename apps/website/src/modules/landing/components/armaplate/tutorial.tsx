@@ -1,7 +1,7 @@
 import { Box, Container, Flex, Text, VStack } from '@chakra-ui/react';
 import NextImage from 'next/image';
 import { FC } from 'react';
-import { useBreakpointValueSSR } from '../../hocks/useBreakpointValue';
+import { useBreakpointValueSSR } from '../../hooks/useBreakpointValue';
 
 type CardTutorialProps = {
   title: string;

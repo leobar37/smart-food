@@ -9,7 +9,7 @@ import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 import { FiSearch } from 'react-icons/fi';
 import { queryAtom } from '../../atoms/SearchAtoms';
-import { useBreakpointValueSSR } from '../../hocks/useBreakpointValue';
+import { useBreakpointValueSSR } from '../../hooks/useBreakpointValue';
 import { SearchContent } from './SearchContent';
 
 export const SearchInput = () => {

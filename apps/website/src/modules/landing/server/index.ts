@@ -60,3 +60,15 @@ export const singleProductHandler: GetServerSideProps = async (context) => {
     props: witHydration(client)({}),
   };
 };
+
+export const cartHandler: GetServerSideProps = async () => {
+  const client = new QueryClient();
+  await client.prefetchQuery(cacheKeys.products, () =>
+    cmsClient.categories.list({
+      relations: ['products'],
+    }),
+  );
+  return {
+    props: witHydration(client)({}),
+  };
+};

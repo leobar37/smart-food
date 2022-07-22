@@ -19,7 +19,7 @@ import {
 import { BtnIcon, CheckIcon } from '@smartfood/ui';
 import { useRouter } from 'next/router';
 import { ReactNode, useState, useMemo } from 'react';
-import { useBreakpointValueSSR } from '../../hocks/useBreakpointValue';
+import { useBreakpointValueSSR } from '../../hooks/useBreakpointValue';
 import { ResumeTitle } from './elements';
 import { useConfirmModal } from './helpers';
 import ResumeContent from './ResumeContent';

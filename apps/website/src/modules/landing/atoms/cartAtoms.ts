@@ -12,3 +12,5 @@ export const orderLinesCountAtom = atom<number>((get) => {
   const order = get(currentOrderAtom);
   return order?.linesCount ?? 0;
 });
+
+export const linesCountAtom = atom(0);

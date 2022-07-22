@@ -3,9 +3,10 @@ import { Product } from '@smartfood/client/v2';
 import { CardProduct, SliderCounter } from '@smartfood/ui';
 import NextLink from 'next/link';
 import { FC, useState } from 'react';
-import { useCartControllerSetter } from '../../controllers/cartController';
-import { useBreakpointValueSSR } from '../../hocks/useBreakpointValue';
-
+import { useAddToCart } from '../../controllers';
+import { useBreakpointValueSSR } from '../../hooks/useBreakpointValue';
+import { linesCountAtom } from '../../atoms/cartAtoms';
+import { useSetAtom } from 'jotai';
 type ProductCardProps = {
   product: Product;
 };
@@ -18,8 +19,8 @@ const ProductCard: FC<ProductCardProps> = ({ product }) => {
 
   const [quantity, setQuantity] = useState(1);
 
-  const { addToCart } = useCartControllerSetter();
-
+  const addToCartMutation = useAddToCart();
+  const setLinesCount = useSetAtom(linesCountAtom);
   return (
     <LinkBox mb="16" width="max-content" mx={['auto']}>
       <CardProduct
@@ -27,11 +28,21 @@ const ProductCard: FC<ProductCardProps> = ({ product }) => {
         button={
           <Button
             onClick={() => {
-              addToCart({
-                quantity,
-                productId: product.id,
-                price: product.price,
-              });
+              setLinesCount((prev) => prev + 1);
+              addToCartMutation.mutate(
+                {
+                  productId: product.id,
+                  quantity: quantity,
+                },
+                {
+                  onSettled: () => {
+                    setQuantity(1);
+                  },
+                  onError: () => {
+                    setLinesCount((prev) => prev - 1);
+                  },
+                },
+              );
             }}
           >
             Agregar al carrito

@@ -1,13 +1,14 @@
-import { Box, HStack, useBoolean, VStack } from '@chakra-ui/react';
-import { useBreakpointValueSSR } from '../../hocks/useBreakpointValue';
+import { Box, HStack, IconButton, useBoolean, VStack } from '@chakra-ui/react';
+import { useBreakpointValueSSR } from '../../hooks/useBreakpointValue';
 import { Brand, BtnIcon, MenuIcon, CartIconWithCounter } from '@smartfood/ui';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { FC } from 'react';
 import LinkItem from './LinkItem';
 import { CloseIcon, Nav, NavWrapper } from './styles';
-import { useOrderLinesCount } from '../../controllers';
-
+import { useAtomValue } from 'jotai';
+import { linesCountAtom } from '../../atoms/cartAtoms';
+import { BadgeWithCount, CartIcon } from '@smartfood/ui';
 type Properties = {
   brandSize: 'sm' | 'lg';
 };
@@ -57,11 +58,11 @@ export const NavBar: FC = () => {
 
   const isVisibleMenuButton = useBreakpointValueSSR([true, null, false]);
 
-  const linesCount = useOrderLinesCount();
+  const linesCount = useAtomValue(linesCountAtom);
 
   return (
     <NavWrapper>
-      <Nav as="nav" height="100%">
+      <Nav as="nav">
         <NextLink href={'/'}>
           <Box as="a" flex="20%" cursor={'pointer'}>
             <Brand size={propertiesByBr?.brandSize} />
@@ -77,11 +78,17 @@ export const NavBar: FC = () => {
           {items$}
         </HStack>
         <HStack flex="20%" justifyContent="flex-end">
-          <NextLink passHref href={'/carrito'}>
-            <BtnIcon as={'a'} aria-label="carrito" position="relative">
-              <CartIconWithCounter value={linesCount} />
-            </BtnIcon>
-          </NextLink>
+          <BadgeWithCount bg="smartgray.300" color="white" value={linesCount}>
+            <NextLink passHref href={'/carrito'}>
+              <IconButton
+                cursor={'pointer'}
+                as="span"
+                aria-label=""
+                bg="transparent"
+                icon={<CartIcon />}
+              />
+            </NextLink>
+          </BadgeWithCount>
           <BtnIcon
             display={isVisibleMenuButton ? 'initial' : 'none'}
             aria-label="menu"

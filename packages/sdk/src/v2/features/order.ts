@@ -1,5 +1,4 @@
 import {
-  OrderOutput,
   PatchOrderLineMutationVariables,
   PatchOrderMutationVariables,
 } from '../generated';
@@ -13,56 +12,20 @@ export type CreateLineArgs = Omit<
 >;
 
 export class OrderHandler extends Feature {
-  ORDER_KEY = 'CURRENT_ORDER';
   ORDER_ID_KEY = 'CURRENT_ORDER_ID';
 
   async get() {
-    const prevOrderId = this.client.storage.get(this.ORDER_KEY);
-
-    if (!prevOrderId) {
-      return;
-    }
-
-    const orderResult = await this.client.wrap(
-      this.client.api.getOrder({ id: prevOrderId }),
-    );
-
-    const order = orderResult.order;
-
-    this.client.storage.set(this.ORDER_ID_KEY, order?.id);
-    this.client.storage.setJson(this.ORDER_KEY, order);
-
-    return order;
-  }
-
-  async getOrderLinesCount() {
-    const currentOrderId = this.client.storage.get(this.ORDER_ID_KEY);
-
-    const currentOrder = this.client.storage.getJson<OrderOutput>(
-      this.ORDER_KEY,
-    );
-
-    const orderId = currentOrderId ?? currentOrder?.id;
-
+    const orderId = this.client.storage.get(this.ORDER_ID_KEY);
     if (!orderId) {
-      return;
+      return null;
     }
-
-    const orderWithLineCount = await this.client.wrap(
-      this.client.api.getOrderLineCount({
-        id: orderId,
+    const result = await this.client.wrap(
+      this.client.api.getOrder({
+        orderId: orderId,
       }),
     );
 
-    const order = {
-      ...currentOrder,
-      ...orderWithLineCount.order,
-    };
-
-    this.client.storage.set(this.ORDER_ID_KEY, order?.id);
-    this.client.storage.setJson(this.ORDER_KEY, order);
-
-    return order;
+    return result.ecoOrder;
   }
 
   /**
@@ -82,7 +45,6 @@ export class OrderHandler extends Feature {
     const order = result.makeOrder;
 
     this.client.storage.set(this.ORDER_ID_KEY, order.id);
-    this.client.storage.setJson(this.ORDER_KEY, order);
 
     return order;
   }
@@ -102,7 +64,6 @@ export class OrderHandler extends Feature {
     const order = result.makeOrder;
 
     this.client.storage.set(this.ORDER_ID_KEY, order.id);
-    this.client.storage.setJson(this.ORDER_KEY, order);
 
     return order;
   }
@@ -127,7 +88,7 @@ export class OrderHandler extends Feature {
     );
 
     if (result?.patchOrderLine) {
-      this.client.storage.setJson(this.ORDER_KEY, result.patchOrderLine);
+      this.client.storage.set(this.ORDER_ID_KEY, result.patchOrderLine.id);
     }
 
     return result.patchOrderLine;
@@ -148,7 +109,7 @@ export class OrderHandler extends Feature {
       }),
     );
     if (result?.patchOrderLine) {
-      this.client.storage.setJson(this.ORDER_KEY, result.patchOrderLine);
+      this.client.storage.set(this.ORDER_ID_KEY, result.patchOrderLine.id);
     }
     return result?.patchOrderLine;
   }
@@ -168,7 +129,10 @@ export class OrderHandler extends Feature {
     );
 
     if (result?.customDeleteOrderLine) {
-      this.client.storage.setJson(this.ORDER_KEY, result.customDeleteOrderLine);
+      this.client.storage.set(
+        this.ORDER_ID_KEY,
+        result.customDeleteOrderLine.id,
+      );
     }
 
     return result?.customDeleteOrderLine;

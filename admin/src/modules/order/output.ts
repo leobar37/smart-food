@@ -1,5 +1,6 @@
 import { BaseSchemaMeta } from '@graphql-ts/extend';
 import { graphql } from '@keystone-6/core';
+import { memoize } from 'lodash';
 export type OrderOutput = {
   id: string;
   orderNumber: number;
@@ -23,7 +24,7 @@ export type OderLineOutput = {
   selection: any;
   quantity: number;
 };
-export const getOutputs = (base: BaseSchemaMeta) => {
+export const getOutputs = memoize((base: BaseSchemaMeta) => {
   const OrderLine = graphql.object<OderLineOutput>()({
     fields: {
       id: graphql.field({
@@ -88,4 +89,4 @@ export const getOutputs = (base: BaseSchemaMeta) => {
     OrderLine,
     OrderOutput,
   };
-};
+});
