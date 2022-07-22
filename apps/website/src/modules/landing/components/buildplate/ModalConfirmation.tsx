@@ -15,11 +15,11 @@ import {
   ModalFooter,
   ModalOverlay,
   VStack,
-  useBreakpointValue,
 } from '@chakra-ui/react';
 import { BtnIcon, CheckIcon } from '@smartfood/ui';
 import { useRouter } from 'next/router';
 import { ReactNode, useState, useMemo } from 'react';
+import { useBreakpointValueSSR } from '../../hocks/useBreakpointValue';
 import { ResumeTitle } from './elements';
 import { useConfirmModal } from './helpers';
 import ResumeContent from './ResumeContent';
@@ -29,7 +29,7 @@ export const ModalConfirmationPlate = () => {
   const { isOpen, onClose } = useConfirmModal();
   const sizeButtons = ['xs', 'md', 'lg'];
   const router = useRouter();
-  const isModal = useBreakpointValue([false, false, true, true]);
+  const isModal = useBreakpointValueSSR([false, false, true, true]);
 
   const sections = useMemo(
     () => ({

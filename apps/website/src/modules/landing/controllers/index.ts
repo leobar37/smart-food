@@ -56,8 +56,8 @@ export const useSingleProduct = (id: string) => {
 };
 
 export const useOrderLinesCount = () => {
-  const setOrder = useUpdateAtom(currentOrderAtom);
   const orderLinesCount = useAtomValue(orderLinesCountAtom);
+  const setOrder = useUpdateAtom(currentOrderAtom);
 
   useQuery(
     'linesCount',

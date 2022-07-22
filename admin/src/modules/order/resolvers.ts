@@ -173,29 +173,38 @@ export const getMutations = (base: BaseSchemaMeta) => {
       }
 
       if (orderLine) {
-        // update orderLine
         const product = await prisma.product.findFirst({
           where: {
             id: {
               equals: args.orderLine.productId,
             },
           },
+          include: {
+            options: {
+              select: {
+                id: true,
+              },
+            },
+          },
         });
+
+        if (!product) {
+          throw new Error('Product not found');
+        }
 
         orderLine = await prisma.orderLine.update({
           where: {
             id: args.orderLineId,
           },
           data: {
-            productId: args.orderLine.productId,
-            selection: args.orderLine.selection,
-            quantity: args.orderLine.quantity,
-            total: product.price * args.orderLine.quantity,
             orderId: args.orderId,
-            price: args?.orderLine?.price ?? product.price,
+            productId: args.orderLine.productId,
+            quantity: args.orderLine.quantity,
+            selection: { options: product.options },
+            price: product.price,
+            total: product.price * args.orderLine.quantity,
           },
         });
-        lines.filter((d) => (d.id === orderLine.id ? orderLine : d));
       } else {
         // create order line
         const product = await prisma.product.findFirst({
@@ -204,18 +213,26 @@ export const getMutations = (base: BaseSchemaMeta) => {
               equals: args.orderLine.productId,
             },
           },
+          include: {
+            options: {
+              select: {
+                id: true,
+              },
+            },
+          },
         });
 
         orderLine = await prisma.orderLine.create({
           data: {
-            productId: args.orderLine.productId,
-            selection: args.orderLine.selection,
-            quantity: args.orderLine.quantity,
             orderId: args.orderId,
-            price: args?.orderLine?.price ?? product.price,
+            productId: args.orderLine.productId,
+            quantity: args.orderLine.quantity,
+            selection: { options: product.options },
+            price: product.price,
             total: product.price * args.orderLine.quantity,
           },
         });
+
         lines.push(orderLine);
       }
 

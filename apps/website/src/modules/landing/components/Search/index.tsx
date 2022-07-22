@@ -3,20 +3,20 @@ import {
   InputGroup,
   InputLeftElement,
   useBoolean,
-  useBreakpointValue,
 } from '@chakra-ui/react';
 import { useBreakpoint, useMounted } from '@smartfood/ui';
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 import { FiSearch } from 'react-icons/fi';
 import { queryAtom } from '../../atoms/SearchAtoms';
+import { useBreakpointValueSSR } from '../../hocks/useBreakpointValue';
 import { SearchContent } from './SearchContent';
 
 export const SearchInput = () => {
   const [query, setQuery] = useAtom(queryAtom);
   const isMounted = useMounted();
 
-  const inputSearchSize = useBreakpointValue({
+  const inputSearchSize = useBreakpointValueSSR({
     base: 'md',
     lg: 'lg',
   });

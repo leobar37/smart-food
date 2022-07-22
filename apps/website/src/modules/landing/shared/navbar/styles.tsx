@@ -29,6 +29,7 @@ export const NavWrapper = chakra('div', {
     left: 0,
     zIndex: 150,
     borderBottomWidth: '1px',
+    borderBottomColor: '#e2e8f0',
   },
 });
 

@@ -7,7 +7,10 @@ import { Feature } from './base';
 
 type CreateOrderArgs = {} & PatchOrderMutationVariables['metadata'];
 
-type CreateLineArgs = PatchOrderLineMutationVariables['orderLine'];
+export type CreateLineArgs = Omit<
+  PatchOrderLineMutationVariables['orderLine'],
+  'selection'
+>;
 
 export class OrderHandler extends Feature {
   ORDER_KEY = 'CURRENT_ORDER';
@@ -17,7 +20,7 @@ export class OrderHandler extends Feature {
     const prevOrderId = this.client.storage.get(this.ORDER_KEY);
 
     if (!prevOrderId) {
-      return undefined;
+      return;
     }
 
     const orderResult = await this.client.wrap(
@@ -65,13 +68,13 @@ export class OrderHandler extends Feature {
   /**
    *  TODO: the email si not implemented for now because we do not yet handle the customer as an entity
    */
-  async create(params: CreateOrderArgs) {
+  async create(params?: CreateOrderArgs) {
     const result = await this.client.wrap(
       this.client.api.patchOrder({
         metadata: {
-          direction: params.direction,
-          payment: params.payment,
-          phone: params.phone,
+          direction: params?.direction,
+          payment: params?.payment,
+          phone: params?.phone,
         },
       }),
     );
@@ -95,26 +98,48 @@ export class OrderHandler extends Feature {
         },
       }),
     );
+
     const order = result.makeOrder;
+
     this.client.storage.set(this.ORDER_ID_KEY, order.id);
     this.client.storage.setJson(this.ORDER_KEY, order);
+
     return order;
   }
+
   async addLine(line: CreateLineArgs) {
-    const orderId = this.client.storage.get(this.ORDER_ID_KEY);
+    let orderId = this.client.storage.get(this.ORDER_ID_KEY);
+
+    if (!orderId) {
+      const order = await this.create();
+      orderId = order?.id;
+    }
+
+    if (!orderId) {
+      return;
+    }
+
     const result = await this.client.wrap(
       this.client.api.patchOrderLine({
         orderId: orderId,
         orderLine: line,
       }),
     );
+
     if (result?.patchOrderLine) {
       this.client.storage.setJson(this.ORDER_KEY, result.patchOrderLine);
     }
+
     return result.patchOrderLine;
   }
+
   async updateLine(id: string, line: CreateLineArgs) {
     const orderId = this.client.storage.get(this.ORDER_ID_KEY);
+
+    if (!orderId) {
+      return;
+    }
+
     const result = await this.client.wrap(
       this.client.api.patchOrderLine({
         orderId: orderId,
@@ -130,15 +155,22 @@ export class OrderHandler extends Feature {
 
   async deleteLine(id: string) {
     const orderId = this.client.storage.get(this.ORDER_ID_KEY);
+
+    if (!orderId) {
+      return;
+    }
+
     const result = await this.client.wrap(
       this.client.api.deleteOrderLine({
         lineOrderId: id,
         orderId: orderId,
       }),
     );
+
     if (result?.customDeleteOrderLine) {
       this.client.storage.setJson(this.ORDER_KEY, result.customDeleteOrderLine);
     }
+
     return result?.customDeleteOrderLine;
   }
 }

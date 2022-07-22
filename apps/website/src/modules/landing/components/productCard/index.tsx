@@ -1,24 +1,24 @@
-import {
-  Button,
-  useBreakpointValue,
-  Link,
-  LinkOverlay,
-  LinkBox,
-} from '@chakra-ui/react';
+import { Button, Link, LinkOverlay, LinkBox } from '@chakra-ui/react';
 import { Product } from '@smartfood/client/v2';
 import { CardProduct, SliderCounter } from '@smartfood/ui';
 import NextLink from 'next/link';
-import { FC } from 'react';
+import { FC, useState } from 'react';
+import { useCartControllerSetter } from '../../controllers/cartController';
+import { useBreakpointValueSSR } from '../../hocks/useBreakpointValue';
 
 type ProductCardProps = {
   product: Product;
 };
 
 const ProductCard: FC<ProductCardProps> = ({ product }) => {
-  const cardSize = useBreakpointValue({
+  const cardSize = useBreakpointValueSSR({
     base: 'mobile',
     lg: 'desktop',
   });
+
+  const [quantity, setQuantity] = useState(1);
+
+  const { addToCart } = useCartControllerSetter();
 
   return (
     <LinkBox mb="16" width="max-content" mx={['auto']}>
@@ -27,13 +27,23 @@ const ProductCard: FC<ProductCardProps> = ({ product }) => {
         button={
           <Button
             onClick={() => {
-              console.log('this working');
+              addToCart({
+                quantity,
+                productId: product.id,
+                price: product.price,
+              });
             }}
           >
             Agregar al carrito
           </Button>
         }
-        counter={<SliderCounter value={10} />}
+        counter={
+          <SliderCounter
+            onPlus={() => setQuantity((prev) => prev + 1)}
+            onMinus={() => setQuantity((prev) => Math.max(prev - 1, 1))}
+            value={quantity}
+          />
+        }
         content={{
           description: product?.excerpt ?? '',
           image: product.photo?.publicUrlTransformed ?? '',

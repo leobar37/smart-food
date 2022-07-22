@@ -1,13 +1,7 @@
-import {
-  Box,
-  Container,
-  Flex,
-  Text,
-  useBreakpointValue,
-  VStack,
-} from '@chakra-ui/react';
+import { Box, Container, Flex, Text, VStack } from '@chakra-ui/react';
 import NextImage from 'next/image';
 import { FC } from 'react';
+import { useBreakpointValueSSR } from '../../hocks/useBreakpointValue';
 
 type CardTutorialProps = {
   title: string;
@@ -15,7 +9,7 @@ type CardTutorialProps = {
   image: string;
 };
 const CardTutorial: FC<CardTutorialProps> = ({ description, title, image }) => {
-  const sizeImage = useBreakpointValue({
+  const sizeImage = useBreakpointValueSSR({
     base: '150px',
     lg: '220px',
   });

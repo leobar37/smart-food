@@ -1,18 +1,6 @@
-import {
-  Box,
-  HStack,
-  useBoolean,
-  useBreakpointValue,
-  VStack,
-} from '@chakra-ui/react';
-
-import {
-  Brand,
-  BtnIcon,
-  MenuIcon,
-  useMounted,
-  CartIconWithCounter,
-} from '@smartfood/ui';
+import { Box, HStack, useBoolean, VStack } from '@chakra-ui/react';
+import { useBreakpointValueSSR } from '../../hocks/useBreakpointValue';
+import { Brand, BtnIcon, MenuIcon, CartIconWithCounter } from '@smartfood/ui';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { FC } from 'react';
@@ -33,7 +21,7 @@ export const NavBar: FC = () => {
   const [navBarState, navbarActions] = useBoolean(false);
   const router = useRouter();
 
-  const propertiesByBr = useBreakpointValue<Properties>({
+  const propertiesByBr = useBreakpointValueSSR<Properties>({
     base: {
       brandSize: 'sm',
     },
@@ -41,8 +29,6 @@ export const NavBar: FC = () => {
       brandSize: 'lg',
     },
   });
-
-  const isMounted = useMounted();
 
   const items: NavBarItem[] = [
     {
@@ -69,12 +55,7 @@ export const NavBar: FC = () => {
     </LinkItem>
   ));
 
-  const isVisibleMenuButton = useBreakpointValue([true, null, false]);
-
-  // this prevents this component from being rendered in the server, to avoid hidratation problems
-  if (!isMounted) {
-    return null;
-  }
+  const isVisibleMenuButton = useBreakpointValueSSR([true, null, false]);
 
   const linesCount = useOrderLinesCount();
 
