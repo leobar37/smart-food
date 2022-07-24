@@ -14,3 +14,5 @@ export const orderLinesCountAtom = atom<number>((get) => {
 });
 
 export const linesCountAtom = atom(0);
+
+export const notificationAddedAtom = atom(false);

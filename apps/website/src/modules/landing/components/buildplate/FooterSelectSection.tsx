@@ -29,7 +29,7 @@ export const FooterSelectSection = () => {
           minW={[null, null, '12rem']}
           onClick={() => {
             updateStep((prev) => {
-              if (prev == 0) {
+              if (prev === 0) {
                 return 0;
               }
               return prev - 1;

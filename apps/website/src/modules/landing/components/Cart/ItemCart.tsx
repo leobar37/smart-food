@@ -12,8 +12,9 @@ import { SliderCounter } from '@smartfood/ui';
 import NextImage from 'next/image';
 import { FC, useMemo } from 'react';
 import { FiTrash2 } from 'react-icons/fi';
-
-import { useDeleteOrderLine } from '../../controllers';
+import { debounce } from 'lodash';
+import { useDeleteOrderLine, useUpdateLine } from '../../controllers';
+import { useState, useEffect } from 'react';
 
 const TrashIcon = chakra(FiTrash2);
 
@@ -25,6 +26,7 @@ type ItemCartProps = {
 };
 export const ItemCart: FC<ItemCartProps> = ({ line, isEditable }) => {
   const deleteOrderLine = useDeleteOrderLine();
+  const updateLine = useUpdateLine();
   const actions = useMemo(
     () => (
       <HStack
@@ -53,8 +55,25 @@ export const ItemCart: FC<ItemCartProps> = ({ line, isEditable }) => {
     [isEditable],
   );
 
-  const { product, quantity } = line;
+  const debouncedUpdateLine = useMemo(
+    () => debounce(updateLine.mutate, 500),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
 
+  const { product, quantity } = line;
+  const [localQuantity, setQuantity] = useState(quantity ?? 0);
+
+  useEffect(() => {
+    if (quantity !== localQuantity) {
+      debouncedUpdateLine({
+        lineId: line.id!,
+        quantity: localQuantity,
+      });
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [localQuantity]);
   return (
     <HStack
       as="article"
@@ -91,7 +110,17 @@ export const ItemCart: FC<ItemCartProps> = ({ line, isEditable }) => {
         >
           {product?.name}
         </Text>
-        <SliderCounter value={quantity ?? 0} size="small" />
+        <SliderCounter
+          value={localQuantity}
+          minusDisabled={localQuantity === 0}
+          onMinus={() => {
+            setQuantity((prev) => prev - 1);
+          }}
+          onPlus={() => {
+            setQuantity((prev) => prev + 1);
+          }}
+          size="small"
+        />
         <Text
           fontWeight={'semibold'}
           fontSize={['md', null, 'lg', 'xl']}

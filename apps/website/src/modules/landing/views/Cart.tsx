@@ -15,7 +15,7 @@ const ProductsSide = () => {
   return (
     <SectionItems title="Pedidos de la carta">
       {noArmedProducts.map((line, idx) => (
-        <ItemCart isEditable={false} line={line} key={idx} />
+        <ItemCart isEditable={false} line={line} key={line.id} />
       ))}
     </SectionItems>
   );
@@ -32,7 +32,7 @@ const ArmedProductsSide = () => {
   return (
     <SectionItems title="Pedidos de la carta">
       {armedProducts.map((line, idx) => (
-        <ItemCart isEditable line={line} key={idx} />
+        <ItemCart isEditable line={line} key={line.id} />
       ))}
     </SectionItems>
   );

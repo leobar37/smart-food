@@ -602,12 +602,16 @@ type OrderLine {
   id: ID!
   order: Order
   product: Product
+  createdAt: DateTime
   quantity: Int
   price: Float
   total: Float
   selection: JSON
   results: JSON
 }
+
+scalar DateTime
+  @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
 
 input OrderLineWhereUniqueInput {
   id: ID
@@ -620,13 +624,26 @@ input OrderLineWhereInput {
   id: IDFilter
   order: OrderWhereInput
   product: ProductWhereInput
+  createdAt: DateTimeNullableFilter
   quantity: IntNullableFilter
   price: FloatNullableFilter
   total: FloatNullableFilter
 }
 
+input DateTimeNullableFilter {
+  equals: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  gt: DateTime
+  gte: DateTime
+  not: DateTimeNullableFilter
+}
+
 input OrderLineOrderByInput {
   id: OrderDirection
+  createdAt: OrderDirection
   quantity: OrderDirection
   price: OrderDirection
   total: OrderDirection
@@ -635,6 +652,7 @@ input OrderLineOrderByInput {
 input OrderLineUpdateInput {
   order: OrderRelateToOneForUpdateInput
   product: ProductRelateToOneForUpdateInput
+  createdAt: DateTime
   quantity: Int
   price: Float
   total: Float
@@ -655,6 +673,7 @@ input OrderLineUpdateArgs {
 input OrderLineCreateInput {
   order: OrderRelateToOneForCreateInput
   product: ProductRelateToOneForCreateInput
+  createdAt: DateTime
   quantity: Int
   price: Float
   total: Float
@@ -684,9 +703,6 @@ type Order {
   deliveryDetails: JSON
   paymentMethod: OrderPaymentMethodType
 }
-
-scalar DateTime
-  @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
 
 enum OrderStatusType {
   PENDING
@@ -730,17 +746,6 @@ input IntFilter {
   gt: Int
   gte: Int
   not: IntFilter
-}
-
-input DateTimeNullableFilter {
-  equals: DateTime
-  in: [DateTime!]
-  notIn: [DateTime!]
-  lt: DateTime
-  lte: DateTime
-  gt: DateTime
-  gte: DateTime
-  not: DateTimeNullableFilter
 }
 
 input OrderStatusTypeNullableFilter {

@@ -1,14 +1,34 @@
-import { Box, HStack, IconButton, useBoolean, VStack } from '@chakra-ui/react';
-import { useBreakpointValueSSR } from '../../hooks/useBreakpointValue';
-import { Brand, BtnIcon, MenuIcon, CartIconWithCounter } from '@smartfood/ui';
+import {
+  Box,
+  HStack,
+  IconButton,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
+  Text,
+  useBoolean,
+  useUpdateEffect,
+  VStack,
+} from '@chakra-ui/react';
+import {
+  BadgeWithCount,
+  Brand,
+  BtnIcon,
+  CartIcon,
+  CheckNotificationIcon,
+  MenuIcon,
+} from '@smartfood/ui';
+import { useAtomValue } from 'jotai';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { FC } from 'react';
+import { linesCountAtom, notificationAddedAtom } from '../../atoms/cartAtoms';
+import { useBreakpointValueSSR } from '../../hooks/useBreakpointValue';
 import LinkItem from './LinkItem';
 import { CloseIcon, Nav, NavWrapper } from './styles';
-import { useAtomValue } from 'jotai';
-import { linesCountAtom } from '../../atoms/cartAtoms';
-import { BadgeWithCount, CartIcon } from '@smartfood/ui';
+import { useNotificationCart } from '../../hooks';
 type Properties = {
   brandSize: 'sm' | 'lg';
 };
@@ -21,7 +41,7 @@ type NavBarItem = {
 export const NavBar: FC = () => {
   const [navBarState, navbarActions] = useBoolean(false);
   const router = useRouter();
-
+  const notificationCart = useNotificationCart();
   const propertiesByBr = useBreakpointValueSSR<Properties>({
     base: {
       brandSize: 'sm',
@@ -60,6 +80,45 @@ export const NavBar: FC = () => {
 
   const linesCount = useAtomValue(linesCountAtom);
 
+  useUpdateEffect(() => {
+    let timeout: any = null;
+    if (notificationCart.isOpen) {
+      timeout = setTimeout(() => {
+        notificationCart.close();
+      }, 1500);
+    }
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [notificationCart.isOpen]);
+
+  const cartIconNode = (
+    <Popover isOpen={notificationCart.isOpen} placement="bottom-end">
+      <PopoverTrigger>
+        <BadgeWithCount bg="smartgray.300" color="white" value={linesCount}>
+          <NextLink passHref href={'/carrito'}>
+            <IconButton
+              cursor={'pointer'}
+              as="span"
+              aria-label=""
+              bg="transparent"
+              icon={<CartIcon />}
+            />
+          </NextLink>
+        </BadgeWithCount>
+      </PopoverTrigger>
+      <PopoverContent>
+        <PopoverArrow />
+        <PopoverBody>
+          <HStack>
+            <CheckNotificationIcon width={35} height={35} />
+            <Text>Se añadió correctamente.</Text>
+          </HStack>
+        </PopoverBody>
+      </PopoverContent>
+    </Popover>
+  );
+
   return (
     <NavWrapper>
       <Nav as="nav">
@@ -78,17 +137,7 @@ export const NavBar: FC = () => {
           {items$}
         </HStack>
         <HStack flex="20%" justifyContent="flex-end">
-          <BadgeWithCount bg="smartgray.300" color="white" value={linesCount}>
-            <NextLink passHref href={'/carrito'}>
-              <IconButton
-                cursor={'pointer'}
-                as="span"
-                aria-label=""
-                bg="transparent"
-                icon={<CartIcon />}
-              />
-            </NextLink>
-          </BadgeWithCount>
+          {cartIconNode}
           <BtnIcon
             display={isVisibleMenuButton ? 'initial' : 'none'}
             aria-label="menu"

@@ -76,15 +76,16 @@ model Category {
 }
 
 model OrderLine {
-  id        String   @id @default(cuid())
-  order     Order?   @relation("OrderLine_order", fields: [orderId], references: [id])
-  orderId   String?  @map("order")
-  product   Product? @relation("OrderLine_product", fields: [productId], references: [id])
-  productId String?  @map("product")
+  id        String    @id @default(cuid())
+  order     Order?    @relation("OrderLine_order", fields: [orderId], references: [id])
+  orderId   String?   @map("order")
+  product   Product?  @relation("OrderLine_product", fields: [productId], references: [id])
+  productId String?   @map("product")
+  createdAt DateTime?
   quantity  Int?
   price     Float?
   total     Float?
-  selection Json?    @default("{}")
+  selection Json?     @default("{}")
 
   @@index([orderId])
   @@index([productId])

@@ -6,10 +6,7 @@ import { Feature } from './base';
 
 type CreateOrderArgs = {} & PatchOrderMutationVariables['metadata'];
 
-export type CreateLineArgs = Omit<
-  PatchOrderLineMutationVariables['orderLine'],
-  'selection'
->;
+export type CreateLineArgs = PatchOrderLineMutationVariables['orderLine'];
 
 export class OrderHandler extends Feature {
   ORDER_ID_KEY = 'CURRENT_ORDER_ID';

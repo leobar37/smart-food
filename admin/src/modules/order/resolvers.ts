@@ -6,12 +6,13 @@ import {
   OrderPaymentMethodType,
   OrderStatusType,
   PrismaClient,
+  Product,
 } from '@prisma/client';
 import { isNil, merge, omitBy } from 'lodash';
 import { getInputs } from './input';
 import { getOutputs } from './output';
 export const getMutations = (base: BaseSchemaMeta) => {
-  const { metadata, orderLineItem } = getInputs(base);
+  const { metadata, OrderLineItem } = getInputs(base);
   const { OrderOutput } = getOutputs(base);
 
   /**
@@ -138,80 +139,62 @@ export const getMutations = (base: BaseSchemaMeta) => {
           'If this field is sent, the order will be searched for and edited',
       }),
       orderLine: graphql.arg({
-        type: orderLineItem,
+        type: OrderLineItem,
       }),
     },
     resolve: async (root, args, context) => {
       const prisma = context.prisma as PrismaClient;
 
-      const order = await prisma.order.findFirst({
-        where: {
-          id: {
-            equals: args.orderId,
-          },
-        },
+      const lineFound = await prisma.orderLine.findFirst({
+        where: args?.orderLineId
+          ? {
+              id: args?.orderLineId,
+            }
+          : {
+              productId: args.orderLine.productId,
+            },
         include: {
-          lines: true,
+          product: true,
         },
       });
-
-      if (!order) {
-        throw new Error('Order not found');
-      }
-
-      let orderLine: OrderLine | undefined;
-      const lines = order.lines;
-
-      if (args?.orderLineId) {
-        orderLine = await prisma.orderLine.findFirst({
-          where: {
-            id: {
-              equals: args.orderLineId,
+      const updateLine = async (
+        orderLine: OrderLine & { product: Product },
+      ) => {
+        /*
+          by convention, whne the user wants to overwrite the quantity
+          he , must send the id as argument
+        */
+        const quantity = args?.orderLineId
+          ? args.orderLine.quantity
+          : args.orderLine.quantity + orderLine.quantity;
+        const product = orderLine.product;
+        const isZero = quantity === 0;
+        if (isZero) {
+          await prisma.orderLine.delete({
+            where: {
+              id: orderLine.id,
             },
-          },
-        });
-      }
-
-      if (orderLine) {
-        const product = await prisma.product.findFirst({
-          where: {
-            id: {
-              equals: args.orderLine.productId,
-            },
-          },
-          include: {
-            options: {
-              select: {
-                id: true,
-              },
-            },
-          },
-        });
-
-        if (!product) {
-          throw new Error('Product not found');
+          });
+          return null;
         }
-
-        orderLine = await prisma.orderLine.update({
-          where: {
-            id: args.orderLineId,
-          },
-          data: {
-            orderId: args.orderId,
-            productId: args.orderLine.productId,
-            quantity: args.orderLine.quantity,
-            selection: { options: product.options },
-            price: product.price,
-            total: product.price * args.orderLine.quantity,
-          },
-        });
-      } else {
-        // create order line
-        const product = await prisma.product.findFirst({
-          where: {
-            id: {
-              equals: args.orderLine.productId,
+        if (!isZero) {
+          return await prisma.orderLine.update({
+            where: {
+              id: orderLine.id,
             },
+            data: {
+              quantity: quantity,
+              selection: args.orderLine.selection,
+              price: product.price,
+              total: product.price * quantity,
+            },
+          });
+        }
+      };
+      const createLine = async () => {
+        const product = await prisma.product.findUnique({
+          where: {
+            id: args.orderLine.productId,
           },
           include: {
             options: {
@@ -221,42 +204,32 @@ export const getMutations = (base: BaseSchemaMeta) => {
             },
           },
         });
-
-        orderLine = await prisma.orderLine.create({
+        return await prisma.orderLine.create({
           data: {
+            createdAt: new Date(),
             orderId: args.orderId,
             productId: args.orderLine.productId,
             quantity: args.orderLine.quantity,
-            selection: { options: product.options },
+            selection: args.orderLine.selection,
             price: product.price,
             total: product.price * args.orderLine.quantity,
           },
         });
-
-        lines.push(orderLine);
+      };
+      if (lineFound) {
+        await updateLine(lineFound);
+      } else {
+        await createLine();
       }
-
-      const total = lines.reduce((acc, line) => {
-        return acc + line.total;
-      }, 0);
-
-      // update order
-      const orderUpdated = await prisma.order.update({
+      // TODO: create services and move this code to this part
+      return prisma.order.findUnique({
         where: {
-          id: order.id,
-        },
-        data: {
-          total: total,
+          id: args.orderId,
         },
         include: {
           lines: true,
         },
-      });
-
-      return {
-        ...orderUpdated,
-        linesCount: orderUpdated.lines.length,
-      } as any;
+      }) as any;
     },
   });
 
@@ -331,7 +304,11 @@ export const getQueries = (base: BaseSchemaMeta) => {
           id: args.orderId,
         },
         include: {
-          lines: true,
+          lines: {
+            orderBy: {
+              createdAt: 'desc',
+            },
+          },
         },
       });
       return {

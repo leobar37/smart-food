@@ -26,7 +26,7 @@ export const getInputs = memoize((base: BaseSchemaMeta) => {
   /**
    * OrderLineItem
    */
-  const orderLineItem = graphql.inputObject({
+  const OrderLineItem = graphql.inputObject({
     name: 'OrderLineItem',
     fields: {
       productId: graphql.arg({
@@ -53,6 +53,6 @@ export const getInputs = memoize((base: BaseSchemaMeta) => {
 
   return {
     metadata,
-    orderLineItem,
+    OrderLineItem,
   };
 });

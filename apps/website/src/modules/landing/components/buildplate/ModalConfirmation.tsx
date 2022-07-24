@@ -23,6 +23,31 @@ import { useBreakpointValueSSR } from '../../hooks/useBreakpointValue';
 import { ResumeTitle } from './elements';
 import { useConfirmModal } from './helpers';
 import ResumeContent from './ResumeContent';
+import {
+  trackedSelectionAtom,
+  currentProductAtom,
+} from '../../atoms/buildProductAtoms';
+import { useAtomValue } from 'jotai';
+import { useAddToCart } from '../../controllers';
+
+// TODO: move this to controllers folder
+const useConfirmationController = () => {
+  const addToCart = useAddToCart();
+  const trackSelection = useAtomValue(trackedSelectionAtom);
+  const currentProduct = useAtomValue(currentProductAtom);
+  const saveBuildPlate = () => {
+    return addToCart.mutateAsync({
+      productId: currentProduct.id,
+      quantity: 1,
+      selection: {
+        options: Object.values(trackSelection),
+      },
+    });
+  };
+  return {
+    saveBuildPlate,
+  };
+};
 
 export const ModalConfirmationPlate = () => {
   const [section, setSection] = useState<'resume' | 'notification'>('resume');
@@ -30,7 +55,7 @@ export const ModalConfirmationPlate = () => {
   const sizeButtons = ['xs', 'md', 'lg'];
   const router = useRouter();
   const isModal = useBreakpointValueSSR([false, false, true, true]);
-
+  const { saveBuildPlate } = useConfirmationController();
   const sections = useMemo(
     () => ({
       resume: (
@@ -39,15 +64,21 @@ export const ModalConfirmationPlate = () => {
           <ResumeContent showEdit={false} />
           <ModalFooter>
             <HStack justifyContent={'center'} mt="5" mx="auto" w="full">
-              <Button size={sizeButtons} colorScheme={'smartgray'}>
+              <Button
+                variant={'outline'}
+                size={sizeButtons}
+                colorScheme={'smartgray'}
+              >
                 Cancelar
               </Button>
               <Button
-                onClick={() => {
+                onClick={async () => {
+                  // TODO: implement loading here
+                  await saveBuildPlate();
                   setSection('notification');
                 }}
                 size={sizeButtons}
-                colorScheme={'smartgreen'}
+                colorScheme={'smartgray'}
               >
                 Confirmar
               </Button>
