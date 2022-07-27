@@ -17,18 +17,23 @@ import {
   Brand,
   BtnIcon,
   CartIcon,
-  CheckNotificationIcon,
+  CheckIcon,
+  LoadingIcon,
   MenuIcon,
 } from '@smartfood/ui';
+import { motion } from 'framer-motion';
 import { useAtomValue } from 'jotai';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { FC } from 'react';
-import { linesCountAtom, notificationAddedAtom } from '../../atoms/cartAtoms';
+import { linesCountAtom } from '../../atoms/cartAtoms';
+import { useNotificationCart } from '../../hooks';
 import { useBreakpointValueSSR } from '../../hooks/useBreakpointValue';
 import LinkItem from './LinkItem';
 import { CloseIcon, Nav, NavWrapper } from './styles';
-import { useNotificationCart } from '../../hooks';
+
+const LoadingMotion = motion(LoadingIcon);
+
 type Properties = {
   brandSize: 'sm' | 'lg';
 };
@@ -38,10 +43,95 @@ type NavBarItem = {
   url: string;
 };
 
+const CartIconWithPopover = () => {
+  const notificationCart = useNotificationCart();
+
+  const linesCount = useAtomValue(linesCountAtom);
+
+  useUpdateEffect(() => {
+    let timeout: any = null;
+    if (notificationCart.isOpen && notificationCart.state === 'success') {
+      timeout = setTimeout(() => {
+        notificationCart.close();
+      }, 1500);
+    }
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [notificationCart.isOpen]);
+
+  const renderIcon = () => {
+    switch (notificationCart.state) {
+      case 'loading': {
+        return (
+          <LoadingMotion
+            animate={{
+              rotate: [0, 360],
+            }}
+            transition={{
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          />
+        );
+      }
+      case 'success': {
+        return <CheckIcon />;
+      }
+    }
+  };
+
+  return (
+    <Popover isOpen={notificationCart.isOpen} placement="bottom-end">
+      <PopoverTrigger>
+        <BadgeWithCount bg="smartgray.300" color="white" value={linesCount}>
+          <NextLink passHref href={'/carrito'}>
+            <IconButton
+              cursor={'pointer'}
+              as="span"
+              aria-label=""
+              bg="transparent"
+              icon={<CartIcon />}
+            />
+          </NextLink>
+        </BadgeWithCount>
+      </PopoverTrigger>
+      <PopoverContent>
+        <PopoverArrow />
+        <PopoverBody>
+          <HStack>
+            <IconButton
+              sx={{
+                bg: 'rgba(114,203,16,0.14)',
+                w: '32px',
+                h: '32px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                svg: {
+                  color: 'smartgreen.500',
+                  fontSize: 'sm',
+                },
+              }}
+              aria-label=""
+            >
+              {renderIcon()}
+            </IconButton>
+            <Text>
+              {notificationCart.state === 'success'
+                ? 'Se añadió correctamente.'
+                : 'Agregando..'}
+            </Text>
+          </HStack>
+        </PopoverBody>
+      </PopoverContent>
+    </Popover>
+  );
+};
+
 export const NavBar: FC = () => {
   const [navBarState, navbarActions] = useBoolean(false);
   const router = useRouter();
-  const notificationCart = useNotificationCart();
   const propertiesByBr = useBreakpointValueSSR<Properties>({
     base: {
       brandSize: 'sm',
@@ -78,47 +168,6 @@ export const NavBar: FC = () => {
 
   const isVisibleMenuButton = useBreakpointValueSSR([true, null, false]);
 
-  const linesCount = useAtomValue(linesCountAtom);
-
-  useUpdateEffect(() => {
-    let timeout: any = null;
-    if (notificationCart.isOpen) {
-      timeout = setTimeout(() => {
-        notificationCart.close();
-      }, 1500);
-    }
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [notificationCart.isOpen]);
-
-  const cartIconNode = (
-    <Popover isOpen={notificationCart.isOpen} placement="bottom-end">
-      <PopoverTrigger>
-        <BadgeWithCount bg="smartgray.300" color="white" value={linesCount}>
-          <NextLink passHref href={'/carrito'}>
-            <IconButton
-              cursor={'pointer'}
-              as="span"
-              aria-label=""
-              bg="transparent"
-              icon={<CartIcon />}
-            />
-          </NextLink>
-        </BadgeWithCount>
-      </PopoverTrigger>
-      <PopoverContent>
-        <PopoverArrow />
-        <PopoverBody>
-          <HStack>
-            <CheckNotificationIcon width={35} height={35} />
-            <Text>Se añadió correctamente.</Text>
-          </HStack>
-        </PopoverBody>
-      </PopoverContent>
-    </Popover>
-  );
-
   return (
     <NavWrapper>
       <Nav as="nav">
@@ -137,7 +186,7 @@ export const NavBar: FC = () => {
           {items$}
         </HStack>
         <HStack flex="20%" justifyContent="flex-end">
-          {cartIconNode}
+          <CartIconWithPopover />
           <BtnIcon
             display={isVisibleMenuButton ? 'initial' : 'none'}
             aria-label="menu"

@@ -5,6 +5,8 @@ import NextLink from 'next/link';
 import { FC, useState } from 'react';
 import { useAddToCart } from '../../controllers';
 import { useBreakpointValueSSR } from '../../hooks/useBreakpointValue';
+import { useGetProductLine } from '../../controllers';
+
 type ProductCardProps = {
   product: Product;
 };
@@ -15,16 +17,27 @@ const ProductCard: FC<ProductCardProps> = ({ product }) => {
     lg: 'desktop',
   });
 
-  const [quantity, setQuantity] = useState(1);
+  const { isSelected, line } = useGetProductLine(product.id);
+  const [quantity, setQuantity] = useState(line?.quantity ?? 0);
 
   const addToCartMutation = useAddToCart();
+
+  console.log({
+    isSelected,
+    line,
+  });
+
   return (
     <LinkBox mb="16" width="max-content" mx={['auto']}>
       <CardProduct
         size={cardSize as any}
         button={
           <Button
+            variant={isSelected ? 'solid' : 'outline'}
             onClick={() => {
+              if (isSelected) {
+                return null;
+              }
               addToCartMutation.mutate(
                 {
                   productId: product.id,
@@ -38,15 +51,17 @@ const ProductCard: FC<ProductCardProps> = ({ product }) => {
               );
             }}
           >
-            Agregar al carrito
+            {isSelected ? `Agregado` : 'Agregar al carrito'}
           </Button>
         }
         counter={
-          <SliderCounter
-            onPlus={() => setQuantity((prev) => prev + 1)}
-            onMinus={() => setQuantity((prev) => Math.max(prev - 1, 1))}
-            value={quantity}
-          />
+          isSelected ? (
+            <SliderCounter
+              onPlus={() => setQuantity((prev) => prev + 1)}
+              onMinus={() => setQuantity((prev) => Math.max(prev - 1, 1))}
+              value={quantity}
+            />
+          ) : null
         }
         content={{
           description: product?.excerpt ?? '',

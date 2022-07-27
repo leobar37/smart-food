@@ -1,19 +1,27 @@
 import { useAtomValue } from 'jotai';
 import { useUpdateAtom } from 'jotai/utils';
-import { notificationAddedAtom } from '../atoms/cartAtoms';
+import { notificationAddedAtom, NotificationState } from '../atoms/cartAtoms';
 export const useNotificationCart = () => {
   const updatePopover = useUpdateAtom(notificationAddedAtom);
-  const isOpen = useAtomValue(notificationAddedAtom);
-  const open = () => {
-    updatePopover(true);
+  const state = useAtomValue(notificationAddedAtom);
+
+  const open = (state: NotificationState) => {
+    updatePopover({
+      isOpen: true,
+      state: state,
+    });
   };
 
   const close = () => {
-    updatePopover(false);
+    updatePopover({
+      isOpen: false,
+      state: 'loading',
+    });
   };
   return {
     open,
     close,
-    isOpen,
+    isOpen: state.isOpen,
+    state: state.state,
   };
 };

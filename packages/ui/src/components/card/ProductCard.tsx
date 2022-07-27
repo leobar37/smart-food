@@ -66,6 +66,7 @@ export const CardProduct: FC<CardProductProps> = ({
       } as SystemStyleObject,
       imageSx: {
         minWidth: '200px',
+        maxWidth: '200px',
       } as SystemStyleObject,
     },
     mobile: {
@@ -83,7 +84,6 @@ export const CardProduct: FC<CardProductProps> = ({
   });
 
   const buttonCloned = cloneElement(button as any, {
-    variant: 'outline',
     colorScheme: 'smartgray',
     ...properties.buttonSx,
   });
@@ -107,7 +107,7 @@ export const CardProduct: FC<CardProductProps> = ({
           {content.title}
         </Text>
         {descriptionNode}
-        {counter}
+        {/* {counter}  */}
         <Text color="smartgreen.700" fontSize={'2xl'} fontWeight="semibold">
           S/ {content.price}
         </Text>

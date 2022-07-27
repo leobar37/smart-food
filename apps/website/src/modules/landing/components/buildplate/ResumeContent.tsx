@@ -93,9 +93,11 @@ ResumenItem.defaultProps = {
 type ResumeContentProps = {
   showEdit?: boolean;
 } & BoxProps;
+
 const ResumeContent: FC<ResumeContentProps> = ({ showEdit, ...props }) => {
   const [resumeItemsAtoms] = useAtom(resumePreviewAtomsAtom);
   const currentProduct = useAtomValue(currentProductAtom);
+
   return (
     <>
       <VStack alignItems={'flex-start'} mx="2" {...props}>

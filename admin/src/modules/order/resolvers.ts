@@ -10,6 +10,7 @@ import {
 } from '@prisma/client';
 import { isNil, merge, omitBy } from 'lodash';
 import { getInputs } from './input';
+import * as orderService from './order.service';
 import { getOutputs } from './output';
 export const getMutations = (base: BaseSchemaMeta) => {
   const { metadata, OrderLineItem } = getInputs(base);
@@ -99,24 +100,14 @@ export const getMutations = (base: BaseSchemaMeta) => {
             isNil,
           ),
           include: {
-            lines: true,
+            lines: {
+              orderBy: {
+                createdAt: 'desc',
+              },
+            },
           },
         });
-        const result = await prisma.order.findUnique({
-          where: {
-            id: orderCreted.id,
-          },
-          include: {
-            lines: true,
-          },
-        });
-
-        return {
-          ...result,
-          linesCount: result?.lines?.length ?? 0,
-          total: result.total ?? 0,
-          lines: result?.lines ?? [],
-        } as any;
+        return orderCreted;
       }
     },
   });
@@ -144,7 +135,6 @@ export const getMutations = (base: BaseSchemaMeta) => {
     },
     resolve: async (root, args, context) => {
       const prisma = context.prisma as PrismaClient;
-
       const lineFound = await prisma.orderLine.findFirst({
         where: args?.orderLineId
           ? {
@@ -221,15 +211,7 @@ export const getMutations = (base: BaseSchemaMeta) => {
       } else {
         await createLine();
       }
-      // TODO: create services and move this code to this part
-      return prisma.order.findUnique({
-        where: {
-          id: args.orderId,
-        },
-        include: {
-          lines: true,
-        },
-      }) as any;
+      return orderService.findOrder(prisma, args.orderId);
     },
   });
 
@@ -264,18 +246,7 @@ export const getMutations = (base: BaseSchemaMeta) => {
           id: lineOrderId,
         },
       });
-      const orderUpdated = await prisma.order.findUnique({
-        where: {
-          id: orderId,
-        },
-        include: {
-          lines: true,
-        },
-      });
-      return {
-        ...orderUpdated,
-        linesCount: orderUpdated.lines.length,
-      } as any;
+      return orderService.findOrder(prisma, orderId);
     },
   });
   return {
@@ -299,22 +270,7 @@ export const getQueries = (base: BaseSchemaMeta) => {
     },
     resolve: async (root, args, ctx) => {
       const prisma = ctx.prisma as PrismaClient;
-      const order = await prisma.order.findUnique({
-        where: {
-          id: args.orderId,
-        },
-        include: {
-          lines: {
-            orderBy: {
-              createdAt: 'desc',
-            },
-          },
-        },
-      });
-      return {
-        ...order,
-        linesCount: order.lines.length,
-      } as any;
+      return orderService.findOrder(prisma, args.orderId);
     },
   });
   return {

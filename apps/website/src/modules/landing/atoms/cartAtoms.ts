@@ -15,4 +15,8 @@ export const orderLinesCountAtom = atom<number>((get) => {
 
 export const linesCountAtom = atom(0);
 
-export const notificationAddedAtom = atom(false);
+export type NotificationState = 'loading' | 'success';
+export const notificationAddedAtom = atom({
+  isOpen: false,
+  state: 'loading' as NotificationState,
+});
