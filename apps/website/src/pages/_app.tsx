@@ -1,4 +1,4 @@
-import { HYDRATION_KEY } from '@App/helpers/hydration';
+import { HYDRATION_KEY } from '@App/core/helpers/hydration';
 import { ChakraProvider } from '@chakra-ui/react';
 import { theme } from '@smartfood/ui';
 import type { AppContext, AppProps as NextAppProps } from 'next/app';
@@ -8,7 +8,7 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { Global, css } from '@emotion/react';
 import App from 'next/app';
 import verifyIsMobile from 'ismobilejs';
-import { IsMobileContext } from '@App/helpers/isMobileContext';
+import { IsMobileContext } from '@App/core/helpers/isMobileContext';
 
 const ConnectedApp: FC<{
   children: ReactNode;

@@ -1,5 +1,5 @@
-import { CartPage } from '../../modules/landing';
-import { cartHandler } from '../../modules/landing/server';
+import { CartPage } from '../../features/cart';
+import { cartHandler } from '@App/core/server';
 
 export const getServerSideProps = cartHandler;
 export default CartPage;
