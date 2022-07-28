@@ -1,5 +1,5 @@
-import { ProductPage } from '../../modules/landing';
-import { singleProductHandler } from '../../modules/landing/server';
+import { ProductPage } from '../../features/landing';
+import { singleProductHandler } from '@App/core/server';
 
 export const getServerSideProps = singleProductHandler;
 

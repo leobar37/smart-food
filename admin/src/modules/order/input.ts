@@ -1,7 +1,7 @@
 import { BaseSchemaMeta } from '@graphql-ts/extend';
 import { graphql } from '@keystone-6/core';
-
-export const getInputs = (base: BaseSchemaMeta) => {
+import { memoize } from 'lodash';
+export const getInputs = memoize((base: BaseSchemaMeta) => {
   const metadata = graphql.inputObject({
     name: 'Metadata',
     fields: {
@@ -26,7 +26,7 @@ export const getInputs = (base: BaseSchemaMeta) => {
   /**
    * OrderLineItem
    */
-  const orderLineItem = graphql.inputObject({
+  const OrderLineItem = graphql.inputObject({
     name: 'OrderLineItem',
     fields: {
       productId: graphql.arg({
@@ -53,6 +53,6 @@ export const getInputs = (base: BaseSchemaMeta) => {
 
   return {
     metadata,
-    orderLineItem,
+    OrderLineItem,
   };
-};
+});

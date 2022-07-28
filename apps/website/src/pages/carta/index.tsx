@@ -1,5 +1,5 @@
-import { MenuPage } from '../../modules/landing';
-import { menuHandler } from '../../modules/landing/server';
+import { MenuPage } from '@App/features/menu';
+import { menuHandler } from '@App/core/server';
 
 export const getServerSideProps = menuHandler;
 

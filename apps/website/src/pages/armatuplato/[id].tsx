@@ -1,6 +1,6 @@
-import { BuildPlatePage } from '../../modules/landing';
-import { buildPlateHandler } from '../../modules/landing/server';
+import { BuildPLatePage } from '@App/features/buildPlate';
+import { buildPlateHandler } from '@App/core/server';
 
 export const getServerSideProps = buildPlateHandler;
 
-export default BuildPlatePage;
+export default BuildPLatePage;

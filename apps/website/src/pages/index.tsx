@@ -1,8 +1,8 @@
-import Home from '../modules/landing/views/Home';
-import { homeHandler } from '../modules/landing/server';
+import { HomePage } from '../features/landing';
+import { homeHandler } from '@App/core/server';
 
 export const getServerSideProps = homeHandler;
 
-export default Home;
+export default HomePage;
 
 // header

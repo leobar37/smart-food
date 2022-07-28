@@ -5,6 +5,7 @@ import {
   json,
   relationship,
   virtual,
+  timestamp,
 } from '@keystone-6/core/fields';
 import { PrismaClient } from '@prisma/client';
 import { get } from 'lodash';
@@ -28,6 +29,7 @@ export const OrderLine = list({
         removeMode: 'none',
       },
     }),
+    createdAt: timestamp(),
     quantity: integer(),
     price: float(),
     total: float(),
