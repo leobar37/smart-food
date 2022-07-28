@@ -1,8 +1,9 @@
 import cmsLib from '@App/lib/cms';
 import { OrderOutput } from '@smartfood/client/v2';
-import { clone } from 'lodash';
+import { clone, debounce } from 'lodash';
 import { useMutation, useQueryClient } from 'react-query';
-import { cacheKeys } from '../../constants';
+import { cacheKeys, mutationsKeys } from '../../constants';
+import { useMemo } from 'react';
 
 export const useUpdateLine = () => {
   const queryClient = useQueryClient();
@@ -41,6 +42,7 @@ export const useUpdateLine = () => {
           order: snapShotOder,
         };
       },
+      mutationKey: mutationsKeys.updateLine,
       onSuccess: (data) => {
         queryClient.setQueryData(cacheKeys.order, data);
       },
@@ -50,4 +52,9 @@ export const useUpdateLine = () => {
       },
     },
   );
+};
+
+export const useDebounceUpdateLine = () => {
+  const mutation = useUpdateLine();
+  return useMemo(() => debounce(mutation.mutate, 500), [mutation.mutate]);
 };

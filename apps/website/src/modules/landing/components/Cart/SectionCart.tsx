@@ -8,7 +8,7 @@ export type SectionItemsProps = {
 
 export const SectionItems: FC<SectionItemsProps> = ({ title, children }) => {
   return (
-    <Box textAlign="left">
+    <Box textAlign={['center', null, null, 'left']}>
       <Text
         sx={{
           textTransform: 'uppercase',
@@ -19,7 +19,12 @@ export const SectionItems: FC<SectionItemsProps> = ({ title, children }) => {
       >
         {title}
       </Text>
-      <VStack alignItems={'flex-start'} mt={5} mb={5} spacing={4}>
+      <VStack
+        alignItems={['center', null, 'flex-start']}
+        mt={5}
+        mb={5}
+        spacing={4}
+      >
         {children}
       </VStack>
     </Box>

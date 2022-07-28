@@ -71,9 +71,9 @@ export const ItemCart: FC<ItemCartProps> = ({ line, isEditable }) => {
         quantity: localQuantity,
       });
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localQuantity]);
+
   return (
     <HStack
       as="article"

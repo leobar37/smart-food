@@ -43,7 +43,7 @@ export const useDetailedOrder = () => {
     return {
       armedProducts,
       noArmedProducts,
-      order: orderQuery,
+      orderQuery: orderQuery,
       totalPrice,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -58,7 +58,7 @@ const CartIconWithPopover = () => {
     return () => {
       clearTimeout(timeout);
     };
-  }, [notificationCart.isOpen]);
+  }, [notificationCart.isOpen, notificationCart.state]);
 
   const renderIcon = () => {
     switch (notificationCart.state) {

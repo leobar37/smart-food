@@ -2,10 +2,11 @@ import { Button, Link, LinkBox, LinkOverlay } from '@chakra-ui/react';
 import { Product } from '@smartfood/client/v2';
 import { CardProduct, SliderCounter } from '@smartfood/ui';
 import NextLink from 'next/link';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useAddToCart } from '../../controllers';
 import { useBreakpointValueSSR } from '../../hooks/useBreakpointValue';
 import { useGetProductLine } from '../../controllers';
+import { useDebounceUpdateLine } from '../../controllers';
 
 type ProductCardProps = {
   product: Product;
@@ -20,12 +21,20 @@ const ProductCard: FC<ProductCardProps> = ({ product }) => {
   const { isSelected, line } = useGetProductLine(product.id);
   const [quantity, setQuantity] = useState(line?.quantity ?? 0);
 
+  const [productSelected, setProductSelected] = useState(isSelected);
   const addToCartMutation = useAddToCart();
 
-  console.log({
-    isSelected,
-    line,
-  });
+  const updateLine = useDebounceUpdateLine();
+
+  useEffect(() => {
+    if (quantity > 1 && line?.id) {
+      updateLine({
+        lineId: line?.id,
+        quantity: quantity,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quantity]);
 
   return (
     <LinkBox mb="16" width="max-content" mx={['auto']}>
@@ -33,35 +42,38 @@ const ProductCard: FC<ProductCardProps> = ({ product }) => {
         size={cardSize as any}
         button={
           <Button
-            variant={isSelected ? 'solid' : 'outline'}
+            variant={productSelected ? 'solid' : 'outline'}
             onClick={() => {
-              if (isSelected) {
+              if (productSelected) {
                 return null;
               }
               addToCartMutation.mutate(
                 {
                   productId: product.id,
-                  quantity: quantity,
+                  quantity: 1,
                 },
                 {
+                  onError: () => {
+                    setProductSelected(false);
+                  },
                   onSettled: () => {
-                    setQuantity(1);
+                    setProductSelected(true);
                   },
                 },
               );
+              setProductSelected(true);
+              setQuantity(1);
             }}
           >
-            {isSelected ? `Agregado` : 'Agregar al carrito'}
+            {productSelected ? `Agregado` : 'Agregar al carrito'}
           </Button>
         }
         counter={
-          isSelected ? (
-            <SliderCounter
-              onPlus={() => setQuantity((prev) => prev + 1)}
-              onMinus={() => setQuantity((prev) => Math.max(prev - 1, 1))}
-              value={quantity}
-            />
-          ) : null
+          <SliderCounter
+            onPlus={() => setQuantity((prev) => prev + 1)}
+            onMinus={() => setQuantity((prev) => Math.max(prev - 1, 1))}
+            value={quantity}
+          />
         }
         content={{
           description: product?.excerpt ?? '',
