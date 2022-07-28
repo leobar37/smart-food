@@ -1,6 +1,4 @@
 import {
-  Order,
-  OrderOutput,
   PatchOrderLineMutationVariables,
   PatchOrderMutationVariables,
 } from '../generated';
@@ -8,26 +6,44 @@ import { Feature } from './base';
 
 type CreateOrderArgs = {} & PatchOrderMutationVariables['metadata'];
 
-type CreateLineArgs = PatchOrderLineMutationVariables['orderLine'];
+export type CreateLineArgs = PatchOrderLineMutationVariables['orderLine'];
 
 export class OrderHandler extends Feature {
-  ORDER_KEY = 'CURRENT_ORDER';
+  ORDER_ID_KEY = 'CURRENT_ORDER_ID';
+
+  async get() {
+    const orderId = this.client.storage.get(this.ORDER_ID_KEY);
+    if (!orderId) {
+      return null;
+    }
+    const result = await this.client.wrap(
+      this.client.api.getOrder({
+        orderId: orderId,
+      }),
+    );
+
+    return result.ecoOrder;
+  }
+
   /**
    *  TODO: the email si not implemented for now because we do not yet handle the customer as an entity
    */
-  async create(params: CreateOrderArgs) {
+  async create(params?: CreateOrderArgs) {
     const result = await this.client.wrap(
       this.client.api.patchOrder({
         metadata: {
-          direction: params.direction,
-          payment: params.payment,
-          phone: params.phone,
+          direction: params?.direction,
+          payment: params?.payment,
+          phone: params?.phone,
         },
       }),
     );
+
     const order = result.makeOrder;
-    this.client.storage.setJson(this.ORDER_KEY, order);
-    return result.makeOrder as OrderOutput;
+
+    this.client.storage.set(this.ORDER_ID_KEY, order.id);
+
+    return order;
   }
 
   async update(id: string, params: CreateOrderArgs) {
@@ -41,49 +57,81 @@ export class OrderHandler extends Feature {
         },
       }),
     );
+
     const order = result.makeOrder;
-    this.client.storage.setJson(this.ORDER_KEY, order);
+
+    this.client.storage.set(this.ORDER_ID_KEY, order.id);
+
     return order;
   }
+
   async addLine(line: CreateLineArgs) {
-    const order = this.client.storage.getJson<Order>(this.ORDER_KEY);
+    let orderId = this.client.storage.get(this.ORDER_ID_KEY);
+
+    if (!orderId) {
+      const order = await this.create();
+      orderId = order?.id;
+    }
+
+    if (!orderId) {
+      return;
+    }
+
     const result = await this.client.wrap(
       this.client.api.patchOrderLine({
-        orderId: order.id,
+        orderId: orderId,
         orderLine: line,
       }),
     );
+
     if (result?.patchOrderLine) {
-      this.client.storage.setJson(this.ORDER_KEY, result.patchOrderLine);
+      this.client.storage.set(this.ORDER_ID_KEY, result.patchOrderLine.id);
     }
+
     return result.patchOrderLine;
   }
+
   async updateLine(id: string, line: CreateLineArgs) {
-    const order = this.client.storage.getJson<Order>(this.ORDER_KEY);
+    const orderId = this.client.storage.get(this.ORDER_ID_KEY);
+
+    if (!orderId) {
+      return;
+    }
+
     const result = await this.client.wrap(
       this.client.api.patchOrderLine({
-        orderId: order.id,
+        orderId: orderId,
         orderLine: line,
         orderLineId: id,
       }),
     );
     if (result?.patchOrderLine) {
-      this.client.storage.setJson(this.ORDER_KEY, result.patchOrderLine);
+      this.client.storage.set(this.ORDER_ID_KEY, result.patchOrderLine.id);
     }
     return result?.patchOrderLine;
   }
 
   async deleteLine(id: string) {
-    const order = this.client.storage.getJson<Order>(this.ORDER_KEY);
+    const orderId = this.client.storage.get(this.ORDER_ID_KEY);
+
+    if (!orderId) {
+      return;
+    }
+
     const result = await this.client.wrap(
       this.client.api.deleteOrderLine({
         lineOrderId: id,
-        orderId: order.id,
+        orderId: orderId,
       }),
     );
+
     if (result?.customDeleteOrderLine) {
-      this.client.storage.setJson(this.ORDER_KEY, result.customDeleteOrderLine);
+      this.client.storage.set(
+        this.ORDER_ID_KEY,
+        result.customDeleteOrderLine.id,
+      );
     }
+
     return result?.customDeleteOrderLine;
   }
 }

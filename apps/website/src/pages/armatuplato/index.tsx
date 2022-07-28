@@ -1,5 +1,5 @@
-import { ArmPlatePage } from '../../modules/landing';
-import { armYourPlateHandler } from '../../modules/landing/server';
+import { ArmPlatePage } from '../../features/landing';
+import { armYourPlateHandler } from '@App/core/server';
 
 export const getServerSideProps = armYourPlateHandler;
 

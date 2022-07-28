@@ -6,13 +6,15 @@ import {
   OrderPaymentMethodType,
   OrderStatusType,
   PrismaClient,
+  Product,
 } from '@prisma/client';
 import { isNil, merge, omitBy } from 'lodash';
 import { getInputs } from './input';
+import * as orderService from './order.service';
 import { getOutputs } from './output';
 export const getMutations = (base: BaseSchemaMeta) => {
-  const { metadata, orderLineItem } = getInputs(base);
-  const { OrderLine, OrderOutput } = getOutputs(base);
+  const { metadata, OrderLineItem } = getInputs(base);
+  const { OrderOutput } = getOutputs(base);
 
   /**
    * Make order
@@ -98,24 +100,14 @@ export const getMutations = (base: BaseSchemaMeta) => {
             isNil,
           ),
           include: {
-            lines: true,
+            lines: {
+              orderBy: {
+                createdAt: 'desc',
+              },
+            },
           },
         });
-        const result = await prisma.order.findUnique({
-          where: {
-            id: orderCreted.id,
-          },
-          include: {
-            lines: true,
-          },
-        });
-
-        return {
-          ...result,
-          linesCount: result?.lines?.length ?? 0,
-          total: result.total ?? 0,
-          lines: result?.lines ?? [],
-        } as any;
+        return orderCreted;
       }
     },
   });
@@ -138,108 +130,88 @@ export const getMutations = (base: BaseSchemaMeta) => {
           'If this field is sent, the order will be searched for and edited',
       }),
       orderLine: graphql.arg({
-        type: orderLineItem,
+        type: OrderLineItem,
       }),
     },
     resolve: async (root, args, context) => {
       const prisma = context.prisma as PrismaClient;
-
-      const order = await prisma.order.findFirst({
-        where: {
-          id: {
-            equals: args.orderId,
-          },
-        },
+      const lineFound = await prisma.orderLine.findFirst({
+        where: args?.orderLineId
+          ? {
+              id: args?.orderLineId,
+            }
+          : {
+              productId: args.orderLine.productId,
+            },
         include: {
-          lines: true,
+          product: true,
         },
       });
-
-      if (!order) {
-        throw new Error('Order not found');
-      }
-
-      let orderLine: OrderLine | undefined;
-      const lines = order.lines;
-
-      if (args?.orderLineId) {
-        orderLine = await prisma.orderLine.findFirst({
+      const updateLine = async (
+        orderLine: OrderLine & { product: Product },
+      ) => {
+        /*
+          by convention, whne the user wants to overwrite the quantity
+          he , must send the id as argument
+        */
+        const quantity = args?.orderLineId
+          ? args.orderLine.quantity
+          : args.orderLine.quantity + orderLine.quantity;
+        const product = orderLine.product;
+        const isZero = quantity === 0;
+        if (isZero) {
+          await prisma.orderLine.delete({
+            where: {
+              id: orderLine.id,
+            },
+          });
+          return null;
+        }
+        if (!isZero) {
+          return await prisma.orderLine.update({
+            where: {
+              id: orderLine.id,
+            },
+            data: {
+              quantity: quantity,
+              selection: args.orderLine.selection,
+              price: product.price,
+              total: product.price * quantity,
+            },
+          });
+        }
+      };
+      const createLine = async () => {
+        const product = await prisma.product.findUnique({
           where: {
-            id: {
-              equals: args.orderLineId,
+            id: args.orderLine.productId,
+          },
+          include: {
+            options: {
+              select: {
+                id: true,
+              },
             },
           },
         });
-      }
-
-      if (orderLine) {
-        // update orderLine
-        const product = await prisma.product.findFirst({
-          where: {
-            id: {
-              equals: args.orderLine.productId,
-            },
-          },
-        });
-
-        orderLine = await prisma.orderLine.update({
-          where: {
-            id: args.orderLineId,
-          },
+        return await prisma.orderLine.create({
           data: {
-            productId: args.orderLine.productId,
-            selection: args.orderLine.selection,
-            quantity: args.orderLine.quantity,
-            total: product.price * args.orderLine.quantity,
+            createdAt: new Date(),
             orderId: args.orderId,
-            price: args?.orderLine?.price ?? product.price,
+            productId: args.orderLine.productId,
+            quantity: args.orderLine.quantity,
+            selection: args.orderLine.selection,
+            price: product.price,
+            total: product.price * args.orderLine.quantity,
           },
         });
-        lines.filter((d) => (d.id === orderLine.id ? orderLine : d));
+      };
+      if (lineFound) {
+        await updateLine(lineFound);
       } else {
-        // create order line
-        const product = await prisma.product.findFirst({
-          where: {
-            id: {
-              equals: args.orderLine.productId,
-            },
-          },
-        });
-
-        orderLine = await prisma.orderLine.create({
-          data: {
-            productId: args.orderLine.productId,
-            selection: args.orderLine.selection,
-            quantity: args.orderLine.quantity,
-            orderId: args.orderId,
-            price: args?.orderLine?.price ?? product.price,
-            total: product.price * args.orderLine.quantity,
-          },
-        });
-        lines.push(orderLine);
+        await createLine();
       }
-
-      const total = lines.reduce((acc, line) => {
-        return acc + line.total;
-      }, 0);
-
-      // update order
-      const orderUpdated = await prisma.order.update({
-        where: {
-          id: order.id,
-        },
-        data: {
-          total: total,
-        },
-        include: {
-          lines: true,
-        },
-      });
-
-      return {
-        ...orderUpdated,
-        linesCount: orderUpdated.lines.length,
-      } as any;
+      return orderService.findOrder(prisma, args.orderId);
     },
   });
 
@@ -274,18 +246,7 @@ export const getMutations = (base: BaseSchemaMeta) => {
           id: lineOrderId,
         },
       });
-      const orderUpdated = await prisma.order.findUnique({
-        where: {
-          id: orderId,
-        },
-        include: {
-          lines: true,
-        },
-      });
-      return {
-        ...orderUpdated,
-        linesCount: orderUpdated.lines.length,
-      } as any;
+      return orderService.findOrder(prisma, orderId);
     },
   });
   return {
@@ -296,33 +257,23 @@ export const getMutations = (base: BaseSchemaMeta) => {
 };
 
 export const getQueries = (base: BaseSchemaMeta) => {
+  const { OrderOutput } = getOutputs(base);
+
   const getOrder = graphql.field({
-    type: base.object('Order'),
+    type: OrderOutput,
+    description:
+      'This a order is a bit different of original order, generated by keystone JS',
     args: {
       orderId: graphql.arg({
         type: graphql.String,
       }),
     },
-    resolve: (_, args, context) => {
-      const prisma = context.prisma as PrismaClient;
-      return prisma.order.findFirst({
-        where: {
-          id: {
-            equals: args.orderId,
-          },
-        },
-      });
+    resolve: async (root, args, ctx) => {
+      const prisma = ctx.prisma as PrismaClient;
+      return orderService.findOrder(prisma, args.orderId);
     },
   });
-
   return {
     getOrder,
   };
 };
-/**
- * patch order line
- */
-
-/**
- * Custom delete
- */

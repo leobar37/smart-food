@@ -1,4 +1,4 @@
-fragment OrderFragment on OrderOutput {
+fragment OrderFragment on Order {
   id
   orderNumber
   createdAt
@@ -8,9 +8,40 @@ fragment OrderFragment on OrderOutput {
   metadata
 }
 
+fragment OrderOutputFragment on OrderOutput {
+  id
+  orderNumber
+  createdAt
+  status
+  linesCount
+  total
+  metadata
+}
+
+query getOrder($orderId: String!) {
+  ecoOrder(orderId: $orderId) {
+    ...OrderOutputFragment
+    lines {
+      id
+      selection
+      quantity
+      orderId
+      total
+      productId
+    }
+  }
+}
+
+query getOrderLineCount($id: ID) {
+  order(where: { id: $id }) {
+    id
+    linesCount
+  }
+}
+
 mutation patchOrder($email: String, $metadata: Metadata, $orderId: String) {
   makeOrder(email: $email, metadata: $metadata, orderId: $orderId) {
-    ...OrderFragment
+    ...OrderOutputFragment
   }
 }
 
@@ -24,7 +55,7 @@ mutation patchOrderLine(
     orderLineId: $orderLineId
     orderLine: $orderLine
   ) {
-    ...OrderFragment
+    ...OrderOutputFragment
     lines {
       id
       selection
@@ -38,7 +69,7 @@ mutation patchOrderLine(
 
 mutation deleteOrderLine($orderId: String, $lineOrderId: String) {
   customDeleteOrderLine(orderId: $orderId, lineOrderId: $lineOrderId) {
-    ...OrderFragment
+    ...OrderOutputFragment
     lines {
       id
       selection

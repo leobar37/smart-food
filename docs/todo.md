@@ -1,25 +1,5 @@
 # Todo
 
-##  Ui
-
-- Storybook configuration
-- Chackra-ui + storybook
-- Theme setup
-
-**Components what should be present in storybook**
- 
-- Button
-- Typography
-- Branding
-- SlideCounter
-- Tooltip
-- Card
-- ExoticCard
-- Toastify
-- Modal
-- Shadows
-- Steps
-- Input
-- Checkbox
-  
-Tiempo esperado -> 1 Semana
+- [ ] Design loading in flow to add the product
+- [ ] Design loading component while updating the price in the cart
+- [ ] Addd functionality to edit the built product

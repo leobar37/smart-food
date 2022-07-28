@@ -11,7 +11,7 @@ export const orderExtendGraphql = graphql.extend((base) => {
       customDeleteOrderLine: deleteOrderLine,
     },
     query: {
-      customGetOrder: getOrder,
+      ecoOrder: getOrder,
     },
   };
 });
