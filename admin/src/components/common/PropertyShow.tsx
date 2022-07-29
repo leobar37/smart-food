@@ -1,9 +1,5 @@
 import { css } from '@emotion/css';
-import { controller } from '@keystone-6/core/fields/types/virtual/views';
-import { FieldProps } from '@keystone-6/core/types';
-import { Box, Stack, Text } from '@keystone-ui/core';
-import { FieldContainer, FieldLabel } from '@keystone-ui/fields';
-import { isString } from 'lodash';
+import { Stack, Text } from '@keystone-ui/core';
 import React, { FC } from 'react';
 type DeliveryDetails = {
   direction: string;
@@ -17,27 +13,28 @@ export const PropertyLine: FC<{
   return (
     <Stack
       className={css`
-        display:  flex;
+        display: flex;
         min-width: 350px;
-       flex-direction: row !important;
+        flex-direction: row !important;
         margin-top: 1rem;
       `}
     >
       <Text
+        color="black"
         className={css`
-          font-weight: bold;
+          font-weight: 600;
         `}
       >
         {label}
       </Text>
-      <Text marginLeft={"medium"} >{value}</Text>
+      <Text marginLeft={'medium'}>{value}</Text>
     </Stack>
   );
 };
 
 export const PropertySection: FC<{ title: string }> = ({ title, children }) => {
   return (
-    <Stack  padding={"medium"}>
+    <Stack padding={'medium'}>
       <Text size="medium" color="black" weight="bold">
         {title}
       </Text>
@@ -45,4 +42,3 @@ export const PropertySection: FC<{ title: string }> = ({ title, children }) => {
     </Stack>
   );
 };
-

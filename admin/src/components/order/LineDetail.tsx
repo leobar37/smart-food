@@ -31,7 +31,7 @@ const CardOrderLine: FC<{ line: LineItem }> = ({ line }) => {
       <PropertySection title="Detalle">
         <PropertyLine label="Cantidad:" value={line.quantity} />
         <PropertyLine label="Precio:" value={line.price} />
-        <PropertyLine label="Total:" value={line.total} />
+        <PropertyLine label="Total:" value={`${(line as any).total}S/.`} />
       </PropertySection>
       <Stack padding={'medium'}>
         <Button
@@ -79,7 +79,7 @@ export const Field = ({
   );
 
   let detailOrders = (data?.orderLines || []).map((d) => (
-    <CardOrderLine line={d} />
+    <CardOrderLine line={d} key={d.id} />
   ));
 
   return (
