@@ -29,6 +29,7 @@ import {
 import { useSingleProduct } from '@App/core/modules/product';
 import { LandingLayout } from '@App/core/shared-components';
 import { BackButton } from '@smartfood/ui';
+import { Provider as JotaiProvider } from 'jotai';
 const Title = chakra('h2', {
   baseStyle: {
     mx: 'auto',
@@ -40,7 +41,7 @@ const Title = chakra('h2', {
   },
 });
 
-const Header = () => {
+const BuildPlateSteps = () => {
   const allOptions = useAtomValue(selectionAtom);
   const currentStep = useAtomValue(currentStepAtom);
   const product = useAtomValue(currentProductAtom);
@@ -101,7 +102,7 @@ const BuildPlatePage = () => {
       >
         <Stack direction={'row'}>
           <Box flex={['100%', null, '50%']} w="full">
-            <Header />
+            <BuildPlateSteps />
             <SelectSection />
             <FooterSelectSection />
           </Box>
@@ -116,4 +117,12 @@ const BuildPlatePage = () => {
   );
 };
 
-export default BuildPlatePage;
+const BuildPlateContainer = () => {
+  return (
+    <JotaiProvider>
+      <BuildPlatePage />
+    </JotaiProvider>
+  );
+};
+
+export default BuildPlateContainer;

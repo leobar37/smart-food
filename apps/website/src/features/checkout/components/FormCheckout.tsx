@@ -14,6 +14,7 @@ import {
   Text,
   Textarea,
   VStack,
+  FormErrorMessage,
 } from '@chakra-ui/react';
 import {
   DeliveryTypeEnum,
@@ -30,15 +31,40 @@ import { useMemo } from 'react';
 import { confirmModalAtom } from '../atoms';
 import { useResumeModalDisclousure } from '../useResumModal';
 import { TEMPORAL_ORDER_KEY } from '../constants';
+import { cacheKeys } from '@App/core/constants';
+import { useQueryClient } from 'react-query';
+import { isEqual } from 'lodash';
+import * as yup from 'yup';
+import { get } from 'lodash';
+
 type FormDataType = {
   paymentMethod: string;
 } & OrderMetadata['deliveryDetails'];
+
+const formChekoutSchema = yup.object({
+  deliveryType: yup.string().required(),
+  direction: yup.string().when('deliveryType', {
+    is: DeliveryTypeEnum.DELIVERY,
+    then: yup.string().required('La dirección es requerida'),
+    otherwise: yup.mixed().nullable(),
+  }),
+  lastName: yup.string().required('El apellido es requerido'),
+  name: yup.string().required('El nombre es requerido'),
+  paymentMethod: yup.string(),
+  sede: yup.string().when('deliveryType', {
+    is: DeliveryTypeEnum.SEDE,
+    then: yup.string().required(),
+    otherwise: yup.string().nullable(),
+  }),
+});
 
 const FormCheckout = () => {
   const modalResume = useResumeModalDisclousure();
   const updateOrder = useUpdateOrder();
   const router = useRouter();
   const [, setConfirmModalState] = useAtom(confirmModalAtom);
+  const queryClient = useQueryClient();
+
   const formik = useFormik<FormDataType>({
     initialValues: {
       deliveryType: DeliveryTypeEnum.DELIVERY,
@@ -48,9 +74,10 @@ const FormCheckout = () => {
       paymentMethod: PaymentMethods.YAPE,
       sede: null,
     },
-    onSubmit: (values, { setSubmitting }) => {
+    validationSchema: formChekoutSchema,
+    onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true);
-      updateOrder.mutateAsync(
+      await updateOrder.mutateAsync(
         {
           paymentMethod: values.paymentMethod as any,
           metadata: {
@@ -70,6 +97,11 @@ const FormCheckout = () => {
             cmsLib.storage.clean();
             cmsLib.storage.setJson(TEMPORAL_ORDER_KEY, data);
             setConfirmModalState(true);
+            queryClient.removeQueries({
+              predicate: (query) => {
+                return isEqual(query.queryKey, cacheKeys.order);
+              },
+            });
           },
         },
       );
@@ -106,7 +138,7 @@ const FormCheckout = () => {
               name="direction"
               onChange={formik.handleChange}
               value={formik.values.direction ?? ''}
-              placeholder="Ejem: FIgueroa Hidalgo"
+              placeholder="Ejem: Av. Acme 259"
             />
           </FormControl>
           <FormControl>
@@ -115,7 +147,7 @@ const FormCheckout = () => {
               name="reference"
               onChange={formik.handleChange}
               value={formik.values.reference}
-              placeholder="Ejem: FIgueroa Hidalgo"
+              placeholder="Ejem: Frente a SmartFood"
             />
           </FormControl>
         </>
@@ -123,6 +155,14 @@ const FormCheckout = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formik.values]);
+
+  const renderError = (name: string) => {
+    const error = get(formik.errors, name);
+    return error ? <FormErrorMessage>{error}</FormErrorMessage> : null;
+  };
+  const hasError = (name: string) => {
+    return !!(formik.errors as any)[name];
+  };
 
   return (
     <VStack
@@ -182,7 +222,7 @@ const FormCheckout = () => {
           </Stack>
         </RadioGroup>
       </FormControl>
-      <FormControl>
+      <FormControl isInvalid={hasError('name')}>
         <FormLabel>Nombre:</FormLabel>
         <Input
           name="name"
@@ -190,8 +230,9 @@ const FormCheckout = () => {
           value={formik.values.name}
           placeholder="Ejem: Lucero"
         />
+        {renderError('name')}
       </FormControl>
-      <FormControl>
+      <FormControl isInvalid={hasError('lastName')}>
         <FormLabel>Apellido:</FormLabel>
         <Input
           name="lastName"
@@ -199,15 +240,17 @@ const FormCheckout = () => {
           value={formik.values.lastName}
           placeholder="Ejem: FIgueroa Hidalgo"
         />
+        {renderError('lastName')}
       </FormControl>
-      <FormControl>
+      <FormControl isInvalid={hasError('phone')}>
         <FormLabel>Número de celular:</FormLabel>
         <Input
           name="phone"
           onChange={formik.handleChange}
           value={formik.values.phone}
-          placeholder="Ejem: FIgueroa Hidalgo"
+          placeholder="Ejem: 987654321"
         />
+        {renderError('phone')}
       </FormControl>
       {sedeOrDirection}
 
@@ -228,6 +271,9 @@ const FormCheckout = () => {
           Ver Resumen
         </Link>
         <Button
+          isLoading={formik.isSubmitting}
+          disabled={!formik.isValid || formik.isSubmitting}
+          loadingText={'Confirmando...'}
           onClick={formik.submitForm}
           maxW={'max-content'}
           colorScheme={'smartgray'}

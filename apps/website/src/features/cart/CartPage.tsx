@@ -85,8 +85,7 @@ const CartPage = () => {
   });
 
   return (
-    <LandingLayout>
-      k
+    <LandingLayout mt="10">
       <Header />
       <Container as="section" maxW={'5xl'}>
         <Stack

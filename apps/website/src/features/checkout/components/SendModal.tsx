@@ -25,6 +25,9 @@ export const ConfirmationModal = () => {
   const order = cmsLib.storage.getJson<OrderOutput>(TEMPORAL_ORDER_KEY);
   const [count, setCount] = useState(0);
   const router = useRouter();
+  if (!order) {
+    return null;
+  }
   return (
     <Modal isOpen={confirmModalState} isCentered onClose={noop}>
       <ModalOverlay />

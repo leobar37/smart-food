@@ -11,6 +11,8 @@ import { isNil, merge, omitBy } from 'lodash';
 import { getInputs } from './input';
 import * as orderService from './order.service';
 import { getOutputs } from './output';
+import { OrderMetadata } from '@smartfood/common';
+import { get } from 'lodash';
 export const getMutations = (base: BaseSchemaMeta) => {
   const { OrderLineItem } = getInputs(base);
   const { OrderOutput } = getOutputs(base);
@@ -29,8 +31,8 @@ export const getMutations = (base: BaseSchemaMeta) => {
       }),
       metadata: graphql.arg({
         description: `
-         The delivery data should be linked  to a cliente, but this functionality
-         is not avalaible is not avalaible in the firt version, for now it saved as a json.
+         The delivery data should be linked  to a client, but this functionality
+         is not avalaible in the firt version, for now it saved as a json.
         `,
         type: graphql.JSON,
       }),
@@ -44,22 +46,21 @@ export const getMutations = (base: BaseSchemaMeta) => {
     },
     resolve: async (source, args, context) => {
       const prisma = context.prisma as PrismaClient;
-      const metatada = args.metadata as any;
-
+      const metatada = args.metadata as any as OrderMetadata;
       let client: Client | undefined;
+
       if (args?.email) {
         client = await prisma.client.findFirst({
           where: {
             email: {
-              contains: args.email,
+              contains: args?.email,
             },
           },
         });
-        if (!client) {
-          throw new Error('This client not exist ');
-        }
       }
+
       if (args?.orderId) {
+        const pendingStatus = get(metatada, 'deliveryDetails.name', false);
         const order = await prisma.order.findUnique({
           where: {
             id: args.orderId,
@@ -75,6 +76,9 @@ export const getMutations = (base: BaseSchemaMeta) => {
               {
                 metadata: omitBy(metatada, isNil) ?? {},
                 paymentMethod: args?.paymentMethod,
+                status: pendingStatus
+                  ? OrderStatusType.PENDING
+                  : OrderStatusType.IN_CART,
               },
               isNil,
             ),
@@ -96,7 +100,7 @@ export const getMutations = (base: BaseSchemaMeta) => {
             {
               clientId: client?.id,
               metadata: omitBy(metatada, isNil) ?? {},
-              status: OrderStatusType.PENDING,
+              status: OrderStatusType.IN_CART,
               paymentMethod: args?.paymentMethod,
             },
             isNil,
