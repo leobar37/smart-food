@@ -16,13 +16,13 @@ RUN wget -q -t3 'https://packages.doppler.com/public/cli/rsa.8004D9FF50437357.ke
     
 
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
-COPY package*.json ./
+
+COPY . .
 
 # Install app dependencies
 RUN yarn install
 
 # Bundle app source
-COPY . .
 
 RUN  ls .
 
