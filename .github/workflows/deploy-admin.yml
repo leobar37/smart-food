@@ -1,21 +1,26 @@
-# name: Deploy
+name: Deploy
 
-# on:
-#   push:
-#     branches:
-#       - develop
-#       - main
+on:
+  push:
+    branches:
+      - main
 
-# concurrency: ${{github.workflow}}-${{github.workflow}}
+concurrency: ${{github.workflow}}-${{github.workflow}}
 
-# jobs:
-#   release:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: run ssh commands
-#         uses: fifsky/ssh-action@master
-#         with:
-#           command: |
-#            cd repo && git pull &&
-#            cd admin &&
-
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: run ssh commands
+        uses: fifsky/ssh-action@master
+        with:
+          command: |
+            cd repo && git pull &&
+            cd admin &&
+            docker build -t leobar37/smartfood-admin:latest --build-arg DOPPLER_TOKEN=${{secrets.DOPPLER_TOKEN}} . && 
+            dokku git:from-image smartfood-admin leobar37/smartfood-admin:latest &&
+            dokku ps:rebuild smartfood-admin}
+          args: '-tt -vvv'
+          host: ${{ secrets.HOST_SSH_DOKKU }}
+          user: ${{ secrets.USER_SSH_DOKKU }}
+          key: ${{ secrets.SECRET_SSH }}
