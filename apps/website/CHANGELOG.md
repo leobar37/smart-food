@@ -1,5 +1,14 @@
 # @smartfood/website
 
+## 0.1.3
+
+### Patch Changes
+
+- Updated dependencies
+  - @smartfood/common@1.0.1
+  - @smartfood/client@0.2.1
+  - @smartfood/ui@0.0.3
+
 ## 0.1.2
 
 ### Patch Changes
