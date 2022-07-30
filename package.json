@@ -5,6 +5,7 @@
   "scripts": {
     "build": "turbo run build",
     "test": "turbo run test",
+    "dump": "changeset version",
     "lint": "turbo run lint",
     "dev": "turbo run dev",
     "storybook": "start-storybook -p 6006",
