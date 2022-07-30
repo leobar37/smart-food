@@ -1,9 +1,10 @@
 {
   "name": "@smartfood/ui",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "build": "preconstruct build"
   },
+  "private": true,
   "main": "dist/smartfood-ui.cjs.js",
   "module": "dist/smartfood-ui.esm.js",
   "types": "dist/smartfood-ui.cjs.d.ts",
@@ -14,7 +15,7 @@
     "@chakra-ui/utils": "^2.0.3",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
-    "@smartfood/common": "0.0.1",
+    "@smartfood/common": "1.0.0",
     "framer-motion": "^6",
     "react-icons": "^4.4.0"
   },
