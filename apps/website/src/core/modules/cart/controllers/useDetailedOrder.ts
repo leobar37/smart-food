@@ -7,6 +7,7 @@ import { flatternCategories } from '../../product/helpers';
 import { useCategoriesWithProducts } from './../../product';
 
 import { useOrder } from './useOrder';
+
 export const useDetailedOrder = () => {
   const orderQuery = useOrder();
   const { data: categoryProducts } = useCategoriesWithProducts();
@@ -47,6 +48,7 @@ export const useDetailedOrder = () => {
       armedProducts,
       noArmedProducts,
       orderQuery: orderQuery,
+      linesWithProduct: newlines,
       totalPrice,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

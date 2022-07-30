@@ -4,7 +4,7 @@ import { OptionSelection } from '@smartfood/common';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useMutation, useQueryClient } from 'react-query';
 import { linesCountAtom } from '../atoms';
-import { cacheKeys } from '../../../constants';
+import { cacheKeys, mutationsKeys } from '../../../constants';
 import { useNotificationCart } from '../../notification';
 
 export const useAddToCart = () => {
@@ -20,6 +20,7 @@ export const useAddToCart = () => {
       selection?: { options: OptionSelection[] };
     }) => {
       notificationCart.open('loading');
+
       const order = await cmsLib.order.addLine({
         productId: params.productId,
         quantity: params.quantity,
@@ -29,6 +30,7 @@ export const useAddToCart = () => {
       return order;
     },
     {
+      mutationKey: mutationsKeys.addLineToOrder,
       onMutate: async (params) => {
         await client.cancelQueries(cacheKeys.order);
         const order = client.getQueryData(cacheKeys.order) as OrderOutput;

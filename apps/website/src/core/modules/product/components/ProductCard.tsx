@@ -8,7 +8,7 @@ import {
   useGetProductLine,
   useDebounceUpdateLine,
 } from '../../cart';
-import { useBreakpointValueSSR } from '../../../../core/hooks/useBreakpointValue';
+import { useBreakpointValueSSR } from '@App/core/hooks';
 
 type ProductCardProps = {
   product: Product;
@@ -27,6 +27,15 @@ const ProductCard: FC<ProductCardProps> = ({ product }) => {
   const addToCartMutation = useAddToCart();
 
   const updateLine = useDebounceUpdateLine();
+
+  console.log(line);
+
+  useEffect(() => {
+    if (line) {
+      setQuantity(line.quantity ?? 0);
+      setProductSelected(isSelected);
+    }
+  }, [line, isSelected]);
 
   useEffect(() => {
     if (quantity > 1 && line?.id) {

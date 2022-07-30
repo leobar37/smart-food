@@ -5,10 +5,9 @@ const baseStyle: PartsStyleObject<typeof parts> = {};
 
 const variantOutline: PartsStyleFunction<typeof parts> = ({ theme }) => {
   const color = theme.colors.smartgreen['500'];
-
   return {
     field: {
-      borderRadius: 'full',
+      borderRadius: '8px',
       _focusVisible: {
         borderColor: color,
         boxShadow: `0 0 0 1px ${color}`,

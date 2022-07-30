@@ -3,7 +3,6 @@ import { graphql } from '@keystone-6/core';
 import {
   Client,
   OrderLine,
-  OrderPaymentMethodType,
   OrderStatusType,
   PrismaClient,
   Product,
@@ -12,8 +11,10 @@ import { isNil, merge, omitBy } from 'lodash';
 import { getInputs } from './input';
 import * as orderService from './order.service';
 import { getOutputs } from './output';
+import { OrderMetadata } from '@smartfood/common';
+import { get } from 'lodash';
 export const getMutations = (base: BaseSchemaMeta) => {
-  const { metadata, OrderLineItem } = getInputs(base);
+  const { OrderLineItem } = getInputs(base);
   const { OrderOutput } = getOutputs(base);
 
   /**
@@ -29,7 +30,14 @@ export const getMutations = (base: BaseSchemaMeta) => {
           'If the email is sent, the user will be searched for and affiliated to the order',
       }),
       metadata: graphql.arg({
-        type: metadata,
+        description: `
+         The delivery data should be linked  to a client, but this functionality
+         is not avalaible in the firt version, for now it saved as a json.
+        `,
+        type: graphql.JSON,
+      }),
+      paymentMethod: graphql.arg({
+        type: base.enum('OrderPaymentMethodType'),
       }),
       orderId: graphql.arg({
         type: graphql.String,
@@ -38,26 +46,22 @@ export const getMutations = (base: BaseSchemaMeta) => {
     },
     resolve: async (source, args, context) => {
       const prisma = context.prisma as PrismaClient;
-      const metatada = {
-        direction: args.metadata?.direction,
-        phone: args.metadata?.phone,
-      };
-
+      const metatada = args.metadata as any as OrderMetadata;
       let client: Client | undefined;
+
       if (args?.email) {
         client = await prisma.client.findFirst({
           where: {
             email: {
-              contains: args.email,
+              contains: args?.email,
             },
           },
         });
-        if (!client) {
-          throw new Error('This client not exist ');
-        }
       }
+
       if (args?.orderId) {
-        const order = await prisma.order.findFirst({
+        const pendingStatus = get(metatada, 'deliveryDetails.name', false);
+        const order = await prisma.order.findUnique({
           where: {
             id: args.orderId,
           },
@@ -70,9 +74,11 @@ export const getMutations = (base: BaseSchemaMeta) => {
             order,
             omitBy(
               {
-                metadata: omitBy(args.metadata, isNil) ?? {},
-                paymentMethod: args?.metadata
-                  ?.payment as OrderPaymentMethodType,
+                metadata: omitBy(metatada, isNil) ?? {},
+                paymentMethod: args?.paymentMethod,
+                status: pendingStatus
+                  ? OrderStatusType.PENDING
+                  : OrderStatusType.IN_CART,
               },
               isNil,
             ),
@@ -94,8 +100,8 @@ export const getMutations = (base: BaseSchemaMeta) => {
             {
               clientId: client?.id,
               metadata: omitBy(metatada, isNil) ?? {},
-              status: OrderStatusType.PENDING,
-              paymentMethod: args?.metadata?.payment as OrderPaymentMethodType,
+              status: OrderStatusType.IN_CART,
+              paymentMethod: args?.paymentMethod,
             },
             isNil,
           ),
@@ -142,6 +148,7 @@ export const getMutations = (base: BaseSchemaMeta) => {
             }
           : {
               productId: args.orderLine.productId,
+              orderId: args.orderId,
             },
         include: {
           product: true,

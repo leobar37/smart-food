@@ -4,3 +4,4 @@ export * from './useDetailedOrder';
 export * from './useOrder';
 export * from './useUpdateLine';
 export * from './useGetProductLine';
+export * from './useUpdateOrder';

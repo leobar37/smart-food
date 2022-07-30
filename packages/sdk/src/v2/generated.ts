@@ -400,14 +400,6 @@ export type KeystoneMeta = {
   adminMeta: KeystoneAdminMeta;
 };
 
-export type Metadata = {
-  direction?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  payment?: InputMaybe<OrderPaymentMethodType>;
-  phone?: InputMaybe<Scalars['String']>;
-  reference?: InputMaybe<Scalars['String']>;
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
   authenticateUserWithPassword?: Maybe<UserAuthenticationWithPasswordResult>;
@@ -612,8 +604,9 @@ export type MutationDeleteUsersArgs = {
 
 export type MutationMakeOrderArgs = {
   email?: InputMaybe<Scalars['String']>;
-  metadata?: InputMaybe<Metadata>;
+  metadata?: InputMaybe<Scalars['JSON']>;
   orderId?: InputMaybe<Scalars['String']>;
+  paymentMethod?: InputMaybe<OrderPaymentMethodType>;
 };
 
 export type MutationPatchOrderLineArgs = {
@@ -847,6 +840,7 @@ export enum OrderDirection {
 
 export type OrderLine = {
   __typename?: 'OrderLine';
+  createdAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['ID'];
   order?: Maybe<Order>;
   price?: Maybe<Scalars['Float']>;
@@ -858,6 +852,7 @@ export type OrderLine = {
 };
 
 export type OrderLineCreateInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
   order?: InputMaybe<OrderRelateToOneForCreateInput>;
   price?: InputMaybe<Scalars['Float']>;
   product?: InputMaybe<ProductRelateToOneForCreateInput>;
@@ -889,6 +884,7 @@ export type OrderLineManyRelationFilter = {
 };
 
 export type OrderLineOrderByInput = {
+  createdAt?: InputMaybe<OrderDirection>;
   id?: InputMaybe<OrderDirection>;
   price?: InputMaybe<OrderDirection>;
   quantity?: InputMaybe<OrderDirection>;
@@ -924,6 +920,7 @@ export type OrderLineUpdateArgs = {
 };
 
 export type OrderLineUpdateInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
   order?: InputMaybe<OrderRelateToOneForUpdateInput>;
   price?: InputMaybe<Scalars['Float']>;
   product?: InputMaybe<ProductRelateToOneForUpdateInput>;
@@ -936,6 +933,7 @@ export type OrderLineWhereInput = {
   AND?: InputMaybe<Array<OrderLineWhereInput>>;
   NOT?: InputMaybe<Array<OrderLineWhereInput>>;
   OR?: InputMaybe<Array<OrderLineWhereInput>>;
+  createdAt?: InputMaybe<DateTimeNullableFilter>;
   id?: InputMaybe<IdFilter>;
   order?: InputMaybe<OrderWhereInput>;
   price?: InputMaybe<FloatNullableFilter>;
@@ -1511,6 +1509,7 @@ export type OrderOutputFragmentFragment = {
   linesCount?: number | null;
   total?: number | null;
   metadata?: any | null;
+  paymentMethod?: OrderPaymentMethodType | null;
 };
 
 export type GetOrderQueryVariables = Exact<{
@@ -1528,6 +1527,7 @@ export type GetOrderQuery = {
     linesCount?: number | null;
     total?: number | null;
     metadata?: any | null;
+    paymentMethod?: OrderPaymentMethodType | null;
     lines?: Array<{
       __typename?: 'OrderLineOutput';
       id?: string | null;
@@ -1555,8 +1555,9 @@ export type GetOrderLineCountQuery = {
 
 export type PatchOrderMutationVariables = Exact<{
   email?: InputMaybe<Scalars['String']>;
-  metadata?: InputMaybe<Metadata>;
+  metadata?: InputMaybe<Scalars['JSON']>;
   orderId?: InputMaybe<Scalars['String']>;
+  paymentMethod?: InputMaybe<OrderPaymentMethodType>;
 }>;
 
 export type PatchOrderMutation = {
@@ -1570,6 +1571,7 @@ export type PatchOrderMutation = {
     linesCount?: number | null;
     total?: number | null;
     metadata?: any | null;
+    paymentMethod?: OrderPaymentMethodType | null;
   } | null;
 };
 
@@ -1590,6 +1592,7 @@ export type PatchOrderLineMutation = {
     linesCount?: number | null;
     total?: number | null;
     metadata?: any | null;
+    paymentMethod?: OrderPaymentMethodType | null;
     lines?: Array<{
       __typename?: 'OrderLineOutput';
       id?: string | null;
@@ -1618,6 +1621,7 @@ export type DeleteOrderLineMutation = {
     linesCount?: number | null;
     total?: number | null;
     metadata?: any | null;
+    paymentMethod?: OrderPaymentMethodType | null;
     lines?: Array<{
       __typename?: 'OrderLineOutput';
       id?: string | null;
@@ -1785,6 +1789,7 @@ export const OrderOutputFragmentFragmentDoc = gql`
     linesCount
     total
     metadata
+    paymentMethod
   }
 `;
 export const ProductFragmentFragmentDoc = gql`
@@ -1830,8 +1835,18 @@ export const GetOrderLineCountDocument = gql`
   }
 `;
 export const PatchOrderDocument = gql`
-  mutation patchOrder($email: String, $metadata: Metadata, $orderId: String) {
-    makeOrder(email: $email, metadata: $metadata, orderId: $orderId) {
+  mutation patchOrder(
+    $email: String
+    $metadata: JSON
+    $orderId: String
+    $paymentMethod: OrderPaymentMethodType
+  ) {
+    makeOrder(
+      email: $email
+      metadata: $metadata
+      orderId: $orderId
+      paymentMethod: $paymentMethod
+    ) {
       ...OrderOutputFragment
     }
   }
