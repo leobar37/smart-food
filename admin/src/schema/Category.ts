@@ -5,6 +5,8 @@ export const Category = list({
   access: {
     operation: {
       create: (...args) => {
+        console.log('create category');
+
         return true;
       },
       query: (...args) => {
