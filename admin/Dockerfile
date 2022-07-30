@@ -1,5 +1,7 @@
 FROM node:16-alpine3.14 as base
+
 RUN apk update
+
 
 ARG DOPPLER_TOKEN=none
 ENV DOPPLER_TOKEN=${DOPPLER_TOKEN}
@@ -13,11 +15,7 @@ RUN wget -q -t3 'https://packages.doppler.com/public/cli/rsa.8004D9FF50437357.ke
 
 WORKDIR /app
 
-COPY  admin/package*.json ./
-
-COPY admin/yarn.lock ./
-
-COPY admin/ .
+COPY . .
 
 RUN yarn install
 
