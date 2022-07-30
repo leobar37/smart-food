@@ -24,7 +24,8 @@
     "graphql": "^16.5.0",
     "graphql-request": "^4.3.0",
     "graphql-tag": "^2.12.6",
-    "lodash.get": "^4.4.2"
+    "lodash.get": "^4.4.2",
+    "@smartfood/common": "^0.0.1"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.18.6",

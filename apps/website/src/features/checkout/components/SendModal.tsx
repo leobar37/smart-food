@@ -1,22 +1,35 @@
+import cmsLib from '@App/core/lib/cms';
 import {
-  Box,
-  Text,
+  Button,
+  HStack,
   Modal,
+  ModalBody,
   ModalContent,
   ModalHeader,
   ModalOverlay,
   Stack,
+  Text,
   VStack,
-  ModalBody,
-  Button,
 } from '@chakra-ui/react';
+import { OrderOutput } from '@smartfood/client/v2';
+import { buildWtsMessage } from '@smartfood/common';
 import { CheckIcon } from '@smartfood/ui';
-
+import { useAtom } from 'jotai';
 import { noop } from 'lodash';
-
-export const SendModal = () => {
+import { useState } from 'react';
+import { confirmModalAtom } from '../atoms';
+import { TEMPORAL_ORDER_KEY } from '../constants';
+import { useRouter } from 'next/router';
+export const ConfirmationModal = () => {
+  const [confirmModalState] = useAtom(confirmModalAtom);
+  const order = cmsLib.storage.getJson<OrderOutput>(TEMPORAL_ORDER_KEY);
+  const [count, setCount] = useState(0);
+  const router = useRouter();
+  if (!order) {
+    return null;
+  }
   return (
-    <Modal isOpen={false} isCentered onClose={noop}>
+    <Modal isOpen={confirmModalState} isCentered onClose={noop}>
       <ModalOverlay />
       <ModalContent padding={['5', null, '10', '12']} margin="4" maxWidth="3xl">
         <ModalHeader padding="0" mb="8">
@@ -52,17 +65,54 @@ export const SendModal = () => {
             fontSize={['md', 'lg']}
             textAlign="center"
             width="100%"
-            mb="8"
+            mb="2"
           >
-            Gracias por preferirnos, el detalle de tu pedido fue enviado a tu
-            whatsApp. Por el mismo medio se te enviará el código para que puedas
-            realizar el deposito. ¡Disfruta tu pedido!
+            Gracias por preferirnos, necesitamos CONFIRMAR tu orden. Puedes
+            presionar el siguiente botón o enviar un mensaje con tu número de
+            orden al +51987654321
           </Text>
-          <VStack>
-            <Button width="2xs" height="3rem" colorScheme="smartgray">
-              Ir a inicio
+          <Text
+            as="h5"
+            color="smartgray.500"
+            fontSize={['md', 'lg']}
+            textAlign="center"
+            width="100%"
+            mb="4"
+            mx="auto"
+            w="full"
+            fontWeight={'bold'}
+          >
+            Nro de Orden: <Text>{order.orderNumber}</Text>
+          </Text>
+
+          <HStack justifyContent={'center'}>
+            <Button
+              onClick={() => {
+                const message = buildWtsMessage(`
+                Hola, quiero confimar mi pedido, con número ${order.orderNumber}
+              `);
+                setCount((prev) => prev + 1);
+                window.open(message);
+              }}
+              width="2xs"
+              size="lg"
+              colorScheme="smartgray"
+            >
+              Confirmar tu orden
             </Button>
-          </VStack>
+            {count > 0 && (
+              <Button
+                size="lg"
+                width="2xs"
+                onClick={() => {
+                  localStorage.removeItem(TEMPORAL_ORDER_KEY);
+                  router.replace('/');
+                }}
+              >
+                Ir al inicio
+              </Button>
+            )}
+          </HStack>
         </ModalBody>
       </ModalContent>
     </Modal>

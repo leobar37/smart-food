@@ -16,6 +16,7 @@ fragment OrderOutputFragment on OrderOutput {
   linesCount
   total
   metadata
+  paymentMethod
 }
 
 query getOrder($orderId: String!) {
@@ -39,8 +40,18 @@ query getOrderLineCount($id: ID) {
   }
 }
 
-mutation patchOrder($email: String, $metadata: Metadata, $orderId: String) {
-  makeOrder(email: $email, metadata: $metadata, orderId: $orderId) {
+mutation patchOrder(
+  $email: String
+  $metadata: JSON
+  $orderId: String
+  $paymentMethod: OrderPaymentMethodType
+) {
+  makeOrder(
+    email: $email
+    metadata: $metadata
+    orderId: $orderId
+    paymentMethod: $paymentMethod
+  ) {
     ...OrderOutputFragment
   }
 }

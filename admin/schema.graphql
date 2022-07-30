@@ -913,7 +913,13 @@ type Mutation {
     If the email is sent, the user will be searched for and affiliated to the order
     """
     email: String
-    metadata: Metadata
+
+    """
+    The delivery data should be linked  to a client, but this functionality
+    is not avalaible in the firt version, for now it saved as a json.
+    """
+    metadata: JSON
+    paymentMethod: OrderPaymentMethodType
 
     """
     If this field is passed the order will be edited
@@ -956,14 +962,6 @@ type OrderLineOutput {
   total: Float
   selection: JSON
   quantity: Int
-}
-
-input Metadata {
-  direction: String
-  phone: String
-  payment: OrderPaymentMethodType
-  name: String
-  reference: String
 }
 
 input OrderLineItem {

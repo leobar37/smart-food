@@ -8,8 +8,9 @@ import {
   timestamp,
   virtual,
 } from '@keystone-6/core/fields';
-import { OrderEnum, ORDER_STATUS, PAYMENT_METHODS } from '../constants';
+import { OrderEnum, ORDER_STATUS } from '../constants';
 import { get } from 'lodash';
+import { PAYMENT_METHODS } from '@smartfood/common';
 export const Order = list({
   ui: {
     labelField: 'orderNumber',
@@ -80,8 +81,7 @@ export const Order = list({
         resolve: (root) => {
           const { metadata } = root as any;
           return {
-            direction: get(metadata, 'direction'),
-            phone: get(metadata, 'phone'),
+            metadata: metadata,
           };
         },
       }),

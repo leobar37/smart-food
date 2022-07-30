@@ -1,10 +1,13 @@
+import { DeliveryTypeEnum, OrderMetadata } from '@smartfood/common';
 import {
   PatchOrderLineMutationVariables,
   PatchOrderMutationVariables,
 } from '../generated';
 import { Feature } from './base';
-
-type CreateOrderArgs = {} & PatchOrderMutationVariables['metadata'];
+import { omit } from 'lodash';
+export type CreateOrderArgs = Omit<PatchOrderMutationVariables, 'metadata'> & {
+  metadata?: OrderMetadata;
+};
 
 export type CreateLineArgs = PatchOrderLineMutationVariables['orderLine'];
 
@@ -31,11 +34,8 @@ export class OrderHandler extends Feature {
   async create(params?: CreateOrderArgs) {
     const result = await this.client.wrap(
       this.client.api.patchOrder({
-        metadata: {
-          direction: params?.direction,
-          payment: params?.payment,
-          phone: params?.phone,
-        },
+        metadata: params?.metadata,
+        paymentMethod: params?.paymentMethod,
       }),
     );
 
@@ -46,15 +46,19 @@ export class OrderHandler extends Feature {
     return order;
   }
 
-  async update(id: string, params: CreateOrderArgs) {
+  async update(params: CreateOrderArgs) {
+    let orderId = this.client.storage.get(this.ORDER_ID_KEY);
+    let metadata = params.metadata;
+    if (
+      (metadata.deliveryDetails.deliveryType as any) === DeliveryTypeEnum.SEDE
+    ) {
+      metadata = omit(metadata, 'reference', 'direction');
+    }
     const result = await this.client.wrap(
       this.client.api.patchOrder({
-        orderId: id,
-        metadata: {
-          direction: params.direction,
-          payment: params.payment,
-          phone: params.phone,
-        },
+        orderId: orderId,
+        metadata: metadata,
+        paymentMethod: params.paymentMethod,
       }),
     );
 

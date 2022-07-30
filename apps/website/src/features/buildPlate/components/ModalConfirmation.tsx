@@ -29,7 +29,9 @@ import {
 } from '@App/core/modules/product';
 import { useAtomValue } from 'jotai';
 import { useAddToCart } from '@App/core/modules/cart';
-
+import { useQueryClient } from 'react-query';
+import { mutationsKeys } from '@App/core/constants';
+import { useNotificationCart } from '@App/core/modules/notification';
 // TODO: move this to controllers folder
 const useConfirmationController = () => {
   const addToCart = useAddToCart();
@@ -44,9 +46,7 @@ const useConfirmationController = () => {
       },
     });
   };
-  return {
-    saveBuildPlate,
-  };
+  return saveBuildPlate;
 };
 
 export const ModalConfirmationPlate = () => {
@@ -55,7 +55,12 @@ export const ModalConfirmationPlate = () => {
   const sizeButtons = ['xs', 'md', 'lg'];
   const router = useRouter();
   const isModal = useBreakpointValueSSR([false, false, true, true]);
-  const { saveBuildPlate } = useConfirmationController();
+
+  const saveBuildPlate = useConfirmationController();
+
+  const queryClient = useQueryClient();
+  const notificationCart = useNotificationCart();
+
   const sections = useMemo(
     () => ({
       resume: (
@@ -72,8 +77,9 @@ export const ModalConfirmationPlate = () => {
                 Cancelar
               </Button>
               <Button
+                loadingText="Cargando..."
+                isLoading={notificationCart.isOpen}
                 onClick={async () => {
-                  // TODO: implement loading here
                   await saveBuildPlate();
                   setSection('notification');
                 }}
@@ -113,7 +119,7 @@ export const ModalConfirmationPlate = () => {
             <Button
               size={sizeButtons}
               onClick={() => {
-                setSection('resume');
+                router.push('/checkout');
               }}
               colorScheme={'smartgray'}
             >
@@ -133,7 +139,7 @@ export const ModalConfirmationPlate = () => {
       ),
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
+    [notificationCart.isOpen, saveBuildPlate],
   );
   const content = sections[section];
 
