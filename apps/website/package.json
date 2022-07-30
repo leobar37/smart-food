@@ -1,6 +1,6 @@
 {
   "name": "@smartfood/website",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "private": true,
   "scripts": {
     "dev": "next dev --port 4200",
@@ -13,9 +13,9 @@
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "@preconstruct/next": "^4.0.0",
-    "@smartfood/client": "0.0.2",
-    "@smartfood/common": "0.0.1",
-    "@smartfood/ui": "0.0.1",
+    "@smartfood/client": "0.2.0",
+    "@smartfood/common": "1.0.0",
+    "@smartfood/ui": "0.0.2",
     "formik": "^2.2.9",
     "framer-motion": "^6",
     "ismobilejs": "^1.1.1",

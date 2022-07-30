@@ -1,9 +1,13 @@
 {
   "name": "@smartfood/common",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": false,
   "scripts": {
     "build": "preconstruct build"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "main": "dist/smartfood-common.cjs.js",
   "module": "dist/smartfood-common.esm.js",

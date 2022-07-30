@@ -12,7 +12,8 @@
     "prepare": "husky install",
     "gen:types": "yarn chakra-cli tokens  packages/ui/src/theme/index.ts",
     "postinstall": "preconstruct dev && manypkg check",
-    "fix": "preconstruct fix && manypkg fix"
+    "fix": "preconstruct fix && manypkg fix",
+    "release": "turbo run build --filter=@smartfood/client --filter=@smartfood/common && changeset publish"
   },
   "workspaces": {
     "nohoist": [
