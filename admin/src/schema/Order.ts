@@ -9,7 +9,6 @@ import {
   virtual,
 } from '@keystone-6/core/fields';
 import { OrderEnum, ORDER_STATUS } from '../constants';
-import { get } from 'lodash';
 import { PAYMENT_METHODS } from '@smartfood/common';
 export const Order = list({
   ui: {
