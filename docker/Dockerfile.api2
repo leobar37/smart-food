@@ -24,12 +24,14 @@ RUN yarn install
 # Bundle app source
 COPY . .
 
+RUN  ls .
+
 ENTRYPOINT [ "doppler" ,"run" , "--" ]
 
 # Creates a "dist" folder with the production build
-RUN npm run build
+RUN yarn build
 
 
-RUN  ls 
 # Start the server using the production build
 CMD [ "node", "dist/src/main.js" ]
+
