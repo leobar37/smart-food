@@ -3,6 +3,9 @@ FROM node:16.13.1-alpine3.14 as base
 
 RUN echo "Hello admin"
 
+ARG DOPPLER_TOKEN
+ENV DOPPLER_TOKEN=$DOPPLER_TOKEN
+
 # Create app directory
 WORKDIR /usr/src/app
 
