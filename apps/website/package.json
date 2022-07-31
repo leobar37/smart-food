@@ -17,8 +17,7 @@
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "@smartfood/ui": "*",
-    "@smartfood/common": "*",
-    "@smartfood/client": "*"
+    "@smartfood/common": "*"
   },
   "devDependencies": {
     "@types/node": "17.0.42",

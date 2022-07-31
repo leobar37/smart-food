@@ -11,7 +11,6 @@ import { Message } from './model/Message';
 import { SessionManager } from '../messenger/session.manager';
 import { ClientSession } from './model/Session';
 import { MessengerEvent } from './enums';
-
 @Controller('/webhook')
 export class HandlerController {
   constructor(

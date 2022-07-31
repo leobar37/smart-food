@@ -1,0 +1,24 @@
+{
+  "name": "@smartfood/bd",
+  "version": "0.1.0",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "devDependencies": {
+    "prisma": "^3.15.1",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.4"
+  },
+  "dependencies": {
+    "@prisma/client": "^3.14.0"
+  },
+  "scripts": {
+    "dev": "prisma db push && yarn generate:schema && yarn start:sutdio",
+    "build": "yarn generate:schema",
+    "start:sutdio": "prisma studio",
+    "generate:schema": "prisma generate",
+    "migration:push": "prisma db push",
+    "migration:create": "prisma migrate dev",
+    "migration:reset": "prisma migrate reset",
+    "migration:deploy": "prisma migrate deploy"
+  }
+}

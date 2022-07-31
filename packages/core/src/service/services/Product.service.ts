@@ -1,39 +1,33 @@
-import { Injectable } from '@nestjs/common';
-import { Client } from '@smartfood/client';
-import { pick } from 'lodash';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { InjectSupabase, SupabaseClient } from '../../common/providers';
 import { SUPABASE_TABLES } from '../../common/constants';
-import {
-  InjectSdk,
-  InjectSupabase,
-  SupabaseClient,
-} from '../../common/providers';
+import { PRODUCTS_DATA } from '../../common/data';
 import { BuildeableProduct, Option } from '../../common/types';
+import { pick } from 'lodash';
+import { isDev } from '@smartfood/common';
 @Injectable()
-export class ProductService {
-  constructor(
-    @InjectSupabase() private readonly supabase: SupabaseClient,
-    @InjectSdk() private readonly sdk: Client,
-  ) {}
-  // async onModuleInit() {
-  //   const { count } = await this.supabase
-  //     .from(SUPABASE_TABLES.BUILDEABLE_PRODUCT)
-  //     .select('*', { count: 'exact' });
+export class ProductService implements OnModuleInit {
+  constructor(@InjectSupabase() private readonly supabase: SupabaseClient) {}
+  async onModuleInit() {
+    const { count } = await this.supabase
+      .from(SUPABASE_TABLES.BUILDEABLE_PRODUCT)
+      .select('*', { count: 'exact' });
 
-  //   const databaseIsEmpty = count === 0;
+    const databaseIsEmpty = count === 0;
 
-  //   if (isDev && databaseIsEmpty) {
-  //     console.log(
-  //       'The populate databse is empty, populating it with default data',
-  //     );
-  //     const forResolve = PRODUCTS_DATA.map(async (product) => {
-  //       const prAdded = await this.createProduct(product);
-  //       console.log(`Product ${prAdded.name} added`);
-  //     });
-  //     await Promise.all(forResolve);
-  //   }
-  //   const products = await this.getAllProducts();
-  //   console.log(products);
-  // }
+    if (isDev && databaseIsEmpty) {
+      console.log(
+        'The populate databse is empty, populating it with default data',
+      );
+      const forResolve = PRODUCTS_DATA.map(async (product) => {
+        const prAdded = await this.createProduct(product);
+        console.log(`Product ${prAdded.name} added`);
+      });
+      await Promise.all(forResolve);
+    }
+    const products = await this.getAllProducts();
+    console.log(products);
+  }
 
   async createProduct(input: BuildeableProduct) {
     // inset prouct
@@ -83,31 +77,39 @@ export class ProductService {
   }
 
   async getAllProducts() {
-    return this.sdk.getProducts({
-      responseType: 'product-with-options',
-      categoryId: 'cl4epbb95000294uqitys7o0g',
-    });
+    const { data } = await this.supabase
+      .from<BuildeableProduct>(SUPABASE_TABLES.BUILDEABLE_PRODUCT)
+      .select('*');
+    return data;
   }
-
-  async getProductById(productId: string) {
-    const products = await this.sdk.getProducts({
-      responseType: 'product-only',
-      productId: productId,
-    });
-    return products[0] ?? null;
+  async getProductById(productId: number) {
+    const { data } = await this.supabase
+      .from<BuildeableProduct>(SUPABASE_TABLES.BUILDEABLE_PRODUCT)
+      .select('*')
+      .eq('id', productId)
+      .single();
+    return data;
   }
-
-  async getCompleteProduct(productId: string) {
-    const products = await this.sdk.getProducts({
-      responseType: 'product-with-options',
-      productId: productId,
-    });
-    return products[0] ?? null;
+  async getOptionsByProductId(productId: number) {
+    const { data } = await this.supabase
+      .from<Option>(SUPABASE_TABLES.OPTIONS)
+      .select('*')
+      .eq('productId', productId);
+    return data;
   }
-
-  async getOptionsByOptionsId(optionsId: string) {
-    return await this.sdk.getSubOptions({
-      optionId: optionsId,
-    });
+  async getOptionById(optionId: number) {
+    const { data } = await this.supabase
+      .from<Option>(SUPABASE_TABLES.OPTIONS)
+      .select('*')
+      .eq('id', optionId)
+      .single();
+    return data;
+  }
+  async getOptionsByOptionsId(optionsId: number) {
+    const { data } = await this.supabase
+      .from<Option>(SUPABASE_TABLES.OPTIONS)
+      .select('*')
+      .eq('optionsId', optionsId);
+    return data;
   }
 }

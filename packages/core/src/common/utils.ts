@@ -18,10 +18,7 @@ export const replyPayload = (payload: any) =>
 export const messageText = (source: any) =>
   get(source, 'message.message.text', null);
 
-export const postBack = (source : any) =>   get(source, 'message.postback.payload', null);
-
 export const messagePick = {
   replyPayload,
   messageText,
-  postBack
 };

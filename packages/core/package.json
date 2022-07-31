@@ -10,8 +10,7 @@
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "@smartfood/common": "*",
-    "@smartfood/client": "*"
+    "@smartfood/common": "*"
   },
   "peerDependencies": {
     "@nestjs/common": "^8.0.0",

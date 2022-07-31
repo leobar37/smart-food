@@ -7,7 +7,6 @@ import { MessengerEventBus } from './eventBus';
 import allDialogs from './dialogs';
 import { SessionManager } from './session.manager';
 import { HandleInitService } from './init';
-
 const DIALOGS = [...allDialogs];
 
 @Module({
