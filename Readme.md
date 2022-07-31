@@ -14,3 +14,7 @@ yarn install
 ```sh
 yarn run test
 ```
+
+## Colaborators
+
+looking for colaborators
