@@ -3,7 +3,7 @@ export type OptionSelection = {
   options: string[];
 };
 
-export const enum DeliveryTypeEnum {
+export enum DeliveryTypeEnum {
   SEDE = 'sede',
   DELIVERY = 'delivery',
 }
