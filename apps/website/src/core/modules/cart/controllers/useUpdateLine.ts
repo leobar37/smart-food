@@ -45,11 +45,11 @@ export const useUpdateLine = () => {
       },
       mutationKey: mutationsKeys.updateLine,
       onSuccess: (data) => {
-        // queryClient.setQueryData(cacheKeys.order, data);
+        queryClient.setQueryData(cacheKeys.order, data);
       },
       onError: (...args) => {
         const context = args[2];
-        // queryClient.setQueriesData(cacheKeys.order, context?.order);
+        queryClient.setQueriesData(cacheKeys.order, context?.order);
       },
     },
   );
