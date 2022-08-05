@@ -92,7 +92,7 @@ const BuildPlatePage = () => {
   }
 
   return (
-    <LandingLayout>
+    <LandingLayout titlePage="Arma tu plato">
       <Container
         position={'relative'}
         mt={['20', null, '8']}

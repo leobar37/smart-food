@@ -2,6 +2,7 @@ import {
   Box,
   BoxProps,
   chakra,
+  HStack,
   Image,
   SystemStyleObject,
   Text,
@@ -24,18 +25,17 @@ type CardProductProps = {
 
 const BoxContent = chakra(Box, {
   baseStyle: {
-    maxW: '28rem',
     display: 'flex',
     rounded: 'md',
+    flexDirection: 'column',
     bg: 'white',
     borderWidth: '1px',
+    justifyContent: 'space-between',
   },
 });
 
 const CardImage = chakra('figure', {
   baseStyle: {
-    flex: '45%',
-    minWidth: '200px',
     overflow: 'hidden',
   },
 });
@@ -53,48 +53,61 @@ export const CardProduct: FC<CardProductProps> = ({
         {content.description}
       </Text>
     ),
-    mobile: null,
+    mobile: (
+      <Text fontSize={'md'} color="smartgray.700">
+        {content.description}
+      </Text>
+    ),
   });
 
   const properties = matcher<any, CardProductProps['size']>(size)({
     desktop: {
       boxSx: {
+        width: '20rem',
         fontSize: '1rem',
       },
       buttonSx: {
-        size: 'lg',
+        size: 'sm',
       } as SystemStyleObject,
       imageSx: {
-        minWidth: '200px',
-        maxWidth: '200px',
+        width: 'full',
       } as SystemStyleObject,
     },
     mobile: {
       boxSx: {
+        width: '18rem',
         fontSize: '0.8rem',
       },
       buttonSx: {
-        size: 'md',
+        size: 'sm',
       },
       imageSx: {
-        minWidth: ['120px'],
-        width: ['125px'],
+        width: 'full',
       } as SystemStyleObject,
     },
   });
 
   const buttonCloned = cloneElement(button as any, {
-    colorScheme: 'smartgray',
     ...properties.buttonSx,
   });
   return (
-    <BoxContent {...props}>
+    <BoxContent {...props} sx={properties.boxSx}>
+      <CardImage height={'full'} sx={properties.imageSx}>
+        <Image
+          sx={{
+            w: 'full',
+            objectFit: 'cover',
+            maxHeight: '13rem',
+          }}
+          src={content.image}
+        />
+      </CardImage>
       <VStack
         py={3}
         px={4}
-        height={'100%'}
         alignItems={['flex-start']}
-        justifyContent="flex-end2"
+        justifyContent="flex-start"
+        w="full"
         textAlign={'start'}
         alignSelf={'center'}
       >
@@ -107,23 +120,14 @@ export const CardProduct: FC<CardProductProps> = ({
           {content.title}
         </Text>
         {descriptionNode}
-        {counter}
         <Text color="smartgreen.700" fontSize={'2xl'} fontWeight="semibold">
           S/ {content.price}
         </Text>
-        {buttonCloned}
+        <HStack>
+          {counter}
+          {buttonCloned}
+        </HStack>
       </VStack>
-
-      <CardImage sx={properties.imageSx}>
-        <Image
-          sx={{
-            w: 'full',
-            objectFit: 'cover',
-            h: 'full',
-          }}
-          src={content.image}
-        />
-      </CardImage>
     </BoxContent>
   );
 };

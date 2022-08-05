@@ -9,7 +9,7 @@ const CheckoutPage = () => {
   const modalIsVisble = useBreakpointValueSSR([true, true, false]);
 
   return (
-    <LandingLayout mt={10}>
+    <LandingLayout titlePage="Checkout" mt={10}>
       <HStack justifyContent={'center'} my={['2', null, '24']}>
         <HStack
           spacing={24}

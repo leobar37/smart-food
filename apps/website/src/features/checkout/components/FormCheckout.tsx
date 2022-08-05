@@ -46,7 +46,7 @@ const formChekoutSchema = yup.object({
   direction: yup.string().when('deliveryType', {
     is: DeliveryTypeEnum.DELIVERY,
     then: yup.string().required('La dirección es requerida'),
-    otherwise: yup.mixed().nullable(),
+    otherwise: yup.string().nullable(),
   }),
   lastName: yup.string().required('El apellido es requerido'),
   name: yup.string().required('El nombre es requerido'),

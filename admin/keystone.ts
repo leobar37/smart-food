@@ -3,7 +3,7 @@ import { lists } from './src/schema';
 import { withAuth, session } from './src/auth';
 import { insertSeedData } from './seed-data';
 import { extendGraphqlSchema } from './src/customSchema';
-
+import { isDev } from '@smartfood/common';
 export default withAuth(
   config({
     extendGraphqlSchema: extendGraphqlSchema,
@@ -29,6 +29,8 @@ export default withAuth(
     db: {
       provider: 'postgresql',
       url: process.env.DATABASE_URL ?? '',
+      enableLogging: isDev,
+
       onConnect: async (context) => {
         if (process.argv.includes('--seed-data')) {
           await insertSeedData(context);

@@ -238,16 +238,6 @@ export const getMutations = (base: BaseSchemaMeta) => {
     },
     resolve: async (_, { orderId, lineOrderId }, context) => {
       const prisma = context.prisma as PrismaClient;
-      const order = await prisma.order.findFirst({
-        where: {
-          id: {
-            equals: orderId,
-          },
-        },
-      });
-      if (!order) {
-        throw new Error('Order not found');
-      }
       await prisma.orderLine.delete({
         where: {
           id: lineOrderId,

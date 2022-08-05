@@ -25,7 +25,7 @@ export const MenuPage = () => {
     });
 
   return (
-    <LandingLayout>
+    <LandingLayout titlePage="menu">
       <Header />
       <Box textAlign={'center'} my={8}>
         <SearchInput />
