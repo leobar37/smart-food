@@ -4,6 +4,7 @@ import { clone, debounce } from 'lodash';
 import { useMutation, useQueryClient } from 'react-query';
 import { cacheKeys, mutationsKeys } from '@App/core/constants';
 import { useMemo } from 'react';
+import { DataUpdateFunction } from 'react-query/types/core/utils';
 
 export const useUpdateLine = () => {
   const queryClient = useQueryClient();
@@ -31,12 +32,12 @@ export const useUpdateLine = () => {
             lines.splice(idxline, 1, line);
           }
           order.lines = lines;
-          queryClient.setQueryData(cacheKeys.order, () => {
+          queryClient.setQueryData(cacheKeys.order, ((order: OrderOutput) => {
             return {
               ...order,
-              lines: order.lines,
+              lines: lines,
             };
-          });
+          }) as DataUpdateFunction<any, OrderOutput>);
         }
         return {
           order: snapShotOder,
@@ -44,11 +45,11 @@ export const useUpdateLine = () => {
       },
       mutationKey: mutationsKeys.updateLine,
       onSuccess: (data) => {
-        queryClient.setQueryData(cacheKeys.order, data);
+        // queryClient.setQueryData(cacheKeys.order, data);
       },
       onError: (...args) => {
         const context = args[2];
-        queryClient.setQueriesData(cacheKeys.order, context?.order);
+        // queryClient.setQueriesData(cacheKeys.order, context?.order);
       },
     },
   );
@@ -56,5 +57,16 @@ export const useUpdateLine = () => {
 
 export const useDebounceUpdateLine = () => {
   const mutation = useUpdateLine();
-  return useMemo(() => debounce(mutation.mutate, 500), [mutation.mutate]);
+  return useMemo(() => debounce(mutation.mutate, 600), [mutation.mutate]);
+};
+
+export const useUpdateOrderLineIsMutating = () => {
+  const queryClient = useQueryClient();
+
+  return (
+    queryClient.isMutating({
+      exact: true,
+      mutationKey: mutationsKeys.updateLine,
+    }) > 1
+  );
 };

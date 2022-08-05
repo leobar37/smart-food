@@ -7,6 +7,7 @@ export const SearchContainer = chakra('div', {
     zIndex: 1,
     top: '100%',
     justifyContent: 'center',
+    alignItems: 'start',
     minHeight: '220px',
     '.content': {
       width: ['100%', null, '89%'],

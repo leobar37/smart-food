@@ -4,7 +4,7 @@ import { LandingLayout } from '@App/core/shared-components';
 import { ArmedProducts } from '@App/core/modules/product';
 const ArmPlatePage = () => {
   return (
-    <LandingLayout>
+    <LandingLayout titlePage="Arma tu plato">
       <Header />
       <ArmedProducts />
       <TutorialSection />

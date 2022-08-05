@@ -48,7 +48,7 @@ export const ProductsLine: FC<ProductsLineProps> = ({
       sx={{
         my: 5,
       }}
-      maxWidth={['3xl', null, '4xl', '6xl']}
+      maxWidth={['3xl', null, '4xl', '7xl']}
     >
       <Box
         sx={{
@@ -89,7 +89,7 @@ export const ProductsLine: FC<ProductsLineProps> = ({
             },
 
             1200: {
-              slidesPerView: 2,
+              slidesPerView: 3,
               spaceBetween: -10,
               initialSlide: 1,
               centeredSlides: false,
