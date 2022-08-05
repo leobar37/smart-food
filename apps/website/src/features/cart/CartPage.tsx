@@ -15,6 +15,7 @@ const LoadingMotion = motion(LoadingIcon);
 
 const ProductsSide = () => {
   const detailedOrder = useDetailedOrder();
+
   const renderContent = (content: ReactNode) => {
     return <SectionItems title="Pedidos de la carta">{content}</SectionItems>;
   };
@@ -33,7 +34,7 @@ const ProductsSide = () => {
 
   const content = (
     <>
-      {noArmedProducts.map((line, idx) => (
+      {noArmedProducts.map((line) => (
         <ItemCart isEditable={false} line={line} key={line.id} />
       ))}
       {noArmedProducts.length === 0 && notFound}
@@ -62,7 +63,7 @@ const ArmedProductsSide = () => {
   const content = (
     <>
       {armedProducts.map((line, idx) => (
-        <ItemCart isEditable line={line} key={line.id} />
+        <ItemCart isEditable={false} line={line} key={line.id} />
       ))}
       {armedProducts.length === 0 && notFound}
     </>
@@ -85,7 +86,7 @@ const CartPage = () => {
   });
 
   return (
-    <LandingLayout mt="10">
+    <LandingLayout mt="10" titlePage="Carrito">
       <Header />
       <Container as="section" maxW={'5xl'}>
         <Stack

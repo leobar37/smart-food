@@ -1,4 +1,13 @@
 import {
+  useAddToCart,
+  useDebounceUpdateLine,
+  useDeleteOrderLine,
+  useGetProductLine,
+  useUpdateOrderLineIsMutating,
+} from '@App/core/modules/cart';
+import { useSingleProduct } from '@App/core/modules/product';
+import { LandingLayout } from '@App/core/shared-components';
+import {
   Box,
   Button,
   Container,
@@ -6,15 +15,17 @@ import {
   Image,
   Stack,
   Text,
+  useUpdateEffect,
 } from '@chakra-ui/react';
-import { BackButton, SliderCounter } from '@smartfood/ui';
-import { useRouter } from 'next/router';
-import { FC } from 'react';
-import ReactMarkdown from 'react-markdown';
-import { useSingleProduct } from '@App/core/modules/product';
-import { LandingLayout } from '@App/core/shared-components';
+import { BackButton, BtnIcon, SliderCounter, TrashIcon } from '@smartfood/ui';
 import { isNil } from 'lodash';
+import { useRouter } from 'next/router';
+import { FC, useEffect, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import { motion } from 'framer-motion';
+import { LoadingIcon } from '@smartfood/ui';
 
+const LoadingAnimation = motion(LoadingIcon);
 type ContentProps = {
   text: string;
 };
@@ -50,10 +61,50 @@ const Content: FC<ContentProps> = ({ text }) => {
   );
 };
 
+const LoadingIconWheOrderIsMutating = () => {
+  const isMutating = useUpdateOrderLineIsMutating();
+  return isMutating ? (
+    <LoadingAnimation
+      color="smartgreen.500"
+      animate={{
+        rotate: 360,
+      }}
+      transition={{
+        repeat: Infinity,
+        ease: 'linear',
+        duration: 0.8,
+      }}
+    />
+  ) : null;
+};
+
 const ProductPage = () => {
   const router = useRouter();
   const { id } = router.query as { id: string };
   const { data: product } = useSingleProduct(id);
+  const { line, isSelected } = useGetProductLine(id);
+  const updateLineDebounced = useDebounceUpdateLine();
+  const deleteLine = useDeleteOrderLine();
+  const [quantity, setQuantity] = useState(0);
+  const addToCart = useAddToCart();
+
+  useEffect(() => {
+    if (line) {
+      setQuantity(line.quantity ?? 0);
+    }
+  }, [line]);
+
+  useUpdateEffect(() => {
+    if (line?.id) {
+      // When this is updating loading icon is needed
+      updateLineDebounced({
+        lineId: line?.id,
+        quantity: quantity,
+      });
+    } else {
+      setQuantity(0);
+    }
+  }, [quantity, updateLineDebounced, line]);
 
   if (isNil(product)) {
     return null;
@@ -65,8 +116,34 @@ const ProductPage = () => {
       ? product.description
       : product.excerpt;
 
+  const deleteOrdAddButtonNode = !isSelected ? (
+    <Button
+      isLoading={addToCart.isLoading}
+      loadingText={'Guardando...'}
+      onClick={() => {
+        addToCart.mutate({
+          productId: product.id,
+          quantity: 1,
+        });
+      }}
+      variant={'outline'}
+      size="lg"
+      colorScheme="smartgray"
+    >
+      Agregar al carrito
+    </Button>
+  ) : (
+    <BtnIcon
+      onClick={() => {
+        deleteLine.mutate(line?.id!);
+      }}
+    >
+      <TrashIcon />
+    </BtnIcon>
+  );
+
   return (
-    <LandingLayout>
+    <LandingLayout titlePage="Producto">
       <Container maxWidth={'6xl'} my="28" position={'relative'}>
         <Stack
           direction={['column', null, 'row']}
@@ -86,10 +163,7 @@ const ProductPage = () => {
               mt: ['initial', null, '12'],
             }}
           >
-            <Image
-              alt="text"
-              src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80"
-            />
+            <Image alt="text" src={product.photo?.publicUrlTransformed ?? ''} />
           </Box>
           <Stack direction={'column'} spacing={4}>
             <HStack mt={['8']}>
@@ -113,7 +187,20 @@ const ProductPage = () => {
             </HStack>
             <Content text={textDescription ?? ''} />
             <Stack spacing={3}>
-              <SliderCounter value={1} />
+              <HStack>
+                <SliderCounter
+                  minusDisabled={!isSelected}
+                  plusDisabled={!isSelected}
+                  onMinus={() => {
+                    setQuantity((prev) => Math.max(prev - 1, 0));
+                  }}
+                  onPlus={() => {
+                    setQuantity((prev) => prev + 1);
+                  }}
+                  value={quantity}
+                />
+                <LoadingIconWheOrderIsMutating />
+              </HStack>
               <Text
                 fontWeight={'semibold'}
                 fontSize={'2xl'}
@@ -123,10 +210,14 @@ const ProductPage = () => {
               </Text>
             </Stack>
             <Stack direction={['column', 'row']}>
-              <Button variant={'outline'} size="lg" colorScheme="smartgray">
-                Agregar carrito
-              </Button>
-              <Button size="lg" colorScheme="smartgray">
+              {deleteOrdAddButtonNode}
+              <Button
+                onClick={() => {
+                  router.push('/checkout');
+                }}
+                size="lg"
+                colorScheme="smartgray"
+              >
                 Pedir ahora
               </Button>
             </Stack>

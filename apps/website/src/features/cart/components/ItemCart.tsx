@@ -11,12 +11,10 @@ import { OrderLineOutput, Product } from '@smartfood/client/v2';
 import { SliderCounter } from '@smartfood/ui';
 import NextImage from 'next/image';
 import { FC, useMemo } from 'react';
-import { FiTrash2 } from 'react-icons/fi';
 import { debounce } from 'lodash';
 import { useDeleteOrderLine, useUpdateLine } from '@App/core/modules/cart';
 import { useState, useEffect } from 'react';
-
-const TrashIcon = chakra(FiTrash2);
+import { TrashIcon } from '@smartfood/ui';
 
 type ItemCartProps = {
   line: OrderLineOutput & {

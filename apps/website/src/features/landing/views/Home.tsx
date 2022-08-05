@@ -25,7 +25,7 @@ const HomePage: NextPage = () => {
     });
 
   return (
-    <LandingLayout>
+    <LandingLayout titlePage="Inicio">
       <Header />
       <ArmedProducts />
       {linesInHome}

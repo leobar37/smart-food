@@ -7,7 +7,7 @@
     "test": "turbo run test",
     "dump": "changeset version",
     "lint": "turbo run lint",
-    "dev": "turbo run dev",
+    "dev": "turbo run dev --filter=@smartfood/website",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "prepare": "husky install",
