@@ -97,7 +97,6 @@ model Order {
   createdAt     DateTime?               @default(now())
   status        OrderStatusType?        @default(IN_CART)
   lines         OrderLine[]             @relation("OrderLine_order")
-  total         Float?
   client        Client?                 @relation("Order_client", fields: [clientId], references: [id])
   clientId      String?                 @map("client")
   metadata      Json?                   @default("{}")
