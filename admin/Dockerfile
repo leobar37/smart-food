@@ -15,7 +15,7 @@ RUN wget -q -t3 'https://packages.doppler.com/public/cli/rsa.8004D9FF50437357.ke
 
 WORKDIR /app
 
-COPY . .
+COPY admin/ .
 
 RUN yarn install
 
