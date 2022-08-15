@@ -75,30 +75,32 @@ export const Field = ({
   };
 
   return (
-    <FieldContainer>
-      <FieldLabel>{field.label}</FieldLabel>
-      <Box>
-        {metadata.deliveryDetails && (
-          <>
-            {renderDirectionOrSede()}
-            <DetailLineInfo
-              label={'Nommbre del cliente:'}
-              value={metadata.deliveryDetails.name}
-            />
+    <Box>
+      <FieldContainer>
+        <FieldLabel>{field.label}</FieldLabel>
+        <Box>
+          {metadata?.deliveryDetails && (
+            <>
+              {renderDirectionOrSede()}
+              <DetailLineInfo
+                label={'Nommbre del cliente:'}
+                value={metadata.deliveryDetails.name}
+              />
 
-            <DetailLineInfo
-              label={'Apellido:'}
-              value={metadata.deliveryDetails.lastName}
-            />
-            <DetailLineInfo
-              label={'Teléfono:'}
-              value={metadata.deliveryDetails.phone}
-            />
-          </>
-        )}
-        {/* <DetailLineInfo label="Dirección:" value={info.direction} />
+              <DetailLineInfo
+                label={'Apellido:'}
+                value={metadata.deliveryDetails.lastName}
+              />
+              <DetailLineInfo
+                label={'Teléfono:'}
+                value={metadata.deliveryDetails.phone}
+              />
+            </>
+          )}
+          {/* <DetailLineInfo label="Dirección:" value={info.direction} />
         <DetailLineInfo label="Teléfono:" value={info.phone} /> */}
-      </Box>
-    </FieldContainer>
+        </Box>
+      </FieldContainer>
+    </Box>
   );
 };

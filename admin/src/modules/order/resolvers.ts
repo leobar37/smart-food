@@ -120,7 +120,6 @@ export const getMutations = (base: BaseSchemaMeta) => {
 
   /**
    * Patch Order Line
-   *
    */
   const patchOrderLine = graphql.field({
     type: OrderOutput,
@@ -158,7 +157,7 @@ export const getMutations = (base: BaseSchemaMeta) => {
         orderLine: OrderLine & { product: Product },
       ) => {
         /*
-          by convention, whne the user wants to overwrite the quantity
+          by convention, when the user wants to overwrite the quantity
           he , must send the id as argument
         */
         const quantity = args?.orderLineId

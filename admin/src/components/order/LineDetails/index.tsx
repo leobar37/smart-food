@@ -3,12 +3,14 @@ import { gql, useQuery } from '@keystone-6/core/admin-ui/apollo';
 import { controller } from '@keystone-6/core/fields/types/relationship/views';
 import { FieldProps } from '@keystone-6/core/types';
 import { Button } from '@keystone-ui/button';
-import { Stack, useTheme } from '@keystone-ui/core';
+import { Stack, useTheme, Box, Text } from '@keystone-ui/core';
 import { FieldContainer, FieldLabel } from '@keystone-ui/fields';
+import { DrawerController, Drawer } from '@keystone-ui/modals';
 import { useRouter } from 'next/router';
 import React, { FC } from 'react';
-import { CardContainer } from '../common';
-import { PropertyLine, PropertySection } from '../common/PropertyShow';
+import { CardContainer } from '../../common';
+import { PropertyLine, PropertySection } from '../../common/PropertyShow';
+import { useState } from 'react';
 type LineItem = OrderLineItem & {
   id: string;
   product: {
@@ -30,29 +32,28 @@ const CardOrderLine: FC<{ line: LineItem }> = ({ line }) => {
       </PropertySection>
       <PropertySection title="Detalle">
         <PropertyLine label="Cantidad:" value={line.quantity} />
-        <PropertyLine label="Precio:" value={line.price} />
+        <PropertyLine label="Precio:" value={`${line.price} S/.`} />
         <PropertyLine label="Total:" value={`${(line as any).total}S/.`} />
       </PropertySection>
       <Stack padding={'medium'}>
-        <Button
+        {/* <Button
           onClick={() => {
             router.push(`/order-lines/${line.id}`);
           }}
         >
           ver
         </Button>
+         */}
       </Stack>
     </CardContainer>
   );
 };
 
-export const Field = ({
-  field,
-  value,
-  onChange,
-  autoFocus,
-}: FieldProps<typeof controller>) => {
+const useOrderLinesQuery = () => {};
+
+export const Field = ({ field, value }: FieldProps<typeof controller>) => {
   const ids = ((value as any).value ?? []).map((d) => d.id);
+  const [isOpenDrawer, setIsOpenDrawer] = useState(false);
 
   const { data, error } = useQuery<{ orderLines: LineItem[] }>(
     gql`
@@ -78,22 +79,65 @@ export const Field = ({
     },
   );
 
-  let detailOrders = (data?.orderLines || []).map((d) => (
+  const detailOrders = (data?.orderLines || []).map((d) => (
     <CardOrderLine line={d} key={d.id} />
   ));
+  const total = (data?.orderLines ?? []).reduce((prev, curr) => {
+    return prev + curr.price * curr.quantity;
+  }, 0);
+
+  const drawer = (
+    <DrawerController isOpen={isOpenDrawer}>
+      <Drawer
+        title="Detalle"
+        actions={{
+          cancel: {
+            action: () => {
+              setIsOpenDrawer(false);
+            },
+            label: 'Cancelar',
+          },
+          confirm: {
+            action: () => {},
+            label: 'Cofirmar',
+          },
+        }}
+      >
+        <Box>
+          <FieldContainer>
+            <FieldLabel>Total:</FieldLabel>
+            <Text marginY={'large'}>{total} S/.</Text>
+          </FieldContainer>
+          <FieldContainer>
+            <FieldLabel>{field.label}</FieldLabel>
+            <Stack
+              as="ul"
+              style={{
+                listStyle: 'none',
+                marginLeft: '-40px',
+              }}
+            >
+              {detailOrders}
+            </Stack>
+          </FieldContainer>
+        </Box>
+      </Drawer>
+    </DrawerController>
+  );
 
   return (
     <FieldContainer>
-      <FieldLabel>{field.label}</FieldLabel>
-      <Stack
-        as="ul"
-        style={{
-          listStyle: 'none',
-          marginLeft: '-40px',
+      {drawer}
+      <FieldLabel>Detalle de orden</FieldLabel>
+      <Button
+        weight="bold"
+        tone="active"
+        onClick={() => {
+          setIsOpenDrawer(true);
         }}
       >
-        {detailOrders}
-      </Stack>
+        Ver
+      </Button>
     </FieldContainer>
   );
 };

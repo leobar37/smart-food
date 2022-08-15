@@ -49,7 +49,7 @@ export const useUpdateLine = () => {
       },
       onError: (...args) => {
         const context = args[2];
-        // queryClient.setQueriesData(cacheKeys.order, context?.order);
+        queryClient.setQueryData(cacheKeys.order, context?.order);
       },
     },
   );

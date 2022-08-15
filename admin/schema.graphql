@@ -697,7 +697,6 @@ type Order {
     skip: Int! = 0
   ): [OrderLine!]
   linesCount(where: OrderLineWhereInput! = {}): Int
-  total: Float
   client: Client
   metadata: JSON
   deliveryDetails: JSON
@@ -732,7 +731,6 @@ input OrderWhereInput {
   createdAt: DateTimeNullableFilter
   status: OrderStatusTypeNullableFilter
   lines: OrderLineManyRelationFilter
-  total: FloatNullableFilter
   client: ClientWhereInput
   paymentMethod: OrderPaymentMethodTypeNullableFilter
 }
@@ -773,7 +771,6 @@ input OrderOrderByInput {
   orderNumber: OrderDirection
   createdAt: OrderDirection
   status: OrderDirection
-  total: OrderDirection
   paymentMethod: OrderDirection
 }
 
@@ -782,7 +779,6 @@ input OrderUpdateInput {
   createdAt: DateTime
   status: OrderStatusType
   lines: OrderLineRelateToManyForUpdateInput
-  total: Float
   client: ClientRelateToOneForUpdateInput
   metadata: JSON
   paymentMethod: OrderPaymentMethodType
@@ -811,7 +807,6 @@ input OrderCreateInput {
   createdAt: DateTime
   status: OrderStatusType
   lines: OrderLineRelateToManyForCreateInput
-  total: Float
   client: ClientRelateToOneForCreateInput
   metadata: JSON
   paymentMethod: OrderPaymentMethodType

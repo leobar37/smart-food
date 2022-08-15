@@ -10,11 +10,20 @@ import {
 } from '@keystone-6/core/fields';
 import { OrderEnum, ORDER_STATUS } from '../constants';
 import { PAYMENT_METHODS } from '@smartfood/common';
+
 export const Order = list({
+  graphql: {
+    // omit: ['create', 'delete', 'update', 'query'],
+  },
   ui: {
+    hideCreate: true,
     labelField: 'orderNumber',
     listView: {
       initialColumns: ['client', 'orderNumber', 'status', 'createdAt'],
+      initialSort: {
+        field: 'status',
+        direction: 'ASC',
+      },
     },
   },
   access: {
@@ -47,6 +56,11 @@ export const Order = list({
       defaultValue: {
         kind: 'now',
       },
+      ui: {
+        itemView: {
+          fieldMode: 'read',
+        },
+      },
     }),
     status: select({
       type: 'enum',
@@ -61,11 +75,27 @@ export const Order = list({
       ref: 'OrderLine.order',
       many: true,
       ui: {
-        views: require.resolve('../components/order/LineDetail.tsx'),
+        views: require.resolve('../components/order/LineDetails'),
       },
     }),
-    total: float(),
-    client: relationship({ ref: 'Client.orders', many: false }),
+    // total: virtual({
+    //   field: graphql.field({
+    //     type: graphql.String,
+    //     resolve: (item) => {
+    //       console.log(item);
+    //       return 10 as any;
+    //     },
+    //   }),
+    // }),
+    client: relationship({
+      ref: 'Client.orders',
+      many: false,
+      ui: {
+        itemView: {
+          fieldMode: 'hidden',
+        },
+      },
+    }),
     metadata: json({
       defaultValue: {},
       ui: {
