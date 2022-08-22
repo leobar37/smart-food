@@ -27,7 +27,7 @@
     "react-icons": "^4.4.0",
     "react-markdown": "^8.0.3",
     "react-query": "^3.39.1",
-    "swiper": "^8.2.6",
+    "swiper": "^8.3.2",
     "yup": "^0.32.11"
   },
   "devDependencies": {

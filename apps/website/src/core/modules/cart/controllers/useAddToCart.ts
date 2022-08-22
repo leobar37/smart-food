@@ -20,7 +20,6 @@ export const useAddToCart = () => {
       selection?: { options: OptionSelection[] };
     }) => {
       notificationCart.open('loading');
-
       const order = await cmsLib.order.addLine({
         productId: params.productId,
         quantity: params.quantity,

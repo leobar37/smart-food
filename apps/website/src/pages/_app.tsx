@@ -9,6 +9,7 @@ import { Global, css } from '@emotion/react';
 import App from 'next/app';
 import verifyIsMobile from 'ismobilejs';
 import { IsMobileContext } from '@App/core/helpers/isMobileContext';
+import 'swiper/css';
 
 const ConnectedApp: FC<{
   children: ReactNode;

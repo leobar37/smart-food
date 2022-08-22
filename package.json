@@ -26,7 +26,8 @@
     ],
     "packages": [
       "packages/*",
-      "apps/*"
+      "apps/*",
+      "tools/*"
     ]
   },
   "packageManager": "yarn@1.22.17",
