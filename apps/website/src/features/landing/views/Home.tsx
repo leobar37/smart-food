@@ -8,6 +8,7 @@ import {
 import { Product } from '@smartfood/client/v2';
 import { PRODUCTS_FOR_BUILD_ID } from '@App/core/constants';
 import { LandingLayout } from '@App/core/shared-components';
+
 const HomePage: NextPage = () => {
   const { data: categoryData } = useCategoriesWithProducts();
 
