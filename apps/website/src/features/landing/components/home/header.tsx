@@ -160,7 +160,7 @@ const Header = () => {
             </Button>
             <Button
               onClick={() => {
-                router.push('/carta');
+                router.push('/armatuplato/cl6u810wh00324ouqafe76sxs');
               }}
               colorScheme={'smartgray'}
               size={['md', null, 'lg']}
