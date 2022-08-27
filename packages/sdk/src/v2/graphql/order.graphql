@@ -4,7 +4,6 @@ fragment OrderFragment on Order {
   createdAt
   status
   linesCount
-  total
   metadata
 }
 
@@ -27,7 +26,6 @@ query getOrder($orderId: String!) {
       selection
       quantity
       orderId
-      total
       productId
     }
   }

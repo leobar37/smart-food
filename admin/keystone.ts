@@ -30,12 +30,12 @@ export default withAuth(
       provider: 'postgresql',
       url: process.env.DATABASE_URL ?? '',
       enableLogging: isDev,
-
       onConnect: async (context) => {
         if (process.argv.includes('--seed-data')) {
           await insertSeedData(context);
         }
       },
+      useMigrations: true,
     },
     ui: {
       isAccessAllowed: (context) => !!context.session?.data,

@@ -59,6 +59,7 @@ export const ItemCart: FC<ItemCartProps> = ({ line, isEditable }) => {
     [],
   );
 
+  console.log(line);
   const { product, quantity } = line;
   const [localQuantity, setQuantity] = useState(quantity ?? 0);
 
@@ -71,6 +72,14 @@ export const ItemCart: FC<ItemCartProps> = ({ line, isEditable }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localQuantity]);
+
+  if (!product) {
+    return (
+      <HStack>
+        <Text>Este producto no esta disponible</Text>
+      </HStack>
+    );
+  }
 
   return (
     <HStack

@@ -1,5 +1,5 @@
 import { list } from '@keystone-6/core';
-import { relationship, text } from '@keystone-6/core/fields';
+import { relationship, text, checkbox } from '@keystone-6/core/fields';
 
 export const Category = list({
   access: {
@@ -17,12 +17,15 @@ export const Category = list({
   description: 'Categoria',
   fields: {
     name: text(),
+    title: text(),
     description: text({
       ui: {
         displayMode: 'textarea',
       },
     }),
-    title: text(),
+    isVisible: checkbox({
+      defaultValue: true,
+    }),
     products: relationship({ ref: 'Product.category', many: true }),
   },
 });

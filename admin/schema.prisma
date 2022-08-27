@@ -40,7 +40,7 @@ model Product {
   categoryId             String?     @map("category")
   options                Option[]    @relation("Option_product")
   description            String      @default("")
-  isAvalaible            Boolean     @default(true)
+  isVisible              Boolean     @default(true)
   from_OrderLine_product OrderLine[] @relation("OrderLine_product")
 
   @@index([categoryId])
@@ -70,8 +70,9 @@ model SubOption {
 model Category {
   id          String    @id @default(cuid())
   name        String    @default("")
-  description String    @default("")
   title       String    @default("")
+  description String    @default("")
+  isVisible   Boolean   @default(true)
   products    Product[] @relation("Product_category")
 }
 

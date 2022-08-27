@@ -19,7 +19,7 @@ fragment productFragment on Product {
 ##  Queries
 
 query getProducts($includeOptions: Boolean!) {
-  products {
+  products(where: { isVisible: { equals: true } }) {
     category {
       name
       id
@@ -56,12 +56,13 @@ query getProduct($id: ID, $includeOptions: Boolean!) {
 }
 
 query getCategories($includeProducts: Boolean!) {
-  categories {
+  categories(where: { isVisible: { equals: true } }) {
     id
     name
     description
     title
-    products @include(if: $includeProducts) {
+    products(where: { isVisible: { equals: true } })
+      @include(if: $includeProducts) {
       ...productFragment
     }
   }

@@ -66,6 +66,7 @@ const Header = () => {
           left: 110,
           color: 'white',
         }}
+        target={'_blank'}
         href="tel:923033531"
       >
         Perú(+51) 923 033 531
@@ -87,8 +88,12 @@ const Header = () => {
           },
         }}
       >
-        <Link href="https://www.instagram.com/smart_foodhd/">Instagram</Link>
-        <Link href="https://www.facebook.com/SmartFoodHD">Facebook</Link>
+        <Link target={'_blank'} href="https://www.instagram.com/smart_foodhd/">
+          Instagram
+        </Link>
+        <Link target={'_blank'} href="https://www.facebook.com/SmartFoodHD">
+          Facebook
+        </Link>
       </HStack>
     </Box>
   );
@@ -97,6 +102,7 @@ const Header = () => {
     <Box
       sx={{
         position: 'relative',
+        overflowX : "hidden",
         '.swiper-slide': {
           height: ['80vh', null, '90vh'],
           position: 'relative',
@@ -160,7 +166,7 @@ const Header = () => {
             </Button>
             <Button
               onClick={() => {
-                router.push('/armatuplato/cl6u810wh00324ouqafe76sxs');
+                router.push('/armatuplato');
               }}
               colorScheme={'smartgray'}
               size={['md', null, 'lg']}

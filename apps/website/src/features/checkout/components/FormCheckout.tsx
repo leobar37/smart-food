@@ -15,6 +15,7 @@ import {
   Textarea,
   VStack,
   FormErrorMessage,
+  FormHelperText,
 } from '@chakra-ui/react';
 import {
   DeliveryTypeEnum,
@@ -108,11 +109,11 @@ const FormCheckout = () => {
       setSubmitting(false);
     },
   });
+  const payOnSede =
+    (formik.values.deliveryType as DeliveryTypeEnum) === DeliveryTypeEnum.SEDE;
 
   const sedeOrDirection = useMemo(() => {
-    if (
-      (formik.values.deliveryType as DeliveryTypeEnum) === DeliveryTypeEnum.SEDE
-    ) {
+    if (payOnSede) {
       return (
         <FormControl>
           <FormLabel>Elija la sede:</FormLabel>
@@ -161,7 +162,7 @@ const FormCheckout = () => {
     return error ? <FormErrorMessage>{error}</FormErrorMessage> : null;
   };
   const hasError = (name: string) => {
-    return !!(formik.errors as any)[name];
+    return !!(formik.errors as any)[name] && !!(formik.touched as any)[name];
   };
 
   return (
@@ -170,6 +171,7 @@ const FormCheckout = () => {
       onSubmit={formik.handleSubmit as any}
       py="4"
       w="full"
+      minH={'80vh'}
       px="4"
     >
       <HStack my={4} ml="-6" w="full">
@@ -203,6 +205,9 @@ const FormCheckout = () => {
             <Radio value={DeliveryTypeEnum.SEDE}>Recoger en tienda</Radio>
           </Stack>
         </RadioGroup>
+        {!payOnSede && (
+          <FormHelperText>*Costo de delivery no incluido</FormHelperText>
+        )}
       </FormControl>
       <FormControl my="2">
         <FormLabel>Medio de pago:</FormLabel>
@@ -226,6 +231,7 @@ const FormCheckout = () => {
         <FormLabel>Nombre:</FormLabel>
         <Input
           name="name"
+          onBlur={formik.handleBlur}
           onChange={formik.handleChange}
           value={formik.values.name}
           placeholder="Ejem: Lucero"
@@ -236,6 +242,7 @@ const FormCheckout = () => {
         <FormLabel>Apellido:</FormLabel>
         <Input
           name="lastName"
+          onBlur={formik.handleBlur}
           onChange={formik.handleChange}
           value={formik.values.lastName}
           placeholder="Ejem: FIgueroa Hidalgo"
@@ -246,6 +253,7 @@ const FormCheckout = () => {
         <FormLabel>Número de celular:</FormLabel>
         <Input
           name="phone"
+          onBlur={formik.handleBlur}
           onChange={formik.handleChange}
           value={formik.values.phone}
           placeholder="Ejem: 987654321"

@@ -36,6 +36,7 @@ export type Category = {
   __typename?: 'Category';
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+  isVisible?: Maybe<Scalars['Boolean']>;
   name?: Maybe<Scalars['String']>;
   products?: Maybe<Array<Product>>;
   productsCount?: Maybe<Scalars['Int']>;
@@ -55,6 +56,7 @@ export type CategoryProductsCountArgs = {
 
 export type CategoryCreateInput = {
   description?: InputMaybe<Scalars['String']>;
+  isVisible?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   products?: InputMaybe<ProductRelateToManyForCreateInput>;
   title?: InputMaybe<Scalars['String']>;
@@ -63,6 +65,7 @@ export type CategoryCreateInput = {
 export type CategoryOrderByInput = {
   description?: InputMaybe<OrderDirection>;
   id?: InputMaybe<OrderDirection>;
+  isVisible?: InputMaybe<OrderDirection>;
   name?: InputMaybe<OrderDirection>;
   title?: InputMaybe<OrderDirection>;
 };
@@ -85,6 +88,7 @@ export type CategoryUpdateArgs = {
 
 export type CategoryUpdateInput = {
   description?: InputMaybe<Scalars['String']>;
+  isVisible?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   products?: InputMaybe<ProductRelateToManyForUpdateInput>;
   title?: InputMaybe<Scalars['String']>;
@@ -96,6 +100,7 @@ export type CategoryWhereInput = {
   OR?: InputMaybe<Array<CategoryWhereInput>>;
   description?: InputMaybe<StringFilter>;
   id?: InputMaybe<IdFilter>;
+  isVisible?: InputMaybe<BooleanFilter>;
   name?: InputMaybe<StringFilter>;
   products?: InputMaybe<ProductManyRelationFilter>;
   title?: InputMaybe<StringFilter>;
@@ -808,7 +813,6 @@ export type Order = {
   orderNumber?: Maybe<Scalars['Int']>;
   paymentMethod?: Maybe<OrderPaymentMethodType>;
   status?: Maybe<OrderStatusType>;
-  total?: Maybe<Scalars['Float']>;
 };
 
 export type OrderLinesArgs = {
@@ -830,7 +834,6 @@ export type OrderCreateInput = {
   orderNumber?: InputMaybe<Scalars['Int']>;
   paymentMethod?: InputMaybe<OrderPaymentMethodType>;
   status?: InputMaybe<OrderStatusType>;
-  total?: InputMaybe<Scalars['Float']>;
 };
 
 export enum OrderDirection {
@@ -958,7 +961,6 @@ export type OrderOrderByInput = {
   orderNumber?: InputMaybe<OrderDirection>;
   paymentMethod?: InputMaybe<OrderDirection>;
   status?: InputMaybe<OrderDirection>;
-  total?: InputMaybe<OrderDirection>;
 };
 
 export type OrderOutput = {
@@ -1039,7 +1041,6 @@ export type OrderUpdateInput = {
   orderNumber?: InputMaybe<Scalars['Int']>;
   paymentMethod?: InputMaybe<OrderPaymentMethodType>;
   status?: InputMaybe<OrderStatusType>;
-  total?: InputMaybe<Scalars['Float']>;
 };
 
 export type OrderWhereInput = {
@@ -1053,7 +1054,6 @@ export type OrderWhereInput = {
   orderNumber?: InputMaybe<IntFilter>;
   paymentMethod?: InputMaybe<OrderPaymentMethodTypeNullableFilter>;
   status?: InputMaybe<OrderStatusTypeNullableFilter>;
-  total?: InputMaybe<FloatNullableFilter>;
 };
 
 export type OrderWhereUniqueInput = {
@@ -1072,7 +1072,7 @@ export type Product = {
   description?: Maybe<Scalars['String']>;
   excerpt?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
-  isAvalaible?: Maybe<Scalars['Boolean']>;
+  isVisible?: Maybe<Scalars['Boolean']>;
   name?: Maybe<Scalars['String']>;
   options?: Maybe<Array<Option>>;
   optionsCount?: Maybe<Scalars['Int']>;
@@ -1096,7 +1096,7 @@ export type ProductCreateInput = {
   count?: InputMaybe<Scalars['Int']>;
   description?: InputMaybe<Scalars['String']>;
   excerpt?: InputMaybe<Scalars['String']>;
-  isAvalaible?: InputMaybe<Scalars['Boolean']>;
+  isVisible?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   options?: InputMaybe<OptionRelateToManyForCreateInput>;
   photo?: InputMaybe<Scalars['Upload']>;
@@ -1114,7 +1114,7 @@ export type ProductOrderByInput = {
   description?: InputMaybe<OrderDirection>;
   excerpt?: InputMaybe<OrderDirection>;
   id?: InputMaybe<OrderDirection>;
-  isAvalaible?: InputMaybe<OrderDirection>;
+  isVisible?: InputMaybe<OrderDirection>;
   name?: InputMaybe<OrderDirection>;
   price?: InputMaybe<OrderDirection>;
 };
@@ -1152,7 +1152,7 @@ export type ProductUpdateInput = {
   count?: InputMaybe<Scalars['Int']>;
   description?: InputMaybe<Scalars['String']>;
   excerpt?: InputMaybe<Scalars['String']>;
-  isAvalaible?: InputMaybe<Scalars['Boolean']>;
+  isVisible?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   options?: InputMaybe<OptionRelateToManyForUpdateInput>;
   photo?: InputMaybe<Scalars['Upload']>;
@@ -1168,7 +1168,7 @@ export type ProductWhereInput = {
   description?: InputMaybe<StringFilter>;
   excerpt?: InputMaybe<StringFilter>;
   id?: InputMaybe<IdFilter>;
-  isAvalaible?: InputMaybe<BooleanFilter>;
+  isVisible?: InputMaybe<BooleanFilter>;
   name?: InputMaybe<StringFilter>;
   options?: InputMaybe<OptionManyRelationFilter>;
   price?: InputMaybe<FloatNullableFilter>;
@@ -1496,7 +1496,6 @@ export type OrderFragmentFragment = {
   createdAt?: any | null;
   status?: OrderStatusType | null;
   linesCount?: number | null;
-  total?: number | null;
   metadata?: any | null;
 };
 
@@ -1534,7 +1533,6 @@ export type GetOrderQuery = {
       selection?: any | null;
       quantity?: number | null;
       orderId?: string | null;
-      total?: number | null;
       productId?: string | null;
     } | null> | null;
   } | null;
@@ -1776,7 +1774,6 @@ export const OrderFragmentFragmentDoc = gql`
     createdAt
     status
     linesCount
-    total
     metadata
   }
 `;
@@ -1819,7 +1816,6 @@ export const GetOrderDocument = gql`
         selection
         quantity
         orderId
-        total
         productId
       }
     }
@@ -1894,7 +1890,7 @@ export const DeleteOrderLineDocument = gql`
 `;
 export const GetProductsDocument = gql`
   query getProducts($includeOptions: Boolean!) {
-    products {
+    products(where: { isVisible: { equals: true } }) {
       category {
         name
         id
@@ -1935,12 +1931,13 @@ export const GetProductDocument = gql`
 `;
 export const GetCategoriesDocument = gql`
   query getCategories($includeProducts: Boolean!) {
-    categories {
+    categories(where: { isVisible: { equals: true } }) {
       id
       name
       description
       title
-      products @include(if: $includeProducts) {
+      products(where: { isVisible: { equals: true } })
+        @include(if: $includeProducts) {
         ...productFragment
       }
     }

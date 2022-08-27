@@ -8,8 +8,8 @@ const makeSelectionText = (
   ## Contenido
   ${selection.map((s) => {
     return `
-      **${s.option}** 
-       ${s.selection.map((d) => `- ${d}`).join(`\n`)}
+     **${s.option}** 
+      ${s.selection.map((d) => `- ${d}`).join('\n')}
     `;
   })}
   `;
@@ -22,16 +22,19 @@ const categories = [
     // ** used for landing purposes
     description: `Arma tu plato o bebida como más te guste, elige los ingrediemte que más te gusten. Tenemos + de 25 ingredientes para crearlos.`,
     title: 'Arma lo que más te guste',
+    isVisible: true,
   },
   {
     name: 'armados',
     title: `Prueba nuestros armados para ti`,
     description: `Elige entre toda la variedad de platos deliciosos que hemos armado pensando en ti.`,
+    isVisible: true,
   },
   {
     name: 'bebidas',
     title: 'Bebidas',
     description: `Elige cualquiera de las bebidas refrescantes que hemos armado para ti. También puedes escoger las bebidas para pre y post entrenamiento.`,
+    isVisible: true,
   },
 ];
 
@@ -75,7 +78,7 @@ const genericPlate = {
   photo: defaultImage,
   description: ``,
   excerpt: `Mix de lechugas, quinua, chalaquita, atún, salsa de tiradito, salsa acevichada.`,
-  isAvalaible: true,
+  isVisible: true,
 };
 
 export const AnonymusClient = {
@@ -93,7 +96,7 @@ export const fitnessProduct = {
   category: 'armables',
   photo: defaultImage,
   description: 'Arma tu propio plato',
-  isAvalaible: true,
+  isVisible: true,
   options: [
     {
       name: 'base',
@@ -230,7 +233,7 @@ const ArmedPlates = [
     price: 25,
     category: 'armados',
     photo: defaultImage,
-    isAvalaible: true,
+    isVisible: true,
     description: makeSelectionText([
       {
         option: 'Base',
@@ -265,7 +268,7 @@ const ArmedPlates = [
     price: 25,
     category: 'armados',
     photo: defaultImage,
-    isAvalaible: true,
+    isVisible: true,
     description: makeSelectionText([
       {
         option: 'Base',
@@ -300,7 +303,7 @@ const ArmedPlates = [
     price: 25,
     category: 'armados',
     photo: defaultImage,
-    isAvalaible: true,
+    isVisible: true,
     description: makeSelectionText([
       {
         option: 'Base',
@@ -342,7 +345,7 @@ const ArmedPlates = [
     price: 25,
     category: 'armados',
     photo: defaultImage,
-    isAvalaible: true,
+    isVisible: true,
     description: makeSelectionText([
       {
         option: 'Base',

@@ -28,7 +28,7 @@ export const Product = list({
         displayMode: 'textarea',
       },
     }),
-    isAvalaible: checkbox({
+    isVisible: checkbox({
       defaultValue: true,
     }),
   },
