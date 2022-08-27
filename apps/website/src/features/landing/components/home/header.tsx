@@ -102,6 +102,7 @@ const Header = () => {
     <Box
       sx={{
         position: 'relative',
+        overflowX : "hidden",
         '.swiper-slide': {
           height: ['80vh', null, '90vh'],
           position: 'relative',
