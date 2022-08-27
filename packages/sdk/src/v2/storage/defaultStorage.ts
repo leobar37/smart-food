@@ -37,6 +37,11 @@ export class BrowserStorage implements Storage {
     }
     return null;
   }
+  removeKey(key: string): void {
+    if (this.isSupported()) {
+      localStorage.removeItem(this.PREFIX + key);
+    }
+  }
 
   clean(): void {
     if (this.isSupported()) {

@@ -20,8 +20,9 @@ import { useState } from 'react';
 import { confirmModalAtom } from '../atoms';
 import { TEMPORAL_ORDER_KEY } from '../constants';
 import { useRouter } from 'next/router';
+
 export const ConfirmationModal = () => {
-  const [confirmModalState] = useAtom(confirmModalAtom);
+  const [confirmModalState, setConfirmModalState] = useAtom(confirmModalAtom);
   const order = cmsLib.storage.getJson<OrderOutput>(TEMPORAL_ORDER_KEY);
   const [count, setCount] = useState(0);
   const router = useRouter();
@@ -29,7 +30,13 @@ export const ConfirmationModal = () => {
     return null;
   }
   return (
-    <Modal isOpen={confirmModalState} isCentered onClose={noop}>
+    <Modal
+      isOpen={confirmModalState}
+      isCentered
+      onClose={() => {
+        setConfirmModalState(false);
+      }}
+    >
       <ModalOverlay />
       <ModalContent padding={['5', null, '10', '12']} margin="4" maxWidth="3xl">
         <ModalHeader padding="0" mb="8">
@@ -105,8 +112,9 @@ export const ConfirmationModal = () => {
                 size="lg"
                 width="2xs"
                 onClick={() => {
-                  localStorage.removeItem(TEMPORAL_ORDER_KEY);
+                  cmsLib.storage.removeKey(TEMPORAL_ORDER_KEY);
                   router.replace('/');
+                  setConfirmModalState(false);
                 }}
               >
                 Ir al inicio

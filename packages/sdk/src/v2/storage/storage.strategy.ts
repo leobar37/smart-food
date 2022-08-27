@@ -4,4 +4,5 @@ export interface Storage {
   setJson(key: string, value: any): void;
   getJson<T extends any>(key: string): T;
   clean(): void;
+  removeKey(key: string): void;
 }

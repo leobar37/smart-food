@@ -216,7 +216,7 @@ type Product {
   ): [Option!]
   optionsCount(where: OptionWhereInput! = {}): Int
   description: String
-  isAvalaible: Boolean
+  isVisible: Boolean
 }
 
 type CloudinaryImage_File {
@@ -284,7 +284,7 @@ input ProductWhereInput {
   category: CategoryWhereInput
   options: OptionManyRelationFilter
   description: StringFilter
-  isAvalaible: BooleanFilter
+  isVisible: BooleanFilter
 }
 
 input IntNullableFilter {
@@ -327,7 +327,7 @@ input ProductOrderByInput {
   price: OrderDirection
   excerpt: OrderDirection
   description: OrderDirection
-  isAvalaible: OrderDirection
+  isVisible: OrderDirection
 }
 
 input ProductUpdateInput {
@@ -339,7 +339,7 @@ input ProductUpdateInput {
   category: CategoryRelateToOneForUpdateInput
   options: OptionRelateToManyForUpdateInput
   description: String
-  isAvalaible: Boolean
+  isVisible: Boolean
 }
 
 """
@@ -374,7 +374,7 @@ input ProductCreateInput {
   category: CategoryRelateToOneForCreateInput
   options: OptionRelateToManyForCreateInput
   description: String
-  isAvalaible: Boolean
+  isVisible: Boolean
 }
 
 input CategoryRelateToOneForCreateInput {
@@ -528,8 +528,9 @@ input OptionRelateToOneForCreateInput {
 type Category {
   id: ID!
   name: String
-  description: String
   title: String
+  description: String
+  isVisible: Boolean
   products(
     where: ProductWhereInput! = {}
     orderBy: [ProductOrderByInput!]! = []
@@ -549,8 +550,9 @@ input CategoryWhereInput {
   NOT: [CategoryWhereInput!]
   id: IDFilter
   name: StringFilter
-  description: StringFilter
   title: StringFilter
+  description: StringFilter
+  isVisible: BooleanFilter
   products: ProductManyRelationFilter
 }
 
@@ -563,14 +565,16 @@ input ProductManyRelationFilter {
 input CategoryOrderByInput {
   id: OrderDirection
   name: OrderDirection
-  description: OrderDirection
   title: OrderDirection
+  description: OrderDirection
+  isVisible: OrderDirection
 }
 
 input CategoryUpdateInput {
   name: String
-  description: String
   title: String
+  description: String
+  isVisible: Boolean
   products: ProductRelateToManyForUpdateInput
 }
 
@@ -588,8 +592,9 @@ input CategoryUpdateArgs {
 
 input CategoryCreateInput {
   name: String
-  description: String
   title: String
+  description: String
+  isVisible: Boolean
   products: ProductRelateToManyForCreateInput
 }
 
