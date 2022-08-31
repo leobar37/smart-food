@@ -30,6 +30,7 @@ import { useSingleProduct } from '@App/core/modules/product';
 import { LandingLayout } from '@App/core/shared-components';
 import { BackButton } from '@smartfood/ui';
 import { Provider as JotaiProvider } from 'jotai';
+
 const Title = chakra('h2', {
   baseStyle: {
     mx: 'auto',

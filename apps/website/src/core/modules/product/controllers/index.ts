@@ -5,7 +5,7 @@ import get from 'lodash.get';
 import { useMemo } from 'react';
 import { useQuery } from 'react-query';
 import { queryAtom } from '../atoms';
-import { cacheKeys } from '@App/core/constants';
+import { cacheKeys, PRODUCTS_FOR_BUILD_ID } from '@App/core/constants';
 import { flatternCategories } from '../helpers';
 
 export const useCategoriesWithProducts = () => {
@@ -40,6 +40,8 @@ export const useProductsWithSearch = (): Product[] => {
     const filteredProducts = products?.filter(
       (pr) => buildChain(pr!).indexOf(query.toLocaleLowerCase()) !== -1,
     );
+    console.log(products);
+
     return filteredProducts ?? [];
   }, [query, categoryProducts]);
 

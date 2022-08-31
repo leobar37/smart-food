@@ -1,18 +1,12 @@
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
-import { print } from 'graphql';
+import { print } from 'graphql'
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -43,12 +37,14 @@ export type Category = {
   title?: Maybe<Scalars['String']>;
 };
 
+
 export type CategoryProductsArgs = {
   orderBy?: Array<ProductOrderByInput>;
   skip?: Scalars['Int'];
   take?: InputMaybe<Scalars['Int']>;
   where?: ProductWhereInput;
 };
+
 
 export type CategoryProductsCountArgs = {
   where?: ProductWhereInput;
@@ -122,12 +118,14 @@ export type Client = {
   phone?: Maybe<Scalars['String']>;
 };
 
+
 export type ClientOrdersArgs = {
   orderBy?: Array<OrderOrderByInput>;
   skip?: Scalars['Int'];
   take?: InputMaybe<Scalars['Int']>;
   where?: OrderWhereInput;
 };
+
 
 export type ClientOrdersCountArgs = {
   where?: OrderWhereInput;
@@ -242,6 +240,7 @@ export type CloudinaryImage_File = {
   publicUrlTransformed?: Maybe<Scalars['String']>;
 };
 
+
 export type CloudinaryImage_FilePublicUrlTransformedArgs = {
   transformation?: InputMaybe<CloudinaryImageFormat>;
 };
@@ -315,6 +314,7 @@ export type KeystoneAdminMeta = {
   lists: Array<KeystoneAdminUiListMeta>;
 };
 
+
 export type KeystoneAdminMetaListArgs = {
   key: Scalars['String'];
 };
@@ -334,6 +334,7 @@ export type KeystoneAdminUiFieldMeta = {
   viewsIndex: Scalars['Int'];
 };
 
+
 export type KeystoneAdminUiFieldMetaItemViewArgs = {
   id?: InputMaybe<Scalars['ID']>;
 };
@@ -345,7 +346,7 @@ export type KeystoneAdminUiFieldMetaCreateView = {
 
 export enum KeystoneAdminUiFieldMetaCreateViewFieldMode {
   Edit = 'edit',
-  Hidden = 'hidden',
+  Hidden = 'hidden'
 }
 
 export type KeystoneAdminUiFieldMetaItemView = {
@@ -356,7 +357,7 @@ export type KeystoneAdminUiFieldMetaItemView = {
 export enum KeystoneAdminUiFieldMetaItemViewFieldMode {
   Edit = 'edit',
   Hidden = 'hidden',
-  Read = 'read',
+  Read = 'read'
 }
 
 export type KeystoneAdminUiFieldMetaListView = {
@@ -366,7 +367,7 @@ export type KeystoneAdminUiFieldMetaListView = {
 
 export enum KeystoneAdminUiFieldMetaListViewFieldMode {
   Hidden = 'hidden',
-  Read = 'read',
+  Read = 'read'
 }
 
 export type KeystoneAdminUiListMeta = {
@@ -397,7 +398,7 @@ export type KeystoneAdminUiSort = {
 
 export enum KeystoneAdminUiSortDirection {
   Asc = 'ASC',
-  Desc = 'DESC',
+  Desc = 'DESC'
 }
 
 export type KeystoneMeta = {
@@ -465,147 +466,183 @@ export type Mutation = {
   updateUsers?: Maybe<Array<Maybe<User>>>;
 };
 
+
 export type MutationAuthenticateUserWithPasswordArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
 };
 
+
 export type MutationCreateCategoriesArgs = {
   data: Array<CategoryCreateInput>;
 };
+
 
 export type MutationCreateCategoryArgs = {
   data: CategoryCreateInput;
 };
 
+
 export type MutationCreateClientArgs = {
   data: ClientCreateInput;
 };
+
 
 export type MutationCreateClientsArgs = {
   data: Array<ClientCreateInput>;
 };
 
+
 export type MutationCreateInitialUserArgs = {
   data: CreateInitialUserInput;
 };
+
 
 export type MutationCreateOptionArgs = {
   data: OptionCreateInput;
 };
 
+
 export type MutationCreateOptionsArgs = {
   data: Array<OptionCreateInput>;
 };
+
 
 export type MutationCreateOrderArgs = {
   data: OrderCreateInput;
 };
 
+
 export type MutationCreateOrderLineArgs = {
   data: OrderLineCreateInput;
 };
+
 
 export type MutationCreateOrderLinesArgs = {
   data: Array<OrderLineCreateInput>;
 };
 
+
 export type MutationCreateOrdersArgs = {
   data: Array<OrderCreateInput>;
 };
+
 
 export type MutationCreateProductArgs = {
   data: ProductCreateInput;
 };
 
+
 export type MutationCreateProductsArgs = {
   data: Array<ProductCreateInput>;
 };
+
 
 export type MutationCreateSubOptionArgs = {
   data: SubOptionCreateInput;
 };
 
+
 export type MutationCreateSubOptionsArgs = {
   data: Array<SubOptionCreateInput>;
 };
+
 
 export type MutationCreateUserArgs = {
   data: UserCreateInput;
 };
 
+
 export type MutationCreateUsersArgs = {
   data: Array<UserCreateInput>;
 };
+
 
 export type MutationCustomDeleteOrderLineArgs = {
   lineOrderId?: InputMaybe<Scalars['String']>;
   orderId?: InputMaybe<Scalars['String']>;
 };
 
+
 export type MutationDeleteCategoriesArgs = {
   where: Array<CategoryWhereUniqueInput>;
 };
+
 
 export type MutationDeleteCategoryArgs = {
   where: CategoryWhereUniqueInput;
 };
 
+
 export type MutationDeleteClientArgs = {
   where: ClientWhereUniqueInput;
 };
+
 
 export type MutationDeleteClientsArgs = {
   where: Array<ClientWhereUniqueInput>;
 };
 
+
 export type MutationDeleteOptionArgs = {
   where: OptionWhereUniqueInput;
 };
+
 
 export type MutationDeleteOptionsArgs = {
   where: Array<OptionWhereUniqueInput>;
 };
 
+
 export type MutationDeleteOrderArgs = {
   where: OrderWhereUniqueInput;
 };
+
 
 export type MutationDeleteOrderLineArgs = {
   where: OrderLineWhereUniqueInput;
 };
 
+
 export type MutationDeleteOrderLinesArgs = {
   where: Array<OrderLineWhereUniqueInput>;
 };
+
 
 export type MutationDeleteOrdersArgs = {
   where: Array<OrderWhereUniqueInput>;
 };
 
+
 export type MutationDeleteProductArgs = {
   where: ProductWhereUniqueInput;
 };
+
 
 export type MutationDeleteProductsArgs = {
   where: Array<ProductWhereUniqueInput>;
 };
 
+
 export type MutationDeleteSubOptionArgs = {
   where: SubOptionWhereUniqueInput;
 };
+
 
 export type MutationDeleteSubOptionsArgs = {
   where: Array<SubOptionWhereUniqueInput>;
 };
 
+
 export type MutationDeleteUserArgs = {
   where: UserWhereUniqueInput;
 };
 
+
 export type MutationDeleteUsersArgs = {
   where: Array<UserWhereUniqueInput>;
 };
+
 
 export type MutationMakeOrderArgs = {
   email?: InputMaybe<Scalars['String']>;
@@ -614,79 +651,97 @@ export type MutationMakeOrderArgs = {
   paymentMethod?: InputMaybe<OrderPaymentMethodType>;
 };
 
+
 export type MutationPatchOrderLineArgs = {
+  command?: InputMaybe<Scalars['String']>;
   orderId?: InputMaybe<Scalars['String']>;
   orderLine?: InputMaybe<OrderLineItem>;
   orderLineId?: InputMaybe<Scalars['String']>;
 };
 
+
 export type MutationUpdateCategoriesArgs = {
   data: Array<CategoryUpdateArgs>;
 };
+
 
 export type MutationUpdateCategoryArgs = {
   data: CategoryUpdateInput;
   where: CategoryWhereUniqueInput;
 };
 
+
 export type MutationUpdateClientArgs = {
   data: ClientUpdateInput;
   where: ClientWhereUniqueInput;
 };
 
+
 export type MutationUpdateClientsArgs = {
   data: Array<ClientUpdateArgs>;
 };
+
 
 export type MutationUpdateOptionArgs = {
   data: OptionUpdateInput;
   where: OptionWhereUniqueInput;
 };
 
+
 export type MutationUpdateOptionsArgs = {
   data: Array<OptionUpdateArgs>;
 };
+
 
 export type MutationUpdateOrderArgs = {
   data: OrderUpdateInput;
   where: OrderWhereUniqueInput;
 };
 
+
 export type MutationUpdateOrderLineArgs = {
   data: OrderLineUpdateInput;
   where: OrderLineWhereUniqueInput;
 };
 
+
 export type MutationUpdateOrderLinesArgs = {
   data: Array<OrderLineUpdateArgs>;
 };
 
+
 export type MutationUpdateOrdersArgs = {
   data: Array<OrderUpdateArgs>;
 };
+
 
 export type MutationUpdateProductArgs = {
   data: ProductUpdateInput;
   where: ProductWhereUniqueInput;
 };
 
+
 export type MutationUpdateProductsArgs = {
   data: Array<ProductUpdateArgs>;
 };
+
 
 export type MutationUpdateSubOptionArgs = {
   data: SubOptionUpdateInput;
   where: SubOptionWhereUniqueInput;
 };
 
+
 export type MutationUpdateSubOptionsArgs = {
   data: Array<SubOptionUpdateArgs>;
 };
+
 
 export type MutationUpdateUserArgs = {
   data: UserUpdateInput;
   where: UserWhereUniqueInput;
 };
+
 
 export type MutationUpdateUsersArgs = {
   data: Array<UserUpdateArgs>;
@@ -717,12 +772,14 @@ export type Option = {
   subOptionsCount?: Maybe<Scalars['Int']>;
 };
 
+
 export type OptionSubOptionsArgs = {
   orderBy?: Array<SubOptionOrderByInput>;
   skip?: Scalars['Int'];
   take?: InputMaybe<Scalars['Int']>;
   where?: SubOptionWhereInput;
 };
+
 
 export type OptionSubOptionsCountArgs = {
   where?: SubOptionWhereInput;
@@ -815,12 +872,14 @@ export type Order = {
   status?: Maybe<OrderStatusType>;
 };
 
+
 export type OrderLinesArgs = {
   orderBy?: Array<OrderLineOrderByInput>;
   skip?: Scalars['Int'];
   take?: InputMaybe<Scalars['Int']>;
   where?: OrderLineWhereInput;
 };
+
 
 export type OrderLinesCountArgs = {
   where?: OrderLineWhereInput;
@@ -838,7 +897,7 @@ export type OrderCreateInput = {
 
 export enum OrderDirection {
   Asc = 'asc',
-  Desc = 'desc',
+  Desc = 'desc'
 }
 
 export type OrderLine = {
@@ -980,7 +1039,7 @@ export enum OrderPaymentMethodType {
   Cash = 'CASH',
   CreditCard = 'CREDIT_CARD',
   Plin = 'PLIN',
-  Yape = 'YAPE',
+  Yape = 'YAPE'
 }
 
 export type OrderPaymentMethodTypeNullableFilter = {
@@ -1018,7 +1077,7 @@ export enum OrderStatusType {
   Delivered = 'DELIVERED',
   InCart = 'IN_CART',
   Paid = 'PAID',
-  Pending = 'PENDING',
+  Pending = 'PENDING'
 }
 
 export type OrderStatusTypeNullableFilter = {
@@ -1080,12 +1139,14 @@ export type Product = {
   price?: Maybe<Scalars['Float']>;
 };
 
+
 export type ProductOptionsArgs = {
   orderBy?: Array<OptionOrderByInput>;
   skip?: Scalars['Int'];
   take?: InputMaybe<Scalars['Int']>;
   where?: OptionWhereInput;
 };
+
 
 export type ProductOptionsCountArgs = {
   where?: OptionWhereInput;
@@ -1210,6 +1271,7 @@ export type Query = {
   usersCount?: Maybe<Scalars['Int']>;
 };
 
+
 export type QueryCategoriesArgs = {
   orderBy?: Array<CategoryOrderByInput>;
   skip?: Scalars['Int'];
@@ -1217,17 +1279,21 @@ export type QueryCategoriesArgs = {
   where?: CategoryWhereInput;
 };
 
+
 export type QueryCategoriesCountArgs = {
   where?: CategoryWhereInput;
 };
+
 
 export type QueryCategoryArgs = {
   where: CategoryWhereUniqueInput;
 };
 
+
 export type QueryClientArgs = {
   where: ClientWhereUniqueInput;
 };
+
 
 export type QueryClientsArgs = {
   orderBy?: Array<ClientOrderByInput>;
@@ -1236,17 +1302,21 @@ export type QueryClientsArgs = {
   where?: ClientWhereInput;
 };
 
+
 export type QueryClientsCountArgs = {
   where?: ClientWhereInput;
 };
+
 
 export type QueryEcoOrderArgs = {
   orderId?: InputMaybe<Scalars['String']>;
 };
 
+
 export type QueryOptionArgs = {
   where: OptionWhereUniqueInput;
 };
+
 
 export type QueryOptionsArgs = {
   orderBy?: Array<OptionOrderByInput>;
@@ -1255,17 +1325,21 @@ export type QueryOptionsArgs = {
   where?: OptionWhereInput;
 };
 
+
 export type QueryOptionsCountArgs = {
   where?: OptionWhereInput;
 };
+
 
 export type QueryOrderArgs = {
   where: OrderWhereUniqueInput;
 };
 
+
 export type QueryOrderLineArgs = {
   where: OrderLineWhereUniqueInput;
 };
+
 
 export type QueryOrderLinesArgs = {
   orderBy?: Array<OrderLineOrderByInput>;
@@ -1274,9 +1348,11 @@ export type QueryOrderLinesArgs = {
   where?: OrderLineWhereInput;
 };
 
+
 export type QueryOrderLinesCountArgs = {
   where?: OrderLineWhereInput;
 };
+
 
 export type QueryOrdersArgs = {
   orderBy?: Array<OrderOrderByInput>;
@@ -1285,13 +1361,16 @@ export type QueryOrdersArgs = {
   where?: OrderWhereInput;
 };
 
+
 export type QueryOrdersCountArgs = {
   where?: OrderWhereInput;
 };
 
+
 export type QueryProductArgs = {
   where: ProductWhereUniqueInput;
 };
+
 
 export type QueryProductsArgs = {
   orderBy?: Array<ProductOrderByInput>;
@@ -1300,13 +1379,16 @@ export type QueryProductsArgs = {
   where?: ProductWhereInput;
 };
 
+
 export type QueryProductsCountArgs = {
   where?: ProductWhereInput;
 };
 
+
 export type QuerySubOptionArgs = {
   where: SubOptionWhereUniqueInput;
 };
+
 
 export type QuerySubOptionsArgs = {
   orderBy?: Array<SubOptionOrderByInput>;
@@ -1315,13 +1397,16 @@ export type QuerySubOptionsArgs = {
   where?: SubOptionWhereInput;
 };
 
+
 export type QuerySubOptionsCountArgs = {
   where?: SubOptionWhereInput;
 };
 
+
 export type QueryUserArgs = {
   where: UserWhereUniqueInput;
 };
+
 
 export type QueryUsersArgs = {
   orderBy?: Array<UserOrderByInput>;
@@ -1330,13 +1415,14 @@ export type QueryUsersArgs = {
   where?: UserWhereInput;
 };
 
+
 export type QueryUsersCountArgs = {
   where?: UserWhereInput;
 };
 
 export enum QueryMode {
   Default = 'default',
-  Insensitive = 'insensitive',
+  Insensitive = 'insensitive'
 }
 
 export type StringFilter = {
@@ -1426,9 +1512,7 @@ export type UserAuthenticationWithPasswordFailure = {
   message: Scalars['String'];
 };
 
-export type UserAuthenticationWithPasswordResult =
-  | UserAuthenticationWithPasswordFailure
-  | UserAuthenticationWithPasswordSuccess;
+export type UserAuthenticationWithPasswordResult = UserAuthenticationWithPasswordFailure | UserAuthenticationWithPasswordSuccess;
 
 export type UserAuthenticationWithPasswordSuccess = {
   __typename?: 'UserAuthenticationWithPasswordSuccess';
@@ -1452,7 +1536,7 @@ export type UserOrderByInput = {
 
 export enum UserRolType {
   Admin = 'ADMIN',
-  Staff = 'STAFF',
+  Staff = 'STAFF'
 }
 
 export type UserRolTypeNullableFilter = {
@@ -1496,20 +1580,11 @@ export type OrderFragmentFragment = {
   createdAt?: any | null;
   status?: OrderStatusType | null;
   linesCount?: number | null;
+  total?: number | null;
   metadata?: any | null;
 };
 
-export type OrderOutputFragmentFragment = {
-  __typename?: 'OrderOutput';
-  id?: string | null;
-  orderNumber?: number | null;
-  createdAt?: any | null;
-  status?: OrderStatusType | null;
-  linesCount?: number | null;
-  total?: number | null;
-  metadata?: any | null;
-  paymentMethod?: OrderPaymentMethodType | null;
-};
+export type OrderOutputFragmentFragment = { __typename?: 'OrderOutput', id?: string | null, orderNumber?: number | null, createdAt?: any | null, status?: OrderStatusType | null, linesCount?: number | null, total?: number | null, metadata?: any | null, paymentMethod?: OrderPaymentMethodType | null };
 
 export type GetOrderQueryVariables = Exact<{
   orderId: Scalars['String'];
@@ -1533,6 +1608,7 @@ export type GetOrderQuery = {
       selection?: any | null;
       quantity?: number | null;
       orderId?: string | null;
+      total?: number | null;
       productId?: string | null;
     } | null> | null;
   } | null;
@@ -1542,14 +1618,8 @@ export type GetOrderLineCountQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
 }>;
 
-export type GetOrderLineCountQuery = {
-  __typename?: 'Query';
-  order?: {
-    __typename?: 'Order';
-    id: string;
-    linesCount?: number | null;
-  } | null;
-};
+
+export type GetOrderLineCountQuery = { __typename?: 'Query', order?: { __typename?: 'Order', id: string, linesCount?: number | null } | null };
 
 export type PatchOrderMutationVariables = Exact<{
   email?: InputMaybe<Scalars['String']>;
@@ -1558,214 +1628,50 @@ export type PatchOrderMutationVariables = Exact<{
   paymentMethod?: InputMaybe<OrderPaymentMethodType>;
 }>;
 
-export type PatchOrderMutation = {
-  __typename?: 'Mutation';
-  makeOrder?: {
-    __typename?: 'OrderOutput';
-    id?: string | null;
-    orderNumber?: number | null;
-    createdAt?: any | null;
-    status?: OrderStatusType | null;
-    linesCount?: number | null;
-    total?: number | null;
-    metadata?: any | null;
-    paymentMethod?: OrderPaymentMethodType | null;
-  } | null;
-};
+
+export type PatchOrderMutation = { __typename?: 'Mutation', makeOrder?: { __typename?: 'OrderOutput', id?: string | null, orderNumber?: number | null, createdAt?: any | null, status?: OrderStatusType | null, linesCount?: number | null, total?: number | null, metadata?: any | null, paymentMethod?: OrderPaymentMethodType | null } | null };
 
 export type PatchOrderLineMutationVariables = Exact<{
   orderId?: InputMaybe<Scalars['String']>;
   orderLineId?: InputMaybe<Scalars['String']>;
   orderLine?: InputMaybe<OrderLineItem>;
+  command?: InputMaybe<Scalars['String']>;
 }>;
 
-export type PatchOrderLineMutation = {
-  __typename?: 'Mutation';
-  patchOrderLine?: {
-    __typename?: 'OrderOutput';
-    id?: string | null;
-    orderNumber?: number | null;
-    createdAt?: any | null;
-    status?: OrderStatusType | null;
-    linesCount?: number | null;
-    total?: number | null;
-    metadata?: any | null;
-    paymentMethod?: OrderPaymentMethodType | null;
-    lines?: Array<{
-      __typename?: 'OrderLineOutput';
-      id?: string | null;
-      selection?: any | null;
-      quantity?: number | null;
-      orderId?: string | null;
-      total?: number | null;
-      productId?: string | null;
-    } | null> | null;
-  } | null;
-};
+
+export type PatchOrderLineMutation = { __typename?: 'Mutation', patchOrderLine?: { __typename?: 'OrderOutput', id?: string | null, orderNumber?: number | null, createdAt?: any | null, status?: OrderStatusType | null, linesCount?: number | null, total?: number | null, metadata?: any | null, paymentMethod?: OrderPaymentMethodType | null, lines?: Array<{ __typename?: 'OrderLineOutput', id?: string | null, selection?: any | null, quantity?: number | null, orderId?: string | null, total?: number | null, productId?: string | null } | null> | null } | null };
 
 export type DeleteOrderLineMutationVariables = Exact<{
   orderId?: InputMaybe<Scalars['String']>;
   lineOrderId?: InputMaybe<Scalars['String']>;
 }>;
 
-export type DeleteOrderLineMutation = {
-  __typename?: 'Mutation';
-  customDeleteOrderLine?: {
-    __typename?: 'OrderOutput';
-    id?: string | null;
-    orderNumber?: number | null;
-    createdAt?: any | null;
-    status?: OrderStatusType | null;
-    linesCount?: number | null;
-    total?: number | null;
-    metadata?: any | null;
-    paymentMethod?: OrderPaymentMethodType | null;
-    lines?: Array<{
-      __typename?: 'OrderLineOutput';
-      id?: string | null;
-      selection?: any | null;
-      quantity?: number | null;
-      orderId?: string | null;
-      total?: number | null;
-      productId?: string | null;
-    } | null> | null;
-  } | null;
-};
 
-export type ProductFragmentFragment = {
-  __typename?: 'Product';
-  id: string;
-  name?: string | null;
-  count?: number | null;
-  price?: number | null;
-  excerpt?: string | null;
-  description?: string | null;
-  photo?: {
-    __typename?: 'CloudinaryImage_File';
-    id?: string | null;
-    filename?: string | null;
-    originalFilename?: string | null;
-    mimetype?: string | null;
-    publicUrl?: string | null;
-    publicUrlTransformed?: string | null;
-  } | null;
-};
+export type DeleteOrderLineMutation = { __typename?: 'Mutation', customDeleteOrderLine?: { __typename?: 'OrderOutput', id?: string | null, orderNumber?: number | null, createdAt?: any | null, status?: OrderStatusType | null, linesCount?: number | null, total?: number | null, metadata?: any | null, paymentMethod?: OrderPaymentMethodType | null, lines?: Array<{ __typename?: 'OrderLineOutput', id?: string | null, selection?: any | null, quantity?: number | null, orderId?: string | null, total?: number | null, productId?: string | null } | null> | null } | null };
+
+export type ProductFragmentFragment = { __typename?: 'Product', id: string, name?: string | null, count?: number | null, price?: number | null, excerpt?: string | null, description?: string | null, photo?: { __typename?: 'CloudinaryImage_File', id?: string | null, filename?: string | null, originalFilename?: string | null, mimetype?: string | null, publicUrl?: string | null, publicUrlTransformed?: string | null } | null };
 
 export type GetProductsQueryVariables = Exact<{
   includeOptions: Scalars['Boolean'];
 }>;
 
-export type GetProductsQuery = {
-  __typename?: 'Query';
-  products?: Array<{
-    __typename?: 'Product';
-    id: string;
-    name?: string | null;
-    count?: number | null;
-    price?: number | null;
-    excerpt?: string | null;
-    description?: string | null;
-    category?: {
-      __typename?: 'Category';
-      name?: string | null;
-      id: string;
-      productsCount?: number | null;
-    } | null;
-    options?: Array<{
-      __typename?: 'Option';
-      id: string;
-      name?: string | null;
-      limit?: number | null;
-      label?: string | null;
-      subOptions?: Array<{
-        __typename?: 'SubOption';
-        id: string;
-        name?: string | null;
-      }> | null;
-    }> | null;
-    photo?: {
-      __typename?: 'CloudinaryImage_File';
-      id?: string | null;
-      filename?: string | null;
-      originalFilename?: string | null;
-      mimetype?: string | null;
-      publicUrl?: string | null;
-      publicUrlTransformed?: string | null;
-    } | null;
-  }> | null;
-};
+
+export type GetProductsQuery = { __typename?: 'Query', products?: Array<{ __typename?: 'Product', id: string, name?: string | null, count?: number | null, price?: number | null, excerpt?: string | null, description?: string | null, category?: { __typename?: 'Category', name?: string | null, id: string, productsCount?: number | null } | null, options?: Array<{ __typename?: 'Option', id: string, name?: string | null, limit?: number | null, label?: string | null, subOptions?: Array<{ __typename?: 'SubOption', id: string, name?: string | null }> | null }> | null, photo?: { __typename?: 'CloudinaryImage_File', id?: string | null, filename?: string | null, originalFilename?: string | null, mimetype?: string | null, publicUrl?: string | null, publicUrlTransformed?: string | null } | null }> | null };
 
 export type GetProductQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
   includeOptions: Scalars['Boolean'];
 }>;
 
-export type GetProductQuery = {
-  __typename?: 'Query';
-  product?: {
-    __typename?: 'Product';
-    id: string;
-    name?: string | null;
-    count?: number | null;
-    price?: number | null;
-    excerpt?: string | null;
-    description?: string | null;
-    options?: Array<{
-      __typename?: 'Option';
-      id: string;
-      name?: string | null;
-      limit?: number | null;
-      label?: string | null;
-      subOptions?: Array<{
-        __typename?: 'SubOption';
-        id: string;
-        name?: string | null;
-      }> | null;
-    }> | null;
-    photo?: {
-      __typename?: 'CloudinaryImage_File';
-      id?: string | null;
-      filename?: string | null;
-      originalFilename?: string | null;
-      mimetype?: string | null;
-      publicUrl?: string | null;
-      publicUrlTransformed?: string | null;
-    } | null;
-  } | null;
-};
+
+export type GetProductQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id: string, name?: string | null, count?: number | null, price?: number | null, excerpt?: string | null, description?: string | null, options?: Array<{ __typename?: 'Option', id: string, name?: string | null, limit?: number | null, label?: string | null, subOptions?: Array<{ __typename?: 'SubOption', id: string, name?: string | null }> | null }> | null, photo?: { __typename?: 'CloudinaryImage_File', id?: string | null, filename?: string | null, originalFilename?: string | null, mimetype?: string | null, publicUrl?: string | null, publicUrlTransformed?: string | null } | null } | null };
 
 export type GetCategoriesQueryVariables = Exact<{
   includeProducts: Scalars['Boolean'];
 }>;
 
-export type GetCategoriesQuery = {
-  __typename?: 'Query';
-  categories?: Array<{
-    __typename?: 'Category';
-    id: string;
-    name?: string | null;
-    description?: string | null;
-    title?: string | null;
-    products?: Array<{
-      __typename?: 'Product';
-      id: string;
-      name?: string | null;
-      count?: number | null;
-      price?: number | null;
-      excerpt?: string | null;
-      description?: string | null;
-      photo?: {
-        __typename?: 'CloudinaryImage_File';
-        id?: string | null;
-        filename?: string | null;
-        originalFilename?: string | null;
-        mimetype?: string | null;
-        publicUrl?: string | null;
-        publicUrlTransformed?: string | null;
-      } | null;
-    }> | null;
-  }> | null;
-};
+
+export type GetCategoriesQuery = { __typename?: 'Query', categories?: Array<{ __typename?: 'Category', id: string, name?: string | null, description?: string | null, title?: string | null, products?: Array<{ __typename?: 'Product', id: string, name?: string | null, count?: number | null, price?: number | null, excerpt?: string | null, description?: string | null, photo?: { __typename?: 'CloudinaryImage_File', id?: string | null, filename?: string | null, originalFilename?: string | null, mimetype?: string | null, publicUrl?: string | null, publicUrlTransformed?: string | null } | null }> | null }> | null };
 
 export const OrderFragmentFragmentDoc = gql`
   fragment OrderFragment on Order {
@@ -1774,39 +1680,40 @@ export const OrderFragmentFragmentDoc = gql`
     createdAt
     status
     linesCount
+    total
     metadata
   }
 `;
 export const OrderOutputFragmentFragmentDoc = gql`
-  fragment OrderOutputFragment on OrderOutput {
-    id
-    orderNumber
-    createdAt
-    status
-    linesCount
-    total
-    metadata
-    paymentMethod
-  }
-`;
+    fragment OrderOutputFragment on OrderOutput {
+  id
+  orderNumber
+  createdAt
+  status
+  linesCount
+  total
+  metadata
+  paymentMethod
+}
+    `;
 export const ProductFragmentFragmentDoc = gql`
-  fragment productFragment on Product {
+    fragment productFragment on Product {
+  id
+  photo {
     id
-    photo {
-      id
-      filename
-      originalFilename
-      mimetype
-      publicUrl
-      publicUrlTransformed
-    }
-    name
-    count
-    price
-    excerpt
-    description
+    filename
+    originalFilename
+    mimetype
+    publicUrl
+    publicUrlTransformed
   }
-`;
+  name
+  count
+  price
+  excerpt
+  description
+}
+    `;
 export const GetOrderDocument = gql`
   query getOrder($orderId: String!) {
     ecoOrder(orderId: $orderId) {
@@ -1816,6 +1723,7 @@ export const GetOrderDocument = gql`
         selection
         quantity
         orderId
+        total
         productId
       }
     }
@@ -1831,66 +1739,55 @@ export const GetOrderLineCountDocument = gql`
   }
 `;
 export const PatchOrderDocument = gql`
-  mutation patchOrder(
-    $email: String
-    $metadata: JSON
-    $orderId: String
-    $paymentMethod: OrderPaymentMethodType
+    mutation patchOrder($email: String, $metadata: JSON, $orderId: String, $paymentMethod: OrderPaymentMethodType) {
+  makeOrder(
+    email: $email
+    metadata: $metadata
+    orderId: $orderId
+    paymentMethod: $paymentMethod
   ) {
-    makeOrder(
-      email: $email
-      metadata: $metadata
-      orderId: $orderId
-      paymentMethod: $paymentMethod
-    ) {
-      ...OrderOutputFragment
-    }
+    ...OrderOutputFragment
   }
-  ${OrderOutputFragmentFragmentDoc}
-`;
+}
+    ${OrderOutputFragmentFragmentDoc}`;
 export const PatchOrderLineDocument = gql`
-  mutation patchOrderLine(
-    $orderId: String
-    $orderLineId: String
-    $orderLine: OrderLineItem
+    mutation patchOrderLine($orderId: String, $orderLineId: String, $orderLine: OrderLineItem, $command: String) {
+  patchOrderLine(
+    orderId: $orderId
+    orderLineId: $orderLineId
+    orderLine: $orderLine
+    command: $command
   ) {
-    patchOrderLine(
-      orderId: $orderId
-      orderLineId: $orderLineId
-      orderLine: $orderLine
-    ) {
-      ...OrderOutputFragment
-      lines {
-        id
-        selection
-        quantity
-        orderId
-        total
-        productId
-      }
+    ...OrderOutputFragment
+    lines {
+      id
+      selection
+      quantity
+      orderId
+      total
+      productId
     }
   }
-  ${OrderOutputFragmentFragmentDoc}
-`;
+}
+    ${OrderOutputFragmentFragmentDoc}`;
 export const DeleteOrderLineDocument = gql`
-  mutation deleteOrderLine($orderId: String, $lineOrderId: String) {
-    customDeleteOrderLine(orderId: $orderId, lineOrderId: $lineOrderId) {
-      ...OrderOutputFragment
-      lines {
-        id
-        selection
-        quantity
-        orderId
-        total
-        productId
-      }
+    mutation deleteOrderLine($orderId: String, $lineOrderId: String) {
+  customDeleteOrderLine(orderId: $orderId, lineOrderId: $lineOrderId) {
+    ...OrderOutputFragment
+    lines {
+      id
+      selection
+      quantity
+      orderId
+      total
+      productId
     }
   }
-  ${OrderOutputFragmentFragmentDoc}
-`;
+}
+    ${OrderOutputFragmentFragmentDoc}`;
 export const GetProductsDocument = gql`
   query getProducts($includeOptions: Boolean!) {
-    products(where: { isVisible: { equals: true } }) {
+    products {
       category {
         name
         id
@@ -1931,13 +1828,12 @@ export const GetProductDocument = gql`
 `;
 export const GetCategoriesDocument = gql`
   query getCategories($includeProducts: Boolean!) {
-    categories(where: { isVisible: { equals: true } }) {
+    categories {
       id
       name
       description
       title
-      products(where: { isVisible: { equals: true } })
-        @include(if: $includeProducts) {
+      products @include(if: $includeProducts) {
         ...productFragment
       }
     }
@@ -1945,17 +1841,8 @@ export const GetCategoriesDocument = gql`
   ${ProductFragmentFragmentDoc}
 `;
 
-export type SdkFunctionWrapper = <T>(
-  action: (requestHeaders?: Record<string, string>) => Promise<T>,
-  operationName: string,
-  operationType?: string,
-) => Promise<T>;
 
-const defaultWrapper: SdkFunctionWrapper = (
-  action,
-  _operationName,
-  _operationType,
-) => action();
+const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 const GetOrderDocumentString = print(GetOrderDocument);
 const GetOrderLineCountDocumentString = print(GetOrderLineCountDocument);
 const PatchOrderDocumentString = print(PatchOrderDocument);
@@ -1964,170 +1851,32 @@ const DeleteOrderLineDocumentString = print(DeleteOrderLineDocument);
 const GetProductsDocumentString = print(GetProductsDocument);
 const GetProductDocumentString = print(GetProductDocument);
 const GetCategoriesDocumentString = print(GetCategoriesDocument);
-export function getSdk(
-  client: GraphQLClient,
-  withWrapper: SdkFunctionWrapper = defaultWrapper,
-) {
+export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    getOrder(
-      variables: GetOrderQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<{
-      data: GetOrderQuery;
-      extensions?: any;
-      headers: Dom.Headers;
-      status: number;
-    }> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.rawRequest<GetOrderQuery>(GetOrderDocumentString, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'getOrder',
-        'query',
-      );
+    getOrder(variables: GetOrderQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetOrderQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetOrderQuery>(GetOrderDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getOrder', 'query');
     },
-    getOrderLineCount(
-      variables?: GetOrderLineCountQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<{
-      data: GetOrderLineCountQuery;
-      extensions?: any;
-      headers: Dom.Headers;
-      status: number;
-    }> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.rawRequest<GetOrderLineCountQuery>(
-            GetOrderLineCountDocumentString,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'getOrderLineCount',
-        'query',
-      );
+    getOrderLineCount(variables?: GetOrderLineCountQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetOrderLineCountQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetOrderLineCountQuery>(GetOrderLineCountDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getOrderLineCount', 'query');
     },
-    patchOrder(
-      variables?: PatchOrderMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<{
-      data: PatchOrderMutation;
-      extensions?: any;
-      headers: Dom.Headers;
-      status: number;
-    }> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.rawRequest<PatchOrderMutation>(
-            PatchOrderDocumentString,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'patchOrder',
-        'mutation',
-      );
+    patchOrder(variables?: PatchOrderMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: PatchOrderMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<PatchOrderMutation>(PatchOrderDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'patchOrder', 'mutation');
     },
-    patchOrderLine(
-      variables?: PatchOrderLineMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<{
-      data: PatchOrderLineMutation;
-      extensions?: any;
-      headers: Dom.Headers;
-      status: number;
-    }> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.rawRequest<PatchOrderLineMutation>(
-            PatchOrderLineDocumentString,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'patchOrderLine',
-        'mutation',
-      );
+    patchOrderLine(variables?: PatchOrderLineMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: PatchOrderLineMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<PatchOrderLineMutation>(PatchOrderLineDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'patchOrderLine', 'mutation');
     },
-    deleteOrderLine(
-      variables?: DeleteOrderLineMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<{
-      data: DeleteOrderLineMutation;
-      extensions?: any;
-      headers: Dom.Headers;
-      status: number;
-    }> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.rawRequest<DeleteOrderLineMutation>(
-            DeleteOrderLineDocumentString,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'deleteOrderLine',
-        'mutation',
-      );
+    deleteOrderLine(variables?: DeleteOrderLineMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: DeleteOrderLineMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<DeleteOrderLineMutation>(DeleteOrderLineDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteOrderLine', 'mutation');
     },
-    getProducts(
-      variables: GetProductsQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<{
-      data: GetProductsQuery;
-      extensions?: any;
-      headers: Dom.Headers;
-      status: number;
-    }> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.rawRequest<GetProductsQuery>(
-            GetProductsDocumentString,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'getProducts',
-        'query',
-      );
+    getProducts(variables: GetProductsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetProductsQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetProductsQuery>(GetProductsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getProducts', 'query');
     },
-    getProduct(
-      variables: GetProductQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<{
-      data: GetProductQuery;
-      extensions?: any;
-      headers: Dom.Headers;
-      status: number;
-    }> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.rawRequest<GetProductQuery>(
-            GetProductDocumentString,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'getProduct',
-        'query',
-      );
+    getProduct(variables: GetProductQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetProductQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetProductQuery>(GetProductDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getProduct', 'query');
     },
-    getCategories(
-      variables: GetCategoriesQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<{
-      data: GetCategoriesQuery;
-      extensions?: any;
-      headers: Dom.Headers;
-      status: number;
-    }> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.rawRequest<GetCategoriesQuery>(
-            GetCategoriesDocumentString,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'getCategories',
-        'query',
-      );
-    },
+    getCategories(variables: GetCategoriesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetCategoriesQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetCategoriesQuery>(GetCategoriesDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getCategories', 'query');
+    }
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;

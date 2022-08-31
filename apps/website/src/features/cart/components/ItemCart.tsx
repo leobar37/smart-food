@@ -1,20 +1,10 @@
-import {
-  Box,
-  chakra,
-  HStack,
-  IconButton,
-  Link,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
-import { OrderLineOutput, Product } from '@smartfood/client/v2';
-import { SliderCounter } from '@smartfood/ui';
-import NextImage from 'next/image';
-import { FC, useMemo } from 'react';
-import { debounce } from 'lodash';
 import { useDeleteOrderLine, useUpdateLine } from '@App/core/modules/cart';
-import { useState, useEffect } from 'react';
-import { TrashIcon } from '@smartfood/ui';
+import { Box, HStack, IconButton, Link, Text, VStack } from '@chakra-ui/react';
+import { OrderLineOutput, Product } from '@smartfood/client/v2';
+import { SliderCounter, TrashIcon } from '@smartfood/ui';
+import { debounce, get } from 'lodash';
+import NextImage from 'next/image';
+import { FC, useEffect, useMemo, useState } from 'react';
 
 type ItemCartProps = {
   line: OrderLineOutput & {
@@ -30,8 +20,8 @@ export const ItemCart: FC<ItemCartProps> = ({ line, isEditable }) => {
       <HStack
         sx={{
           position: 'absolute',
-          top: 0,
-          right: 0,
+          top: -2,
+          right: -8,
         }}
       >
         {isEditable && <Link>Editar</Link>}
@@ -59,8 +49,7 @@ export const ItemCart: FC<ItemCartProps> = ({ line, isEditable }) => {
     [],
   );
 
-  console.log(line);
-  const { product, quantity } = line;
+  const { product, quantity, selection } = line;
   const [localQuantity, setQuantity] = useState(quantity ?? 0);
 
   useEffect(() => {
@@ -81,6 +70,21 @@ export const ItemCart: FC<ItemCartProps> = ({ line, isEditable }) => {
     );
   }
 
+
+  const joinOptions = (selection: any) => {
+    return get(selection, 'options', [])
+      .map((item: any) => get(item, 'subOptions', []))
+      .flat()
+      .map((item: any) => get(item, 'name'))
+      .join(', ');
+  };
+  // when the product could be editable, the difference between them is the description
+  const optionsElement = isEditable ? (
+    <Text fontSize={'sm'} mt="-5" textColor={'gray.500'}>
+      {joinOptions(selection)}
+    </Text>
+  ) : null;
+
   return (
     <HStack
       as="article"
@@ -96,6 +100,7 @@ export const ItemCart: FC<ItemCartProps> = ({ line, isEditable }) => {
         as="picture"
         sx={{
           maxWidth: ['8rem', null, '9rem'],
+          minWidth: ["8rem"],
           overflow: 'hidden',
           rounded: 'md',
         }}
@@ -108,15 +113,17 @@ export const ItemCart: FC<ItemCartProps> = ({ line, isEditable }) => {
           objectFit="cover"
         />
       </Box>
-      <VStack spacing={3} alignItems={'flex-start'}>
+      <VStack spacing={2} alignItems={'flex-start'}>
         {actions}
         <Text
           fontSize={['xl', null, '2xl']}
           fontWeight={'semibold'}
           color="smartgreen.500"
+          my="0"
         >
           {product?.name}
         </Text>
+        {optionsElement}
         <SliderCounter
           value={localQuantity}
           minusDisabled={localQuantity === 0}

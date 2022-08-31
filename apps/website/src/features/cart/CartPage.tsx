@@ -63,7 +63,7 @@ const ArmedProductsSide = () => {
   const content = (
     <>
       {armedProducts.map((line, idx) => (
-        <ItemCart isEditable={false} line={line} key={line.id} />
+        <ItemCart isEditable line={line} key={line.id} />
       ))}
       {armedProducts.length === 0 && notFound}
     </>
@@ -110,7 +110,7 @@ const CartPage = () => {
               fontSize={['xl', null, '2xl']}
               textAlign={'center'}
             >
-              Total: {get(detailedOrder, 'totalPrice', 0)} S/.
+              Total: {get(detailedOrder, 'totalPrice', 0).toFixed(2)} S/.
             </Text>
 
             {showLoadingPrice && (

@@ -2,8 +2,8 @@ import { ClassNames } from '@emotion/react';
 import { Box, useTheme } from '@keystone-ui/core';
 import { useRouter } from 'next/router';
 import React, { FC } from 'react';
-
-export const CardContainer: FC = ({ children }) => {
+import type { ReactNode } from 'react';
+export const CardContainer: FC<{ children: ReactNode }> = ({ children }) => {
   const { tones } = useTheme();
   const tone = tones['active'];
   return (

@@ -52,36 +52,7 @@ export const OrderLine = list({
       field: graphql.field({
         type: graphql.JSON,
         resolve: async (root, _, context) => {
-          const prisma = context.prisma as PrismaClient;
-          const selection = get(root, 'selection.options', []) as {
-            id: string;
-          }[];
-          const result = selection.map(async (option) => {
-            const parent = await prisma.option.findFirst({
-              where: {
-                id: {
-                  equals: option.id,
-                },
-              },
-            });
-            const subSelectionPromises = (get(option, 'options', []) as []).map(
-              (id) =>
-                prisma.subOption.findFirst({
-                  where: {
-                    id: {
-                      equals: id,
-                    },
-                  },
-                }),
-            );
-            const subOptions = await Promise.all(subSelectionPromises);
-            return {
-              option: parent,
-              subOptions: subOptions,
-            };
-          });
-
-          return Promise.all(result);
+          return get(root, 'selection.options', []);
         },
       }),
     }),
