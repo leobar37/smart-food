@@ -1,5 +1,13 @@
 # @smartfood/common
 
+## 1.0.2
+
+### Patch Changes
+
+- - Bugs about the update have been solved
+  - The constant `PATCH_ORDERLINE_COMMANDS` has been added
+  - The property command has beed added to `patchOrderLine` to improve performance
+
 ## 1.0.1
 
 ### Patch Changes

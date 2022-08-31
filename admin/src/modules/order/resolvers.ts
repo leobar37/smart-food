@@ -7,12 +7,12 @@ import {
   PrismaClient,
   Product,
 } from '@prisma/client';
-import { isNil, merge, omitBy } from 'lodash';
+import { OrderMetadata, PATCH_ORDERLINE_COMMANDS } from '@smartfood/common';
+import { get, isNil, merge, omitBy } from 'lodash';
 import { getInputs } from './input';
 import * as orderService from './order.service';
 import { getOutputs } from './output';
-import { OrderMetadata } from '@smartfood/common';
-import { get } from 'lodash';
+import { resolveLineProductSelection } from './order.service';
 export const getMutations = (base: BaseSchemaMeta) => {
   const { OrderLineItem } = getInputs(base);
   const { OrderOutput } = getOutputs(base);
@@ -91,7 +91,7 @@ export const getMutations = (base: BaseSchemaMeta) => {
         return {
           ...result,
           linesCount: result?.lines?.length ?? 0,
-          total: result?.total ?? 0,
+          total: (result as any)?.total ?? 0,
           lines: result?.lines ?? [],
         } as any;
       } else {
@@ -137,22 +137,38 @@ export const getMutations = (base: BaseSchemaMeta) => {
       orderLine: graphql.arg({
         type: OrderLineItem,
       }),
+      command: graphql.arg({
+        type: graphql.String,
+        description: `
+          In order to agilize the process,
+          you will send commands with the respective
+          action you wish to todo
+          commmands:
+          =========
+          UPDATE_QUANTITY: The backend only updates the quantity
+          UPDATE_LINE: this is util when a line is updated, as t 
+          may cause some dowtime
+        `,
+      }),
     },
     resolve: async (root, args, context) => {
       const prisma = context.prisma as PrismaClient;
-      const lineFound = await prisma.orderLine.findFirst({
-        where: args?.orderLineId
-          ? {
+      const isUpdateLineCommand =
+        args.command === PATCH_ORDERLINE_COMMANDS.update_line;
+
+        console.log("patch order line");
+        
+      const lineFound = args?.orderLineId
+        ? await prisma.orderLine.findFirst({
+            where: {
               id: args?.orderLineId,
-            }
-          : {
-              productId: args.orderLine.productId,
-              orderId: args.orderId,
             },
-        include: {
-          product: true,
-        },
-      });
+            include: {
+              product: true,
+            },
+          })
+        : null;
+
       const updateLine = async (
         orderLine: OrderLine & { product: Product },
       ) => {
@@ -160,9 +176,7 @@ export const getMutations = (base: BaseSchemaMeta) => {
           by convention, when the user wants to overwrite the quantity
           he , must send the id as argument
         */
-        const quantity = args?.orderLineId
-          ? args.orderLine.quantity
-          : args.orderLine.quantity + orderLine.quantity;
+        const quantity = args.orderLine.quantity;
         const product = orderLine.product;
         const isZero = quantity === 0;
         if (isZero) {
@@ -173,6 +187,10 @@ export const getMutations = (base: BaseSchemaMeta) => {
           });
           return null;
         }
+        // analyse selection when teh intention is update this
+        const optionsTransformed = isUpdateLineCommand
+          ? await resolveLineProductSelection(args.orderLine.selection, prisma)
+          : [];
         if (!isZero) {
           return await prisma.orderLine.update({
             where: {
@@ -180,39 +198,60 @@ export const getMutations = (base: BaseSchemaMeta) => {
             },
             data: {
               quantity: quantity,
-              selection: args.orderLine.selection,
+              ...(isUpdateLineCommand
+                ? {
+                    selection: {
+                      options: optionsTransformed!,
+                    },
+                  }
+                : {}),
               price: product.price,
               total: product.price * quantity,
             },
           });
         }
       };
+
       const createLine = async () => {
         const product = await prisma.product.findUnique({
           where: {
             id: args.orderLine.productId,
           },
-          include: {
-            options: {
-              select: {
-                id: true,
-              },
-            },
-          },
         });
-        return await prisma.orderLine.create({
+
+        const optionsTransformed = isUpdateLineCommand
+          ? await resolveLineProductSelection(args.orderLine.selection, prisma)
+          : [];
+
+        const orderLine = await prisma.orderLine.create({
           data: {
             createdAt: new Date(),
             orderId: args.orderId,
             productId: args.orderLine.productId,
             quantity: args.orderLine.quantity,
-            selection: args.orderLine.selection,
+            ...(isUpdateLineCommand
+              ? {
+                  selection: {
+                    options: optionsTransformed!,
+                  },
+                }
+              : {}),
             price: product.price,
             total: product.price * args.orderLine.quantity,
           },
         });
+
+        console.log('create line');
+        console.log({
+          product,
+          orderLine,
+        });
+
+        return orderLine;
       };
       if (lineFound) {
+        console.log('line found', lineFound);
+
         await updateLine(lineFound);
       } else {
         await createLine();

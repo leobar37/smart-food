@@ -15,8 +15,11 @@ export const Order = list({
   graphql: {
     // omit: ['create', 'delete', 'update', 'query'],
   },
+  description : "The order",
+ 
   ui: {
     hideCreate: true,
+  
     labelField: 'orderNumber',
     listView: {
       initialColumns: ['client', 'orderNumber', 'status', 'createdAt'],

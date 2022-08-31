@@ -22,6 +22,7 @@ import {
   currentStepAtom,
   resumePreviewAtomsAtom,
   resumePreviewItemsAtom,
+  resumenIsEmptyAtom,
 } from '@App/core/modules/product';
 import { useResumePreviewModal } from '../helpers';
 
@@ -97,6 +98,8 @@ type ResumeContentProps = {
 const ResumeContent: FC<ResumeContentProps> = ({ showEdit, ...props }) => {
   const [resumeItemsAtoms] = useAtom(resumePreviewAtomsAtom);
   const currentProduct = useAtomValue(currentProductAtom);
+  const isEmpty = useAtomValue(resumenIsEmptyAtom);
+
 
   return (
     <>
@@ -104,6 +107,13 @@ const ResumeContent: FC<ResumeContentProps> = ({ showEdit, ...props }) => {
         {resumeItemsAtoms.map((item, idx) => (
           <ResumenItem showEdit={showEdit} itemAtom={item as any} key={idx} />
         ))}
+        {isEmpty && (
+          <Box textAlign={'center'} w="full" my="16">
+            <Text fontSize={'xl'} textColor="gray.400" textAlign={'center'}>
+              Sin selección
+            </Text>
+          </Box>
+        )}
       </VStack>
       <HStack justifyContent={'space-between'} mt="4">
         <Text fontSize={['medium', null, 'lg']}>Precio</Text>

@@ -938,6 +938,18 @@ type Mutation {
     """
     orderLineId: String
     orderLine: OrderLineItem
+
+    """
+    In order to agilize the process,
+    you will send commands with the respective
+    action you wish to todo
+    commmands:
+    =========
+    UPDATE_QUANTITY: The backend only updates the quantity
+    UPDATE_LINE: this is util when a line is updated, as t
+    may cause some dowtime
+    """
+    command: String
   ): OrderOutput
   customDeleteOrderLine(orderId: String, lineOrderId: String): OrderOutput
 }
@@ -1107,6 +1119,7 @@ type KeystoneAdminUIListMeta {
 type KeystoneAdminUIFieldMeta {
   path: String!
   label: String!
+  description: String
   isOrderable: Boolean!
   isFilterable: Boolean!
   fieldMeta: JSON

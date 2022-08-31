@@ -5,11 +5,14 @@ import {
 } from '../generated';
 import { Feature } from './base';
 import { omit } from 'lodash';
+import { PATCH_ORDERLINE_COMMANDS } from '@smartfood/common';
 export type CreateOrderArgs = Omit<PatchOrderMutationVariables, 'metadata'> & {
   metadata?: OrderMetadata;
 };
 
 export type CreateLineArgs = PatchOrderLineMutationVariables['orderLine'];
+export type UpdateLineArgs = PatchOrderLineMutationVariables['orderLine'] &
+  Pick<PatchOrderLineMutationVariables, 'command'>;
 
 export class OrderHandler extends Feature {
   ORDER_ID_KEY = 'CURRENT_ORDER_ID';
@@ -85,6 +88,7 @@ export class OrderHandler extends Feature {
       this.client.api.patchOrderLine({
         orderId: orderId,
         orderLine: line,
+        command: PATCH_ORDERLINE_COMMANDS.update_line,
       }),
     );
 
@@ -95,7 +99,7 @@ export class OrderHandler extends Feature {
     return result.patchOrderLine;
   }
 
-  async updateLine(id: string, line: CreateLineArgs) {
+  async updateLine(id: string, line: UpdateLineArgs) {
     const orderId = this.client.storage.get(this.ORDER_ID_KEY);
 
     if (!orderId) {
@@ -105,8 +109,9 @@ export class OrderHandler extends Feature {
     const result = await this.client.wrap(
       this.client.api.patchOrderLine({
         orderId: orderId,
-        orderLine: line,
+        orderLine: omit(line, 'command'),
         orderLineId: id,
+        command: line.command,
       }),
     );
     if (result?.patchOrderLine) {

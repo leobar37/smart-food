@@ -75,6 +75,10 @@ export const isLastStepAtom = atom((get) => {
   return !!((product?.options?.length ?? 1) - 1 === currentStep);
 });
 
+export const resumenIsEmptyAtom = atom((get) => {
+  const itemsInPreview = get(resumePreviewItemsAtom);
+  return itemsInPreview.every((item) => (item?.subOptions ?? []).length === 0);
+});
 export const currentOptionsFamily = atomFamily((id: number) =>
   atom((get) => {
     const selection = get(selectionAtom);

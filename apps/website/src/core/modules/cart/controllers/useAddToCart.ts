@@ -36,12 +36,12 @@ export const useAddToCart = () => {
 
         const linesCountSnapshot = linesCount;
         if (order) {
-          const existInOrder = order.lines?.some(
-            (line) => line?.productId === params.productId,
-          );
-          if (!existInOrder) {
-            setLinesCount((prev) => prev + 1);
-          }
+          // const existInOrder = order.lines?.some(
+          //   (line) => line?.productId === params.productId,
+          // );
+          // if (!existInOrder) {
+          // }
+          setLinesCount((prev) => prev + 1);
         }
         return {
           linesCount: linesCountSnapshot,

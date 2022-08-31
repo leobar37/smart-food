@@ -5,13 +5,14 @@ import { useMutation, useQueryClient } from 'react-query';
 import { cacheKeys, mutationsKeys } from '@App/core/constants';
 import { useMemo } from 'react';
 import { DataUpdateFunction } from 'react-query/types/core/utils';
-
+import { PATCH_ORDERLINE_COMMANDS } from '@smartfood/common';
 export const useUpdateLine = () => {
   const queryClient = useQueryClient();
   return useMutation(
-    (params: { lineId: string; quantity: number }) => {
+    (params: { lineId: string; quantity: number; command?: string }) => {
       return cmsLib.order.updateLine(params.lineId, {
         quantity: params.quantity,
+        command: params.command ?? PATCH_ORDERLINE_COMMANDS.update_quantity,
       });
     },
     {

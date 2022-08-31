@@ -12,13 +12,15 @@ import {
 } from '@chakra-ui/react';
 import { Product } from '@smartfood/client/v2';
 import { FC, Fragment } from 'react';
-
+import { PRODUCTS_FOR_BUILD_ID } from '@App/core/constants';
+import { get } from 'lodash';
 type SearchItemProps = {
   includeSeparator?: boolean;
   product: Product;
 };
 
 const ProductItem: FC<SearchItemProps> = ({ includeSeparator, product }) => {
+  const isArmable = get(product, 'category.id', '') === PRODUCTS_FOR_BUILD_ID;
   return (
     <Fragment>
       <LinkBox>
@@ -47,7 +49,15 @@ const ProductItem: FC<SearchItemProps> = ({ includeSeparator, product }) => {
                 textAlign="start"
                 fontSize={['md', null, null, 'xl']}
               >
-                <LinkOverlay>{product?.name}</LinkOverlay>
+                <LinkOverlay
+                  href={
+                    !isArmable
+                      ? `/carta/${product.id}`
+                      : `/armatuplato/${product.id}`
+                  }
+                >
+                  {product?.name}
+                </LinkOverlay>
               </Link>
               <Badge fontSize={'xs'}>{product?.category?.name ?? ''}</Badge>
             </VStack>
@@ -61,7 +71,6 @@ const ProductItem: FC<SearchItemProps> = ({ includeSeparator, product }) => {
           </Text>
         </Stack>
       </LinkBox>
-
       {includeSeparator && <Box as="hr" mx="auto" w="80%" bg="gray.500" />}
     </Fragment>
   );

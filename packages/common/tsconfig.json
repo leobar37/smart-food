@@ -4,7 +4,9 @@
     "target": "ES5",
     "module": "ESNext",
     "declaration": true,
-    "emitDeclarationOnly": true
+    "emitDeclarationOnly": true,
+    "baseUrl": "src",
+    "moduleResolution": "Node"
   },
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

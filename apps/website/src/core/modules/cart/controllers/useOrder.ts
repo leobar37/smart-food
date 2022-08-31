@@ -15,8 +15,8 @@ export const useOrder = () => {
     {
       onSuccess: (data) => {
         const allIds = data?.lines?.map((d) => d?.productId);
-        const uniquesIds = new Set(allIds);
-        setCountLines(uniquesIds.size);
+        // const uniquesIds = new Set(allIds);
+        setCountLines(allIds?.length ?? 0);
       },
       refetchInterval: false,
       refetchOnWindowFocus: false,

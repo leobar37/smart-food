@@ -7,9 +7,7 @@ export const useGetProductLine = (productId: string) => {
   const line = useMemo(() => {
     return data?.lines?.find((d) => d?.productId === productId);
   }, [data?.lines, productId]);
-  if (line) {
-    console.log('selected please');
-  }
+  
   return {
     isSelected: !isNil(line),
     line: line,

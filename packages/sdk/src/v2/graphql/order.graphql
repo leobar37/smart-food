@@ -58,11 +58,13 @@ mutation patchOrderLine(
   $orderId: String
   $orderLineId: String
   $orderLine: OrderLineItem
+  $command: String
 ) {
   patchOrderLine(
     orderId: $orderId
     orderLineId: $orderLineId
     orderLine: $orderLine
+    command: $command
   ) {
     ...OrderOutputFragment
     lines {
