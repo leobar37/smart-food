@@ -323,6 +323,7 @@ export type KeystoneAdminUiFieldMeta = {
   __typename?: 'KeystoneAdminUIFieldMeta';
   createView: KeystoneAdminUiFieldMetaCreateView;
   customViewsIndex?: Maybe<Scalars['Int']>;
+  description?: Maybe<Scalars['String']>;
   fieldMeta?: Maybe<Scalars['JSON']>;
   isFilterable: Scalars['Boolean'];
   isOrderable: Scalars['Boolean'];
@@ -1573,16 +1574,7 @@ export type UserWhereUniqueInput = {
   id?: InputMaybe<Scalars['ID']>;
 };
 
-export type OrderFragmentFragment = {
-  __typename?: 'Order';
-  id: string;
-  orderNumber?: number | null;
-  createdAt?: any | null;
-  status?: OrderStatusType | null;
-  linesCount?: number | null;
-  total?: number | null;
-  metadata?: any | null;
-};
+export type OrderFragmentFragment = { __typename?: 'Order', id: string, orderNumber?: number | null, createdAt?: any | null, status?: OrderStatusType | null, linesCount?: number | null, metadata?: any | null };
 
 export type OrderOutputFragmentFragment = { __typename?: 'OrderOutput', id?: string | null, orderNumber?: number | null, createdAt?: any | null, status?: OrderStatusType | null, linesCount?: number | null, total?: number | null, metadata?: any | null, paymentMethod?: OrderPaymentMethodType | null };
 
@@ -1590,29 +1582,8 @@ export type GetOrderQueryVariables = Exact<{
   orderId: Scalars['String'];
 }>;
 
-export type GetOrderQuery = {
-  __typename?: 'Query';
-  ecoOrder?: {
-    __typename?: 'OrderOutput';
-    id?: string | null;
-    orderNumber?: number | null;
-    createdAt?: any | null;
-    status?: OrderStatusType | null;
-    linesCount?: number | null;
-    total?: number | null;
-    metadata?: any | null;
-    paymentMethod?: OrderPaymentMethodType | null;
-    lines?: Array<{
-      __typename?: 'OrderLineOutput';
-      id?: string | null;
-      selection?: any | null;
-      quantity?: number | null;
-      orderId?: string | null;
-      total?: number | null;
-      productId?: string | null;
-    } | null> | null;
-  } | null;
-};
+
+export type GetOrderQuery = { __typename?: 'Query', ecoOrder?: { __typename?: 'OrderOutput', id?: string | null, orderNumber?: number | null, createdAt?: any | null, status?: OrderStatusType | null, linesCount?: number | null, total?: number | null, metadata?: any | null, paymentMethod?: OrderPaymentMethodType | null, lines?: Array<{ __typename?: 'OrderLineOutput', id?: string | null, selection?: any | null, quantity?: number | null, orderId?: string | null, productId?: string | null } | null> | null } | null };
 
 export type GetOrderLineCountQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
@@ -1674,16 +1645,15 @@ export type GetCategoriesQueryVariables = Exact<{
 export type GetCategoriesQuery = { __typename?: 'Query', categories?: Array<{ __typename?: 'Category', id: string, name?: string | null, description?: string | null, title?: string | null, products?: Array<{ __typename?: 'Product', id: string, name?: string | null, count?: number | null, price?: number | null, excerpt?: string | null, description?: string | null, photo?: { __typename?: 'CloudinaryImage_File', id?: string | null, filename?: string | null, originalFilename?: string | null, mimetype?: string | null, publicUrl?: string | null, publicUrlTransformed?: string | null } | null }> | null }> | null };
 
 export const OrderFragmentFragmentDoc = gql`
-  fragment OrderFragment on Order {
-    id
-    orderNumber
-    createdAt
-    status
-    linesCount
-    total
-    metadata
-  }
-`;
+    fragment OrderFragment on Order {
+  id
+  orderNumber
+  createdAt
+  status
+  linesCount
+  metadata
+}
+    `;
 export const OrderOutputFragmentFragmentDoc = gql`
     fragment OrderOutputFragment on OrderOutput {
   id
@@ -1715,29 +1685,27 @@ export const ProductFragmentFragmentDoc = gql`
 }
     `;
 export const GetOrderDocument = gql`
-  query getOrder($orderId: String!) {
-    ecoOrder(orderId: $orderId) {
-      ...OrderOutputFragment
-      lines {
-        id
-        selection
-        quantity
-        orderId
-        total
-        productId
-      }
-    }
-  }
-  ${OrderOutputFragmentFragmentDoc}
-`;
-export const GetOrderLineCountDocument = gql`
-  query getOrderLineCount($id: ID) {
-    order(where: { id: $id }) {
+    query getOrder($orderId: String!) {
+  ecoOrder(orderId: $orderId) {
+    ...OrderOutputFragment
+    lines {
       id
-      linesCount
+      selection
+      quantity
+      orderId
+      productId
     }
   }
-`;
+}
+    ${OrderOutputFragmentFragmentDoc}`;
+export const GetOrderLineCountDocument = gql`
+    query getOrderLineCount($id: ID) {
+  order(where: {id: $id}) {
+    id
+    linesCount
+  }
+}
+    `;
 export const PatchOrderDocument = gql`
     mutation patchOrder($email: String, $metadata: JSON, $orderId: String, $paymentMethod: OrderPaymentMethodType) {
   makeOrder(
@@ -1786,60 +1754,59 @@ export const DeleteOrderLineDocument = gql`
 }
     ${OrderOutputFragmentFragmentDoc}`;
 export const GetProductsDocument = gql`
-  query getProducts($includeOptions: Boolean!) {
-    products {
-      category {
-        name
-        id
-        productsCount
-      }
-      ...productFragment
-      options @include(if: $includeOptions) {
-        id
-        name
-        limit
-        label
-        subOptions {
-          id
-          name
-        }
-      }
+    query getProducts($includeOptions: Boolean!) {
+  products(where: {isVisible: {equals: true}}) {
+    category {
+      name
+      id
+      productsCount
     }
-  }
-  ${ProductFragmentFragmentDoc}
-`;
-export const GetProductDocument = gql`
-  query getProduct($id: ID, $includeOptions: Boolean!) {
-    product(where: { id: $id }) {
-      ...productFragment
-      options @include(if: $includeOptions) {
-        id
-        name
-        limit
-        label
-        subOptions {
-          id
-          name
-        }
-      }
-    }
-  }
-  ${ProductFragmentFragmentDoc}
-`;
-export const GetCategoriesDocument = gql`
-  query getCategories($includeProducts: Boolean!) {
-    categories {
+    ...productFragment
+    options @include(if: $includeOptions) {
       id
       name
-      description
-      title
-      products @include(if: $includeProducts) {
-        ...productFragment
+      limit
+      label
+      subOptions {
+        id
+        name
       }
     }
   }
-  ${ProductFragmentFragmentDoc}
-`;
+}
+    ${ProductFragmentFragmentDoc}`;
+export const GetProductDocument = gql`
+    query getProduct($id: ID, $includeOptions: Boolean!) {
+  product(where: {id: $id}) {
+    ...productFragment
+    options @include(if: $includeOptions) {
+      id
+      name
+      limit
+      label
+      subOptions {
+        id
+        name
+      }
+    }
+  }
+}
+    ${ProductFragmentFragmentDoc}`;
+export const GetCategoriesDocument = gql`
+    query getCategories($includeProducts: Boolean!) {
+  categories(where: {isVisible: {equals: true}}) {
+    id
+    name
+    description
+    title
+    products(where: {isVisible: {equals: true}}) @include(if: $includeProducts) {
+      ...productFragment
+    }
+  }
+}
+    ${ProductFragmentFragmentDoc}`;
+
+export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
 
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
