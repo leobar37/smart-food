@@ -4,6 +4,12 @@ import { getSdk } from './generated';
 import { Products, Categories, OrderHandler } from './features';
 import { Storage } from './storage/storage.strategy';
 import { BrowserStorage } from './storage/defaultStorage';
+import { get, has } from 'lodash';
+
+export enum ERROR_CODES {
+  INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
+}
+
 type ClientOptions = {
   endpoint: string;
   storage?: Storage;
@@ -31,8 +37,21 @@ export class ClientV2 {
   }
   // prettier-ignore
   async wrap<T>(fun: ReturnType<typeof rawRequest<T>>) {
-    const result = await fun;
-    // TODO: Format the error here
-    return result.data as T;
+    return new Promise(async (resolve, reject) => {
+      const result = await fun;
+      const errors =  get(result , "errors");
+      if(has(result , "errors") &&  (errors as []).length > 0 ) {
+        const formatedErrors =  get(result , "errors" , []).map((gross : any) =>  {
+            return {
+                 code : get(gross , "extensions.code", ERROR_CODES.INTERNAL_SERVER_ERROR) as ERROR_CODES,
+                 message : get(gross , "message" )
+                } 
+          });
+        reject(formatedErrors)
+        return;
+      }
+      resolve(result.data)
+      return result.data as T;
+    })as Promise<T>
   }
 }

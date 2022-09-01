@@ -9,7 +9,7 @@ export default withAuth(
     extendGraphqlSchema: extendGraphqlSchema,
     server: {
       port: 5000,
-      cors: {
+        cors: {
         origin: '*',
       },
       extendExpressApp(app, createContext) {
@@ -37,6 +37,7 @@ export default withAuth(
       },
       useMigrations: true,
     },
+
     ui: {
       isAccessAllowed: (context) => !!context.session?.data,
     },
