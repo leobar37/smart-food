@@ -15,9 +15,13 @@ export const useOrder = () => {
     {
       onSuccess: (data) => {
         const allIds = data?.lines?.map((d) => d?.productId);
-        // const uniquesIds = new Set(allIds);
         setCountLines(allIds?.length ?? 0);
       },
+      onError: (err) => {
+        // clean the storage, whe the order fail
+        cmsLib.storage.clean();
+      },
+      retry : false,
       refetchInterval: false,
       refetchOnWindowFocus: false,
     },
