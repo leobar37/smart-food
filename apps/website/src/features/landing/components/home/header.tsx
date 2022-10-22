@@ -88,10 +88,10 @@ const Header = () => {
           },
         }}
       >
-        <Link target={'_blank'} href="https://www.instagram.com/smart_foodhd/">
+        <Link target={'_blank'} href="https://www.instagram.com/leobar_37/">
           Instagram
         </Link>
-        <Link target={'_blank'} href="https://www.facebook.com/SmartFoodHD">
+        <Link target={'_blank'} href="https://videsolutions.me/">
           Facebook
         </Link>
       </HStack>
