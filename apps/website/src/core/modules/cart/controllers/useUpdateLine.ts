@@ -46,7 +46,7 @@ export const useUpdateLine = () => {
       },
       mutationKey: mutationsKeys.updateLine,
       onSuccess: (data) => {
-        queryClient.setQueryData(cacheKeys.order, data);
+        // queryClient.setQueryData(cacheKeys.order, data);
       },
       onError: (...args) => {
         const context = args[2];
